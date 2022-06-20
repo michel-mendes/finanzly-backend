@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/global.css">
+    <link rel="stylesheet" href="/stylesheets/registration.css">
+    <title>User management</title>
+</head>
+<body>
+    <div class="register-box">
+        <div class="logo-container">
+            <img class="img-logo" src="/images/wallet.png" alt="app logo" id="wallet-image">
+        </div>
+
+        <header>
+            <title>Cadastro de usuários</title>
+            <h1>Cadastro My Wallet</h1>
+        </header>
+        
+        <label for="editId" hidden>Sua ID</label>
+        <input class="editInput" type="number" name="id" id="editId" hidden>
+
+        <label for="editFirstName">Seu nome</label>
+        <input class="editInput" type="text" name="firstName" id="editFirstName" autofocus autocomplete="off">
+
+        <label for="editUserName">Escolha um nome de usuário</label>
+        <input class="editInput" type="text" name="userName" id="editUserName">
+
+        <label for="editEmail">Seu endereço de email</label>
+        <input class="editInput" type="email" name="email" id="editEmail">
+
+        <label for="editPassword">Escolha uma senha</label>
+        <input class="editInput" type="password" name="password" id="editPassword">
+                        
+        <div class="button-container">
+            <!--<input type="submit" value="Salvar" formtarget="_self">-->
+            <!-- <input class="container-item" type="submit" id="btnSave" value="Salvar" formtarget="apiResponseReceiver"> -->
+            <!-- <input class="container-item" type="button" id="btnCancel" value="Voltar"> -->
+            <input class="container-item btn" type="button" id="btnSave" value="Criar conta">
+        </div>
+
+        <div class="already-registered">
+            <span>Você já tem uma conta? <a href="/app/login">Faça o login aqui</a></span>
+        </div>
+    </div>
+
+    <script src="\javascripts\registration.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>

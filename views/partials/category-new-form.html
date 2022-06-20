@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/stylesheets/category-new-form.css">
+    <title>Nova categoria</title>
+</head>
+<body>
+    <div class="new-category-box">
+        <h1>Nova / Edição de Categoria</h1>
+        
+        <form action="#">
+            <input type="number" name="id" id="editId" hidden>
+            <input type="number" name="userId" id="editUserId" hidden>
+
+            <label for="editName" id="labelName" class="field-border">
+                <span>Nome da categoria</span>
+                <input type="text" name="name" id="editName" class="borderless">
+            </label>
+
+            <fieldset class="field-border flex-container-row">
+                <legend>Tipo de transações desta categoria</legend>
+                <div>
+                    <input type="radio" name="type" id="radioCred" value="c"><label for="radioCred">Ganhos</label>
+                </div>
+                <div>
+                    <input type="radio" name="type" id="radioDeb" value="d" class="separator"><label for="radioDeb">Gastos</label>
+                </div>
+            </fieldset>
+
+            <div class="button-container">
+                <a class="btn">Cancelar</a>
+                <button class="btn" type="submit">Salvar</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

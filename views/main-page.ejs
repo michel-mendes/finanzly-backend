@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/main-page.css">
+    <link rel="stylesheet" href="/stylesheets/transaction-new-form.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Just for person icon right user name -->
+    <title>My Wallet</title>
+</head>
+<body>
+    <div class="nav">
+        <input type="checkbox" id="nav-check">
+        
+        <div class="nav-header">
+            <div class="nav-title">
+              <img src="/images/wallet.png" alt="" class="img-logo">
+              <span class="app-title">MyWallet</span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="#" id="menuBtnAddTransaction">Adicionar transação</a>
+            <a href="#">Transações</a>
+            <a href="#">Categorias</a>
+            <a href="#" class="menu-separator">Olá, <%= firstName %> <i class="user-icon material-icons">person</i></a>
+
+            <span id="login-userName" hidden><%= userName %></span>
+            <span id="login-userFirstName" hidden><%= firstName %></span>
+        </div>
+
+        <div class="nav-btn">
+            <label for="nav-check">
+              <span></span>
+              <span></span>
+              <span></span>
+            </label>
+        </div>
+
+        <!-- Add the modal window 'Add / Edit transaction' -->
+        <%- include('transaction-new-form.html'); %>
+
+    </div>
+</body>
+</html>

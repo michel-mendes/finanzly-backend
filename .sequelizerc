@@ -1,0 +1,8 @@
+const path = require('path');
+
+module.exports = {
+    'config':           path.resolve('database', 'database-configs.js'), // Tells Sequelize where is the config file. DEFAULT: './config/config.json'
+    'models-path':      path.resolve('database', 'models'), // Tells Sequelize where are the models files.
+    'seeders-path':     path.resolve('database', 'seeders'), // Tells Sequelize where are the seeder files.
+    'migrations-path':  path.resolve('database', 'migrations') // Tells Sequelize where are the migrations files.
+}

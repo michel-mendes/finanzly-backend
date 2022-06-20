@@ -1,0 +1,4 @@
+Relashionship maps:
+
+- Wallet has one User (belongsTo) -> 1:1
+- User has many Wallets (hasMany) -> 1:N
