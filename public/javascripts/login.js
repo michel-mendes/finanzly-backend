@@ -40,14 +40,15 @@ function sendApiRequest ( reqUrl, reqMethod = 'GET' /* Default is GET */, reqBod
 
             if ( !userDataObject.error ) {
                 // If the user is authorized then send his data to dashboard page
-                location.assign( `/app/dashboard?un=${ userDataObject.userName }` )
+                // location.assign( `/app/dashboard?un=${ userDataObject.userName }` )
+                showErrorMessage( userDataObject.message, '#00AA00' )
             }
             else {
                 showErrorMessage( userDataObject.message, '#FF4500' )
             }
         } catch( err ) {
             // showErrorMessage( text, '#FF0000' )
-            showErrorMessage( text + '<br><br>TEsteeeee', '#FF0000' )
+            showErrorMessage( text, '#FF0000' )
         }
     });
 }
