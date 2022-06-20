@@ -1,5 +1,7 @@
 # My Wallet App
 
+- Don't be scared, it's my first project and things are going to be a little messy
+
 My Wallet App is a cost manager for my personal use.
 It was initially coded in Delphi and currently i'm recoding it to JavaScript because it's perfect for apply and improve my JavaScript learnings.
 
