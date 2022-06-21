@@ -39,9 +39,11 @@ function sendApiRequest ( reqUrl, reqMethod = 'GET' /* Default is GET */, reqBod
             const userDataObject = JSON.parse( text );
 
             if ( !userDataObject.error ) {
-                // If the user is authorized then send his data to dashboard page
-                // location.assign( `/app/dashboard?un=${ userDataObject.userName }` )
-                showErrorMessage( userDataObject.message, '#00AA00' )
+                // If the user is authorized then show login success message
+                showErrorMessage( userDataObject.message, '#00AA00' );
+                
+                // Redirect to main page after 2 seconds
+                let timeOut = ( setTimeout( () => { window.location.replace("/app/dashboard") }, 2000 ) );
             }
             else {
                 showErrorMessage( userDataObject.message, '#FF4500' )

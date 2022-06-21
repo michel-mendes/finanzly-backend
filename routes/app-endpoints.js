@@ -8,13 +8,15 @@ router.get('/', function(req, res, next) {
 })
 
 router.get('/dashboard', function(req, res, next) {
-    console.log('Usuário logado? - ' + JSON.stringify(req.session, ' ', 4));
-    
-    if ( !req.session.loggedin ) {
+    if ( !req.session.loggedIn ) {
         res.redirect( '/app/login' )
     }
     
-    res.render( 'main-page', {userName: req.query.un, firstName: 'uai so'});
+    res.render( 'main-page', {
+        userName: req.session.userName,
+        firstName: req.session.userFirstName,
+        email: req.session.userEmail
+    });
 })
 
 router.get('/login', function(req, res, next) {
@@ -46,11 +48,13 @@ function authenticateUser(req, res) {
             }
             else {
                 res.locals.username = user.userName;
-                // res.locals.firstName = user.firstName;
-                // res.locals.userEmail = user.email;
+                res.locals.firstName = user.firstName;
+                res.locals.userEmail = user.email;
 
-                req.session.loggedin = true;
-                req.session.username = res.locals.username;
+                req.session.loggedIn = true;
+                req.session.userName = res.locals.username;
+                req.session.userFirstName = res.locals.firstName;
+                req.session.userEmail = res.locals.userEmail;
 
                 res.json({
                     error: false,
@@ -59,8 +63,6 @@ function authenticateUser(req, res) {
             }
         })
         .catch( reason => {
-            console.log('Iniciando .catch');
-            
             res.sendStatus(401).json({
                 error: true,
                 message: 'Erro!'
