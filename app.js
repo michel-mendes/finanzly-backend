@@ -1,6 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
-var session = require('express-session');
+var cookieSession = require('cookie-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -20,13 +20,15 @@ module.exports = { appDirectories };
 
 // Starting the user session manager
 let sessionOptions = {
-  secret:             '80097982',
-  name:               'myWalletAppSessionID',
-  saveUninitialized:  true,
-  resave:             false
+  secret:             'secret-string-used-for-encryption',
+  name:               'my-wallet-app-session',
+  signed:             true,
+
+   // Cookie Options
+   maxAge: 48 * 60 * 60 * 1000 // 48 hours
 }
 
-app.use( session( sessionOptions ) );
+app.use( cookieSession( sessionOptions ) );
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

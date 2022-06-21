@@ -24,10 +24,8 @@
             <a href="#" id="menuBtnAddTransaction">Adicionar transação</a>
             <a href="#">Transações</a>
             <a href="#">Categorias</a>
-            <a href="#" class="menu-separator">Olá, <%= firstName %> <i class="user-icon material-icons">person</i></a>
-
-            <span id="login-userName" hidden><%= userName %></span>
-            <span id="login-userFirstName" hidden><%= firstName %></span>
+            <a href="#" class="menu-separator">Olá, <%= userFirstName %> <i class="user-icon material-icons">person</i></a>
+            <a href="/app/logout" title="Log out"> <i class="user-icon material-icons">logout</i> </a>
         </div>
 
         <div class="nav-btn">
@@ -40,6 +38,11 @@
 
         <!-- Add the modal window 'Add / Edit transaction' -->
         <%- include('./partials/transaction-new-form.html'); %>
+
+        <div style="border: 1px red solid">
+            <span>ID do usuáro....: </span> <%= userId %> <br>
+            <span>Nome do usuário.: </span> <%= userFirstName %> <br>
+        </div>
 
     </div>
 </body>

@@ -9,6 +9,9 @@ loginButton.onclick = function() {
         password: document.getElementById( 'editPassword' ).value
     }
 
+    loginButton.disabled = true;
+    loginButton.innerText = 'Conectando...';
+    
     sendApiRequest('/app/authenticate', 'POST', loginBody);
 }
 
@@ -51,6 +54,10 @@ function sendApiRequest ( reqUrl, reqMethod = 'GET' /* Default is GET */, reqBod
         } catch( err ) {
             // showErrorMessage( text, '#FF0000' )
             showErrorMessage( text, '#FF0000' )
+        }
+        finally {
+            loginButton.disabled = false;
+            loginButton.innerText = 'Log In';
         }
     });
 }
