@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../public/stylesheets/global.css">
-    <link rel="stylesheet" href="../public/stylesheets/categories-listing.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/global.css">
+    <link rel="stylesheet" href="/stylesheets/categories-listing.css">
+    <link rel="stylesheet" href="/stylesheets/category-new-form.css">
+    <title>My Wallet App - Categorias</title>
 </head>
-<body>
+<body mwa-page="categories-listing">
     <!-- <nav class="side-navbar">
         teste
     </nav> -->
     
     <header class="toolbar">
         <div id="leftSide">
-            <img src="../public/images/left-arrow.jpg" alt="seta voltar">
+            <img src="/images/left-arrow.jpg" alt="seta voltar" onclick="history.back()">
         </div>
 
         <div id="rightSide">
@@ -60,5 +61,7 @@
             </ul>
         </div>
     </section>
+
+    <%- include('./partials/category-new-form.html'); %>
 </body>
 </html>

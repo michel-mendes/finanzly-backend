@@ -49,6 +49,10 @@ router.get('/registration/success', function(req, res, next) {
     res.sendFile(`./registration-success.html`, {root: appDirectories.viewsDirectory})
 });
 
+router.get('/categories', (req, res, next) => {
+    res.render('./pages/categories-listing');
+});
+
 
 
 
