@@ -105,7 +105,7 @@ input:focus{
 
 /* Modal Section */
 /* The Modal (background) */
-body [mwa-page="categories-listing"] .modal {
+body[mwa-page="categories-listing"] .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -120,7 +120,7 @@ body [mwa-page="categories-listing"] .modal {
   }
   
   /* Modal Content */
-  body [mwa-page="categories-listing"] .modal-content {
+  body[mwa-page="categories-listing"] .modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -130,14 +130,15 @@ body [mwa-page="categories-listing"] .modal {
   }
   
   /* The Close Button */
-  body [mwa-page="categories-listing"] .btnCloseModal {
+  body[mwa-page="categories-listing"] .btnCloseModal {
     color: #aaaaaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
   }
   
-  body [mwa-page="categories-listing"] .btnCloseModal:hover, .btnCloseModal:focus {
+  body[mwa-page="categories-listing"] .btnCloseModal:hover, .btnCloseModal:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
@@ -145,7 +146,7 @@ body [mwa-page="categories-listing"] .modal {
   /* End of modal section */
 
 @media (max-width:600px) {
-    body [mwa-page="categories-listing"] .new-category-box {
+    body[mwa-page="categories-listing"] .new-category-box {
         margin-left: auto;
         margin-right: auto;
         max-width: 350px;

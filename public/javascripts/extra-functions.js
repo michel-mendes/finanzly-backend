@@ -12,17 +12,19 @@ function apiRequest ( reqUrl, reqMethod = 'GET' /* Default is GET */, reqBody = 
     let myRequest = new Request( reqUrl, reqInit );
     
     fetch( myRequest )
-    .then ( function( response )
-    {
-        return response.json();
-    })
-    .then ( function( myJSON )
-    {
-        return myJSON;
-    })
-    .catch( function(er)
-    {
-        alert('Erro: \n\n\n' + er);
+    .then ( function(response) { return response.text() } )
+    .then ( function(text) {
+        try {
+            const jsonResponse = JSON.parse( text );
+
+            return jsonResponse;
+        }
+        catch(err) {
+            return {
+                error: true,
+                message: err
+            };
+        }
     })
 }
 

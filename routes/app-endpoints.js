@@ -34,7 +34,7 @@ router.get('/dashboard', function(req, res, next) {
         res.redirect( '/app/login' )
     }
     else {
-        res.render( 'main-page', {
+        res.render( './pages/main-page', {
             userId: req.session.userId,
             userFirstName: req.session.userFirstName
         });
@@ -50,7 +50,11 @@ router.get('/registration/success', function(req, res, next) {
 });
 
 router.get('/categories', (req, res, next) => {
-    res.render('./pages/categories-listing');
+    let categoryServices = require('../database/models/categories/categories-services');
+
+    categoryServices.getAllCategories()
+    .then( result => { res.render('./pages/categories-listing', { categoriesList: result }) } )
+    .catch( next );
 });
 
 

@@ -11,21 +11,9 @@ var router = express.Router();
 
 router.get('/', listAllCategories); // List all categories
 router.get('/:id', listById); // Search category by ID
-router.post('/', validateCategoryRequest, saveCategory); // Create new category
-router.put('/:id', validateCategoryRequest, editCategory); // Update category
+router.post('/', saveCategory); // Create new category
+router.put('/:id', editCategory); // Update category
 router.delete('/:id', deleteCategory); // Delete category
-
-function validateCategoryRequest(req, res, next) {
-    
-    const newSchema = Joi.object({
-        id:              (req.method = 'PUT') ? Joi.number().required() : Joi.number(),
-        userId:          Joi.number().required(),
-        name:            Joi.string().required(),
-        transactionType: Joi.string().required()
-    });
-
-    validateRequest(req, next, newSchema);
-}
 
 function listAllCategories(req, res, next) {
     // Query strings:
