@@ -44,6 +44,10 @@ function listById(req, res, next) {
 
 function saveCategory( req, res, next ) {
 
+    // Put the user ID inside the request, 'userId' is required in order to create a new category
+    // because each category has it's own owner, in this case the USER
+    req.body.userId = req.session.userId;
+    
     categoriesServices.insertNewCategory( req.body )
         .then( function ( promiseResult ) {
             

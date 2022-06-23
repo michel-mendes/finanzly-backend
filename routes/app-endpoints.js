@@ -52,7 +52,7 @@ router.get('/registration/success', function(req, res, next) {
 router.get('/categories', (req, res, next) => {
     let categoryServices = require('../database/models/categories/categories-services');
 
-    categoryServices.getAllCategories()
+    categoryServices.getCategoriesFromUser( req.session.userId )
     .then( result => { res.render('./pages/categories-listing', { categoriesList: result }) } )
     .catch( next );
 });

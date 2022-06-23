@@ -8,11 +8,22 @@ module.exports = {
     getCategoryById,
     insertNewCategory,
     editCategory,
-    deleteCategory
+    deleteCategory,
+    getCategoriesFromUser
 };
 
 async function getAllCategories() {
     return await tabCategory.findAll();
+}
+
+async function getCategoriesFromUser( requestedUserId ) {
+    const userCategories = await tabCategory.findAll( {
+        where: {
+            userId: requestedUserId
+        }
+    });
+
+    return userCategories;
 }
 
 async function getCategoryById( id ) {

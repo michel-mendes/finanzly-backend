@@ -31,10 +31,8 @@ function openModal() {
     modalCategory.style.display = "block";
 }
 
-function saveCategory() {
+async function saveCategory() {
     let categoryData = {
-        id: 0,
-        userId: 1,
         name: editName.value,
         transactionType:    (function() {
                                 let result = ( radioButtonCredito.checked ) ? 'C' : 'D';
@@ -48,7 +46,14 @@ function saveCategory() {
 
     // alert(JSON.stringify(categoryData, ' ', 4));
     
-    let result = apiRequest('/categories', 'POST', categoryData)
-    
-    alert( JSON.stringify( result, ' ', 4 ));
+    apiRequest('/categories', 'POST', categoryData)
+    .then( response => {
+        alert('Oppaa, tudo certo -> \n\n' + JSON.stringify( response, ' ', 4 ));
+    })
+    .catch( errorResponse => {
+        alert('Erro -> \n\n' + errorResponse);
+    })
+    .finally( () => {
+        location.reload();
+    })
 }

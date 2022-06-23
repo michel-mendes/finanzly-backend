@@ -2,11 +2,21 @@ let loginButton = document.getElementById( 'loginButton' );
 let loginHeaderBox = document.getElementById( 'loginHeaderBox' );
 let loginHeaderErrorBox = document.getElementById( 'loginHeaderErrorBox' );
 let errorBox = document.getElementById( 'errorBox' );
+let editUserName = document.getElementById( 'editUserName' );
+let editPassword = document.getElementById( 'editPassword' );
 
-loginButton.onclick = function() {
+editPassword.onkeyup = function ( key ) {
+    let keyCode = key.keyCode;
+
+    if ( keyCode === 13 ) loginUser();
+}
+
+loginButton.onclick = function() { loginUser() };
+
+function loginUser() {
     let loginBody = {
-        userIdentification: document.getElementById( 'editUserName' ).value,
-        password: document.getElementById( 'editPassword' ).value
+        userIdentification: editUserName.value,
+        password: editPassword.value
     }
 
     loginButton.disabled = true;
@@ -46,7 +56,7 @@ function sendApiRequest ( reqUrl, reqMethod = 'GET' /* Default is GET */, reqBod
                 showErrorMessage( userDataObject.message, '#00AA00' );
                 
                 // Redirect to main page after 2 seconds
-                let timeOut = ( setTimeout( () => { window.location.replace("/app/dashboard") }, 2000 ) );
+                let timeOut = ( setTimeout( () => { window.location.replace("/app/dashboard") }, 1000 ) );
             }
             else {
                 showErrorMessage( userDataObject.message, '#FF4500' )
