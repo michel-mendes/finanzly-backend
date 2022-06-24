@@ -7,3 +7,79 @@ body {
     background: #3498db;
     /* width: 100%; */
 }
+
+
+/* -------------------------------------------------------------------------- */
+/* Notification Bar Styles                                                    */
+/* -------------------------------------------------------------------------- */
+#topNotificationBar {
+    z-index: 999;
+    font-family: "Open Sans", sans-serif;
+    width: 80%;
+    margin: 0;
+    left: calc( (100vw - 80%) / 2 );
+    top: -50px;
+    height: 30px;
+    display: table;
+    font-size: 17px;
+    font-weight: 400;
+    padding: .33em .5em;
+    -webkit-font-smoothing: antialiased;
+    color: #5c5e60;
+    position: fixed;
+    background-color: white;
+    box-shadow: 0 1px 3px 2px rgba(0,0,0,0.15);
+
+    /* Sliding transition effect */
+    transition: top 500ms;
+    -webkit-transition: top 500ms;
+}
+#topNotificationBar.regular {
+    height: 30px;
+    font-size: 14px;
+    padding: .2em .5em;
+}
+#topNotificationBar .content {
+    display: flex;
+    flex-direction: row;
+    height: 25px;
+}
+
+#topNotificationBar .message-area {
+    flex-basis: 90%;
+    display: flex;
+    align-items: center;
+}
+
+#topNotificationBar .cta-area {
+    flex-basis: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#topNotificationBar .cta-area a {
+    margin: 0px;
+    padding: 0px;
+    width: 80%;
+    text-align: center;
+}
+
+#topNotificationBar .button {
+    color: #ffffff;
+    background-color: #22af73;
+    border-color: #22af73;
+    opacity: 1;
+    cursor: pointer;
+    line-height: 1.5;
+    max-width: 22.5em;
+    text-align: center;
+    position: relative;
+    border-radius: 3px;
+    white-space: nowrap;
+    margin: 1.75em auto 0;
+    text-decoration: none;
+    padding: 0;
+    overflow: hidden;
+}
+/* -------------------------------------------------------------------------- */

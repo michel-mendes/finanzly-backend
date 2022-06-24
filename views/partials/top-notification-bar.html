@@ -1,63 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/stylesheets/top-notification-bar.css">
-    <title>Document</title>
-</head>
-<body>
-    
-    <div id="top-notification-bar" class="regular">
-        <div class="bar-content">
-            <div class="msg-content">
-                <div class="msg-headline-text">
-                    <p><span id="notif-text"> ** Messages will be displayed here ** </span></p>
-                </div>
+    <div id="topNotificationBar" class="regular">
+        <div class="content">
+            <div class="message-area">
+                <span class="message" id="notificationMessage"> ** Messages will be displayed here ** </span>
             </div>
-            
-            <!-- The code below is not being used yet -->
-            <!-- <a class="cta cta-btn" id="ctaNotificationButton">
-                <div class="btn-text-holder">
-                    <p>Saiba mais...</p>
-                </div>
-            </a> -->
 
+            <div class="cta-area">
+                <a class="button cta-btn" id="notificationCTAButton">
+                    <span class="caption">Saiba mais...</span>
+                </a>
+            </div>
         </div>
+
+        <script>
+            var notificationBar = document.getElementById("topNotificationBar");
+            
+            notificationBar.myMessage = document.getElementById("notificationMessage");
+            notificationBar.myButton = document.getElementById("notificationCTAButton");
+    
+            function showNotification( messageText ) {
+                notificationBar.myMessage.innerText = messageText;
+                notificationBar.style.top = "10px";
+                setTimeout( hideNotification, 3000 );
+            }
+    
+            function hideNotification() {
+                notificationBar.style.top = "-50px";
+            }
+        </script>
     </div>
-
-    <h1>
-        <input type="text" name="" id="editText">
-        <button id="btnDes">Sumir</button>
-        <button id="btnApa">aparecer</button>
-    </h1>
-
-    <script>
-        var notificationBar = document.getElementById("top-notification-bar");
-        var notificationText = document.getElementById("notif-text");
-        var editText = document.getElementById("editText");
-        var btnDes = document.getElementById("btnDes");
-        var btnApa = document.getElementById("btnApa");
-        // var btnCTA = document.getElementById("ctaNotificationButton");
-
-        btnDes.onclick = function() { notificationBar.style.top = "-50px" };
-        btnApa.onclick = function() { showNotification( editText.value ) };
-        // btnCTA.onclick = function() { 
-        //     var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
-        //     win.document.body.innerHTML = editText.value;
-        // };
-
-        function showNotification( messageText ) {
-            notificationText.innerText = messageText;
-            notificationBar.style.top = "10px";
-            setTimeout( hideNotification, 3000 );
-        }
-
-        function hideNotification() {
-            notificationBar.style.top = "-50px";
-        }
-    </script>
-
-</body>
-</html>
