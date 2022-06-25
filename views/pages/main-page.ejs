@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/global.css">
     <link rel="stylesheet" href="/stylesheets/main-page.css">
     <link rel="stylesheet" href="/stylesheets/transaction-new-form.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Just for person icon right user name -->
@@ -36,14 +37,19 @@
             </label>
         </div>
 
-        <!-- Add the modal window 'Add / Edit transaction' -->
-        <%- include('../partials/transaction-new-form.html'); %>
-
         <div style="border: 1px red solid">
             <span>ID do usuáro....: </span> <%= userId %> <br>
-            <span>Nome do usuário.: </span> <%= userFirstName %> <br>
+            <span>Nome do usuário.: </span> <%= userFirstName %> <br><br>
+            <button onclick="showNotification('✓ Login efetuado com sucesso!')">Mostra mensagem</button>
         </div>
-
     </div>
+
+    <!-- 'Add / Edit transaction' modal start-->
+    <%- include('../partials/transaction-new-form.html'); %>
+    <!-- 'Add / Edit transaction' modal end-->
+    
+    <!-- Top notification bar start-->
+    <%- include('../partials/top-notification-bar.html'); %>
+    <!-- Top notification bar end-->
 </body>
 </html>

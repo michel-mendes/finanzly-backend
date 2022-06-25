@@ -53,17 +53,20 @@ function sendApiRequest ( reqUrl, reqMethod = 'GET' /* Default is GET */, reqBod
 
             if ( !userDataObject.error ) {
                 // If the user is authorized then show login success message
-                showErrorMessage( userDataObject.message, '#00AA00' );
+                // showErrorMessage( userDataObject.message, '#00AA00' );
+                showNotification( userDataObject.message );
                 
                 // Redirect to main page after 2 seconds
                 let timeOut = ( setTimeout( () => { window.location.replace("/app/dashboard") }, 1000 ) );
             }
             else {
-                showErrorMessage( userDataObject.message, '#FF4500' )
+                // showErrorMessage( userDataObject.message, '#FF4500' )
+                showNotification( userDataObject.message );
             }
         } catch( err ) {
             // showErrorMessage( text, '#FF0000' )
-            showErrorMessage( text, '#FF0000' )
+            // showErrorMessage( text, '#FF0000' )
+            showNotification( text );
         }
         finally {
             loginButton.disabled = false;

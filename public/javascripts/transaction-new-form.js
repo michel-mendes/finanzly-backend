@@ -1,4 +1,5 @@
 import { apiRequest } from '/javascripts/extra-functions.js';
+import { getFullDate } from '/javascripts/extra-functions.js';
 
 // Get the modal
 let modalTransaction = document.getElementById("modalTransaction");

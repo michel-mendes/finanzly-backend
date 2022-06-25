@@ -1,30 +1,17 @@
-    <div id="topNotificationBar" class="regular">
-        <div class="content">
-            <div class="message-area">
-                <span class="message" id="notificationMessage"> ** Messages will be displayed here ** </span>
-            </div>
-
-            <div class="cta-area">
-                <a class="button cta-btn" id="notificationCTAButton">
-                    <span class="caption">Saiba mais...</span>
-                </a>
+    <div id="topNotificationBarParent">
+        <div id="topNotificationBar" class="regular">
+            <div class="content">
+                <div class="message-area" id="topNotificationBar-messageContainer">
+                    <span class="message" id="notificationMessage"> ** Messages will be displayed here ** </span>
+                </div>
+    
+                <div class="cta-area" id="topNotificationBar-buttonContainer">
+                    <a class="button cta-btn" id="notificationCTAButton">
+                        <span class="caption">Saiba mais...</span>
+                    </a>
+                </div>
             </div>
         </div>
 
-        <script>
-            var notificationBar = document.getElementById("topNotificationBar");
-            
-            notificationBar.myMessage = document.getElementById("notificationMessage");
-            notificationBar.myButton = document.getElementById("notificationCTAButton");
-    
-            function showNotification( messageText ) {
-                notificationBar.myMessage.innerText = messageText;
-                notificationBar.style.top = "10px";
-                setTimeout( hideNotification, 3000 );
-            }
-    
-            function hideNotification() {
-                notificationBar.style.top = "-50px";
-            }
-        </script>
+        <script src="/javascripts/top-notification-bar.js"></script>
     </div>

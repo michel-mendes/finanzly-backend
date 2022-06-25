@@ -4,7 +4,7 @@
 body {
     /* font-family: 'Open Sans', sans-serif; */
     font-family: 'Roboto', sans-serif;
-    background: #3498db;
+    /* background: #3498db; */
     /* width: 100%; */
 }
 
@@ -14,10 +14,10 @@ body {
 /* -------------------------------------------------------------------------- */
 #topNotificationBar {
     z-index: 999;
-    font-family: "Open Sans", sans-serif;
-    width: 80%;
+    /* font-family: "Open Sans", sans-serif; */
+    width: auto;
+    max-width: 80%;
     margin: 0;
-    left: calc( (100vw - 80%) / 2 );
     top: -50px;
     height: 30px;
     display: table;
