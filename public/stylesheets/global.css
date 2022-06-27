@@ -46,13 +46,13 @@ body {
 }
 
 #topNotificationBar .message-area {
-    flex-basis: 90%;
+    flex-basis: 70%;
     display: flex;
     align-items: center;
 }
 
 #topNotificationBar .cta-area {
-    flex-basis: 10%;
+    flex-basis: 30%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,7 +61,7 @@ body {
 #topNotificationBar .cta-area a {
     margin: 0px;
     padding: 0px;
-    width: 80%;
+    max-width: 80%;
     text-align: center;
 }
 
@@ -72,7 +72,7 @@ body {
     opacity: 1;
     cursor: pointer;
     line-height: 1.5;
-    max-width: 22.5em;
+    width: 100px;
     text-align: center;
     position: relative;
     border-radius: 3px;

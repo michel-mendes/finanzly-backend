@@ -40,20 +40,25 @@ async function saveCategory() {
                             })() // IIFE
     }
     
+    if ( editName.value == "" ) {
+        return showNotification( "Informe o nome da categoria!" );
+    }
+    
     if ( !radioButtonCredito.checked && !radioButtonDebito.checked ) {
-        return alert('Selecione o tipo de transação (débito ou crédito)');
+        // return alert('Selecione o tipo de transação (débito ou crédito)');
+        return showNotification( "Selecione o tipo de transação (Ganhos ou Gastos)" );
     }
 
     // alert(JSON.stringify(categoryData, ' ', 4));
     
     apiRequest('/categories', 'POST', categoryData)
     .then( response => {
-        alert('Oppaa, tudo certo -> \n\n' + JSON.stringify( response, ' ', 4 ));
+        showNotification( "Categoria cadastrada com sucesso!" );
     })
     .catch( errorResponse => {
-        alert('Erro -> \n\n' + errorResponse);
+        showNotification( `Erro: ${ errorResponse }` );
     })
     .finally( () => {
-        location.reload();
+        closeModal();
     })
 }
