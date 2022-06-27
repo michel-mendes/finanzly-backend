@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/stylesheets/global.css">
     <link rel="stylesheet" href="/stylesheets/categories-listing.css">
     <link rel="stylesheet" href="/stylesheets/category-new-form.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="/javascripts/category-new-form.js" type="module" defer></script>
     <title>My Wallet App - Categorias</title>
 </head>
@@ -37,16 +38,15 @@
                         <% if ( categoriesList ) {
                             categoriesList.forEach( (category, index) => {
                                 if ( category.transactionType == 'C' ) {%>
-                                <li class="list-item"><span><%= category.name %></span></li>        
+                                <li class="list-item">
+                                    <span><%= category.name %></span>
+                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>">
+                                        <span class="category-management-buttons material-icons" name="btnEditCategory">edit</span>
+                                        <span class="category-management-buttons material-icons" name="btnDeleteCategory">delete</span>
+                                    </div>
+                                </li>        
                             <% }} )
                         } %>
-                        
-                        <!-- <li class="list-item"><span>SALÁRIO</span></li>
-                        <li class="list-item"><span>RENDIMENTOS</span></li>
-                        <li class="list-item"><span>OUTRAS RECEITAS</span></li>
-                        <li class="list-item"><span>DEPÓSITO</span></li>
-                        <li class="list-item"><span>DEVOLUÇÃO</span></li>
-                        <li class="list-item"><span>PIX SURPRESA</span></li> -->
                     </ul>
                 </li>
         
@@ -57,29 +57,76 @@
                         <% if ( categoriesList ) {
                             categoriesList.forEach( (category, index) => {
                                 if ( category.transactionType == 'D' ) {%>
-                                <li class="list-item"><span><%= category.name %></span></li>        
+                                <li class="list-item">
+                                    <span><%= category.name %></span>
+                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>">
+                                        <span class="category-management-buttons material-icons" name="btnEditCategory">edit</span>
+                                        <span class="category-management-buttons material-icons" name="btnDeleteCategory">delete</span>
+                                    </div>
+                                </li>        
                             <% }} )
                         } %>
-                        
-                        <!-- <li class="list-item"><span>CONTAS FIXAS MENSAIS</span></li>
-                        <li class="list-item"><span>COMBUSTÍVEL</span></li>
-                        <li class="list-item"><span>SUPERMERCADO</span></li>
-                        <li class="list-item"><span>PADARIA</span></li>
-                        <li class="list-item"><span>FARMÁCIA</span></li> -->
                     </ul>
                 </li>
             </ul>
         </div>
-    </section>
 
-    <% if (categoriesList) {%>
-        <p> <%= JSON.stringify(categoriesList, ' ', 4) %> </p>
-    <% } %>
+        <div class="category-edit-container">
+            <div class="category-edit-content" >
+                <div class="new-category-box">
+                    <span class="btnCloseEditor" id="buttonCloseEditor">&times;</span>
+
+                    <h1 id="modalTitle">Nova / Edição de Categoria</h1>
+                    
+                    <form action="#">
+                        <input type="number" name="id" id="editId" hidden>
+                        <input type="number" name="userId" id="editUserId" hidden>
+                    
+                        <label for="editName" id="labelName" class="field-border">
+                            <span>Nome da categoria</span>
+                            <input type="text" name="name" id="editName" class="borderless">
+                        </label>
+                    
+                        <fieldset class="field-border flex-container-row">
+                            <legend>Tipo de transações desta categoria</legend>
+                            <div>
+                                <input type="radio" name="transactionType" id="radioCred" value="c"><label for="radioCred">Ganhos</label>
+                            </div>
+                            <div>
+                                <input type="radio" name="transactionType" id="radioDeb" value="d" class="separator"><label for="radioDeb">Gastos</label>
+                            </div>
+                        </fieldset>
+                    
+                        <div class="button-container">
+                            <a class="btn" id="btnCancel">Cancelar</a>
+                            <a class="btn" id="btnSave">Salvar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <%- include('../partials/category-new-form.html'); %>
 
     <!-- Top notification bar start-->
     <%- include('../partials/top-notification-bar.html'); %>
     <!-- Top notification bar end-->
+
+    <script>
+        let allEditButtons = document.getElementsByName("btnEditCategory");
+        let allDeleteButtons = document.getElementsByName("btnDeleteCategory");
+
+        allEditButtons.forEach(editButton => { editButton.onclick = () => { editCategory( editButton ) } });
+        allDeleteButtons.forEach(deleteButton => { deleteButton.onclick = () => { deleteCategory( deleteButton ) } });
+
+        function editCategory( buttonElement ) {
+            alert(buttonElement.parentElement.previousElementSibling.innerHTML);    
+        }
+
+        function deleteCategory( buttonElement ) {
+            alert(buttonElement.parentElement.previousElementSibling.innerHTML);
+        }
+    </script>
 </body>
 </html>

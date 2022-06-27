@@ -50,11 +50,13 @@ body {
 
 .category-list-container {
     display: flex;
+    flex-direction: row;
     justify-content: center;
+    gap: 50px;
     background-color: rgb(228, 228, 228);
 
     /* padding-left: 80px; */
-    min-height: 100vh;
+    min-height: calc( 100vh - 64px );
     padding-top: 30px;
     padding-bottom: 20px;
 }
@@ -65,6 +67,26 @@ body {
     border-top-left-radius: 7px;
     border-top-right-radius: 7px;
     box-shadow: 0 0px 24px 0 rgba(0,0,0,.20);
+}
+
+.category-edit-container {
+    height: min-content;
+    background-color: white;
+    /* flex-basis: 41%; */
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    box-shadow: 0 0px 24px 0 rgba(0,0,0,.20);
+}
+
+.category-edit-container .btnCloseEditor {
+    color: #aaaaaa;
+    position: fixed;
+    margin-top: -10px;
+    margin-left: 265px;
+    height: 30px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .category-box > .categories-list {
@@ -114,6 +136,18 @@ body {
     font-weight: 300;
 }
 
+.category-box > .categories-list > li > .categories-sublist > .list-item:hover .category-management-buttons-container {
+    display: flex;
+}
+
+.category-box > .categories-list > li > .categories-sublist .category-management-buttons-container {
+    display: none;
+    gap: 10px;
+    float: right;
+    margin-top: -5px;
+    margin-right: 10px;
+}
+
 .category-box > .categories-list > li > .categories-sublist > .list-item > span {
     padding-left: 42px;
 }
@@ -122,6 +156,18 @@ body {
     /* background-color: rgb(239, 249, 241); */
     background-color: rgb(204, 240, 212);
     font-weight: bold;
+}
+
+.category-box > .categories-list > li > .categories-sublist > .list-item .category-management-buttons {
+    font-size: 18px;
+    color: gray;
+    margin-top: auto;
+    padding: 0px;
+}
+
+.category-box > .categories-list > li > .categories-sublist > .list-item .category-management-buttons:hover {
+    border: 1px gray solid;
+    border-radius: 8px;
 }
 
 

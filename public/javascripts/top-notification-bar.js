@@ -30,7 +30,7 @@ function showNotification( messageText ) {
     notificationBar.style.left = `${ leftOffset }px`;
     notificationBar.style.top = "10px";
     
-    setTimeout( hideNotification, 3000 );
+    setTimeout( hideNotification, 4500 );
 }
     
 function hideNotification() {
