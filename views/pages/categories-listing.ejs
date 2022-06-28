@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+'<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -40,7 +40,7 @@
                                 if ( category.transactionType == 'C' ) {%>
                                 <li class="list-item">
                                     <span><%= category.name %></span>
-                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>">
+                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>" categoryType="<%= category.transactionType %>">
                                         <span class="category-management-buttons material-icons" name="btnEditCategory">edit</span>
                                         <span class="category-management-buttons material-icons" name="btnDeleteCategory">delete</span>
                                     </div>
@@ -59,7 +59,7 @@
                                 if ( category.transactionType == 'D' ) {%>
                                 <li class="list-item">
                                     <span><%= category.name %></span>
-                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>">
+                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>" categoryType="<%= category.transactionType %>">
                                         <span class="category-management-buttons material-icons" name="btnEditCategory">edit</span>
                                         <span class="category-management-buttons material-icons" name="btnDeleteCategory">delete</span>
                                     </div>
@@ -71,12 +71,13 @@
             </ul>
         </div>
 
-        <div class="category-edit-container">
+        <div class="category-edit-container" id="categoryEditorBox">
             <div class="category-edit-content" >
                 <div class="new-category-box">
-                    <span class="btnCloseEditor" id="buttonCloseEditor">&times;</span>
-
-                    <h1 id="modalTitle">Nova / Edição de Categoria</h1>
+                    <h1 id="categoryEditorTitle">
+                        <span>Adicionar categoria</span>
+                        <span class="btnCloseEditor" id="buttonCloseEditor">&times;</span>
+                    </h1>
                     
                     <form action="#">
                         <input type="number" name="id" id="editId" hidden>
@@ -84,16 +85,16 @@
                     
                         <label for="editName" id="labelName" class="field-border">
                             <span>Nome da categoria</span>
-                            <input type="text" name="name" id="editName" class="borderless">
+                            <input type="text" name="name" id="editorEditName" class="borderless">
                         </label>
                     
                         <fieldset class="field-border flex-container-row">
                             <legend>Tipo de transações desta categoria</legend>
                             <div>
-                                <input type="radio" name="transactionType" id="radioCred" value="c"><label for="radioCred">Ganhos</label>
+                                <input type="radio" name="transactionType" id="editorRadioCred" value="c"><label for="radioCred">Ganhos</label>
                             </div>
                             <div>
-                                <input type="radio" name="transactionType" id="radioDeb" value="d" class="separator"><label for="radioDeb">Gastos</label>
+                                <input type="radio" name="transactionType" id="editorRadioDeb" value="d" class="separator"><label for="radioDeb">Gastos</label>
                             </div>
                         </fieldset>
                     
@@ -117,16 +118,29 @@
         let allEditButtons = document.getElementsByName("btnEditCategory");
         let allDeleteButtons = document.getElementsByName("btnDeleteCategory");
 
+        let editorBox = document.getElementById("categoryEditorBox");
+        let editorEditName = document.getElementById("editorEditName");
+        let editorRadioCred = document.getElementById("editorRadioCred");
+        let editorRadioDeb = document.getElementById("editorRadioDeb");
+        let btnCloseEditor = document.getElementById("buttonCloseEditor");
+
         allEditButtons.forEach(editButton => { editButton.onclick = () => { editCategory( editButton ) } });
         allDeleteButtons.forEach(deleteButton => { deleteButton.onclick = () => { deleteCategory( deleteButton ) } });
 
         function editCategory( buttonElement ) {
-            alert(buttonElement.parentElement.previousElementSibling.innerHTML);    
+            let categoryType  = buttonElement.parentElement.getAttribute( "categoryType" );
+            
+            editorEditName.value = buttonElement.parentElement.previousElementSibling.innerHTML;
+            ( categoryType == "C" ) ? editorRadioCred.checked = true : editorRadioDeb.checked = true;
+
+            editorBox.style.display = "";
         }
 
         function deleteCategory( buttonElement ) {
             alert(buttonElement.parentElement.previousElementSibling.innerHTML);
         }
+
+        btnCloseEditor.onclick = () => { editorBox.style.display = "none"; };
     </script>
 </body>
 </html>
