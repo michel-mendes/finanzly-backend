@@ -42,6 +42,10 @@ h1 {
     margin: auto;
 }
 
+.new-category-box label {
+    cursor: pointer;
+}
+
 .new-category-box > form {
     display: flex;
     flex-direction: column;
@@ -60,6 +64,10 @@ h1 {
     padding: 20px;
 }
 
+.new-category-box input[type="text"] {
+    text-align: center;
+}
+
 .new-category-box > form > fieldset > legend {
     width: auto;
     margin-left: auto;
@@ -69,7 +77,6 @@ h1 {
 
 input:focus{
     outline: none;
-    text-align: center;
 }
 
 .button-container {

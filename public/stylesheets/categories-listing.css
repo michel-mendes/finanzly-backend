@@ -70,6 +70,7 @@ body[mwa-page="categories-listing"] .category-box {
 }
 
 body[mwa-page="categories-listing"] .category-edit-container {
+    display: none;
     height: min-content;
     background-color: white;
     /* flex-basis: 41%; */

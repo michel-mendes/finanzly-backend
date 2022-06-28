@@ -65,32 +65,42 @@ async function insertNewCategory( parameters ) {
 }
 
 async function editCategory( parameters ) {
-    const category = await getCategoryById( parameters.id );
-    const existingCategory = await tabCategory.findOne({ where: { name: parameters.email,
-                                                                  userId: parameters.userId } });
-    
-    if ( !category ) {
-        return {
-            error: true,
-            message: `Category not found!`
+    try {
+        const category = await getCategoryById( parameters.id );
+        const existingCategory = await tabCategory.findOne({ where: { name: parameters.email,
+                                                                      userId: parameters.userId } });
+        
+        if ( !category ) {
+            return {
+                error: true,
+                message: `Category not found!`
+            }
         }
-    }
-    
-    if ( existingCategory ) {
-        return {
-            error: true,
-            message: `This user already have a category named ${ parameters.name }`
-        }
-    }
-    
-    const editedCategory = {
-        name: parameters.name,
-        transactionType: parameters.transactionType
-    }
 
-    Object.assign(category, editedCategory);
-    
-    return await category.save();
+        if ( existingCategory ) {
+            return {
+                error: true,
+                message: `This user already have a category named ${ parameters.name }`
+            }
+        }
+
+        const editedCategory = {
+            name: parameters.name,
+            transactionType: parameters.transactionType
+        }
+
+        Object.assign(category, editedCategory);
+
+        return await category.save();
+    }
+    catch( errorMsg) {
+        console.log(errorMsg);
+
+        return {
+            error: true,
+            message: errorMsg
+        }
+    }
 }
 
 async function deleteCategory( id ) {

@@ -53,7 +53,7 @@ router.get('/categories', (req, res, next) => {
     let categoryServices = require('../database/models/categories/categories-services');
 
     categoryServices.getCategoriesFromUser( req.session.userId )
-    .then( result => { res.render('./pages/categories-listing', { categoriesList: result }) } )
+    .then( result => { res.render('./pages/categories-listing', { categoriesList: result, userId: req.session.userId }) } )
     .catch( next );
 });
 

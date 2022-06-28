@@ -70,7 +70,7 @@ function editCategory( req, res, next ) {
         .then( function ( promiseResult ) {
             
             if (promiseResult.error) {
-                res.status(400).json( promiseResult );
+                res.status(500).json( promiseResult );
             }
             else {
                 res.status(200).json( promiseResult );
