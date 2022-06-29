@@ -48,7 +48,7 @@ async function insertNewCategory( parameters ) {
     if ( category ) {
         return {
             error: true,
-            message: `This user already have a category named ${ parameters.name }`
+            message: `Você já possui uma categoria com o nome \'${ parameters.name }\'`
         }
     }
     else {
@@ -65,42 +65,32 @@ async function insertNewCategory( parameters ) {
 }
 
 async function editCategory( parameters ) {
-    try {
-        const category = await getCategoryById( parameters.id );
-        const existingCategory = await tabCategory.findOne({ where: { name: parameters.email,
-                                                                      userId: parameters.userId } });
-        
-        if ( !category ) {
-            return {
-                error: true,
-                message: `Category not found!`
-            }
-        }
-
-        if ( existingCategory ) {
-            return {
-                error: true,
-                message: `This user already have a category named ${ parameters.name }`
-            }
-        }
-
-        const editedCategory = {
-            name: parameters.name,
-            transactionType: parameters.transactionType
-        }
-
-        Object.assign(category, editedCategory);
-
-        return await category.save();
-    }
-    catch( errorMsg) {
-        console.log(errorMsg);
-
+    const category = await getCategoryById( parameters.id );
+    const existingCategory = await tabCategory.findOne({ where: { name: parameters.name,
+                                                                  userId: parameters.userId } });
+    
+    if ( !category ) {
         return {
             error: true,
-            message: errorMsg
+            message: `Categoria não encontrada!`
         }
     }
+    
+    if ( existingCategory ) {
+        return {
+            error: true,
+            message: `Você já possui uma categoria com o nome \'${ parameters.name }\'`
+        }
+    }
+    
+    const editedCategory = {
+        name: parameters.name,
+        transactionType: parameters.transactionType
+    }
+    
+    Object.assign(category, editedCategory);
+    
+    return await category.save();
 }
 
 async function deleteCategory( id ) {
@@ -109,10 +99,10 @@ async function deleteCategory( id ) {
     if ( !category ) {
         return {
             error: true,
-            message: 'Category not found!'
+            message: 'Categoria não encontrada!'
         }
     }
 
     await category.destroy();
-    return {message: `Category deleted successfully!`}
+    return {message: `Categoria excluída com sucesso!`}
 }

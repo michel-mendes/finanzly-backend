@@ -40,5 +40,5 @@ function hideNotification() {
 function openErrorInNewWindow( errorMessage ) {
     // let newWindow = window.open("", "Mensagem de erro", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
     let newWindow = window.open("", "Mensagem de erro", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes");
-    newWindow.document.body.innerHTML = errorMessage;
+    newWindow.document.body.innerHTML = "<body>" + errorMessage.replace('/\n/g', '<br>') + "</body>";
 }

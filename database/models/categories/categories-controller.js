@@ -70,7 +70,7 @@ function editCategory( req, res, next ) {
         .then( function ( promiseResult ) {
             
             if (promiseResult.error) {
-                res.status(500).json( promiseResult );
+                res.status(400).send( promiseResult.message );
             }
             else {
                 res.status(200).json( promiseResult );
@@ -85,10 +85,10 @@ function deleteCategory(req, res, next) {
     categoriesServices.deleteCategory( req.params.id )
         .then( function ( deleteResult ) { 
             if ( deleteResult.error ) {
-                res.status(400).json( deleteResult );
+                res.status(400).send( deleteResult.message );
             }
             else {
-                res.json( deleteResult );
+                res.status(200).send( deleteResult.message );
             }
         } )
         .catch( next );
