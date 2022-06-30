@@ -57,6 +57,10 @@ router.get('/categories', (req, res, next) => {
     .catch( next );
 });
 
+router.get('/transactions', (req, res, next) => {
+    res.render('./pages/transactions-listing');
+});
+
 
 
 
