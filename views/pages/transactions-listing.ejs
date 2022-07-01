@@ -21,7 +21,7 @@
             <div class="wallet-container">
                 <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
                 <div class="wallet-info">
-                    <span id="toolbarWalletName">Caixa Economica Federal do Brasil</span>
+                    <span id="toolbarWalletName">Caixa Economica Federal do Brasil <i class="material-icons change-wallet-icon">arrow_drop_down</i></span>
                     <span id="toolbarWalletBalance">
                         <strong>+ R$ 1.257,50</strong>
                     </span>
@@ -31,16 +31,57 @@
 
         <div id="rightSide">
             <div class="commands-container">
-                <span class="material-icons">person</span>
+                <span class="material-icons">calendar_month</span>
                 <span class="material-icons search-icon">search</span>
-                <button>Adicionar transação</button>
+
+                <button class="btn btn-cl-green">
+                    <span class="btn-caption">Adicionar transação</span>
+                    <span class="btn-icon material-icons">add</span>
+                </button>
             </div>
         </div>
     </header>
 
     <main>
-        <section class="transaction-list">
+        <section class="transactions-list">
+            
+            <ul class="transactions-day-group">
+                <div class="group-header">
+                    <div class="day-number-box">
+                        <span id="groupDayNumber">25</span>
+                    </div>
+    
+                    <div class="month-year-box">
+                        <span id="groupMonthYear">janeiro de 2022</span>
+                    </div>
+                </div>
 
+                <div class="group-body">
+                    <li>kkk 1</li>
+                    <li>kkk 2</li>
+                    <li>kkk 3</li>
+                    <li>kkk 4</li>
+                </div>
+            </ul>
+
+            <ul class="transactions-day-group">
+                <div class="day-number-box">
+                    <span id="groupDayNumber">24</span>
+                </div>
+
+                <div class="month-year-box">
+                    <span id="groupMonthYear">janeiro de 2022</span>
+                </div>
+
+                <li>kkk 0</li>
+                <li>kkk 0.1</li>
+                <li>kkk 0.2</li>
+                <li>kkk 0.3</li>
+            </ul>
+        </section>
+
+        <section>
+            kkkk
         </section>
     </main>
 </body>

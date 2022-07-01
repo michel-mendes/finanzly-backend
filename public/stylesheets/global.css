@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,300;1,400;1,500;1,800&family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,800;1,300;1,400;1,500;1,800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 * {
     border: 1px black solid;
@@ -95,13 +96,19 @@ body {
 
 body[mwa-page="transactions-listing"] {
     margin: 0px;
+    background-color: rgb(228, 228, 228);
 }
 
 body[mwa-page="transactions-listing"] .toolbar{
     display: flex;
+    background-color: white;
     justify-content: space-between;
     height: 64px;
     border-bottom: 1px solid silver;
+}
+
+body[mwa-page="transactions-listing"] .toolbar .img-back-button{
+    cursor: pointer;
 }
 
 body[mwa-page="transactions-listing"] .toolbar #leftSide{
@@ -136,8 +143,7 @@ body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wall
 body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding-top: 8px;
+    justify-content: space-around;
 }
 
 body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info span{
@@ -146,6 +152,21 @@ body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wall
 
 body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info #toolbarWalletName{
     font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    cursor: pointer;
+    padding-top: 10px;
+}
+
+body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info #toolbarWalletName:hover {
+    text-decoration: solid;
+    text-decoration-line: underline;
+}
+
+body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info .change-wallet-icon{
+    font-size: 12px;
+    margin-left: 5px;
 }
 
 body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info #toolbarWalletBalance{
@@ -155,8 +176,112 @@ body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wall
 body[mwa-page="transactions-listing"] .toolbar #rightSide{
     display: flex;
     justify-content: right;
-    padding: 8px;
     flex-basis: calc(100% - 130px);
 }
+
+body[mwa-page="transactions-listing"] .toolbar #rightSide .commands-container{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-right: 20px;
+}
+
+body[mwa-page="transactions-listing"] main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group {
+    border: 3px solid blue;
+    list-style: none;
+    padding-left: 0px;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .group-header {
+    display: flex;
+    flex-direction: row;
+    border: 3px solid lime;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body {
+    border: 3px solid red;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+
+
+
+/* -------------------------------------------------------------------------- */
+/* CSS Button                                                                 */
+/* -------------------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 15px 5px 15px;
+    gap: 10px;
+    height: 35px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    /* font-family: 'Roboto', sans-serif; */
+    font-family: 'Lato', 'Lucida Grande', 'Lucida Sans', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: filter 200ms;
+    -webkit-transition: filter 200ms;
+}
+
+.btn:focus, .btn:hover {
+    filter: brightness(90%);
+}
+
+.btn[disabled]:focus, .btn[disabled]:hover {
+    filter: none;
+}
+
+.btn > .btn-caption, .btn > .btn-icon {
+    background: inherit;
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    /* filter: invert(1) grayscale(1) contrast(9); */
+    filter: invert() grayscale() contrast(9999);
+}
+
+.btn .btn-icon {
+    border-left: 1px solid #00000082;
+    padding-left: 5px;
+    font-size: 18px
+}
+
+.btn-cl-green {
+    background-color: rgb(71 207 115);
+}
+
+.btn-cl-blue {
+    background-color: rgb(40 121 255);
+}
+
+.btn-cl-red {
+    background-color: #e62222;
+}
+
+.btn-cl-yellow {
+    background-color: rgb(198, 198, 83);
+}
+
+button[disabled] {
+    opacity: 0.5;
+    transition: none;
+    filter: none;
+    cursor: not-allowed;
+}
+
 
 /* -------------------------------------------------------------------------- */
