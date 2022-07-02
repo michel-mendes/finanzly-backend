@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 * {
-    border: 1px black solid;
+    /* border: 1px black solid; */
     box-sizing: border-box;
 }
 
@@ -192,10 +192,33 @@ body[mwa-page="transactions-listing"] main {
     justify-content: center;
 }
 
+body[mwa-page="transactions-listing"] main .transactions-list {
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 body[mwa-page="transactions-listing"] .transactions-day-group {
+    flex-direction: column;
     border: 3px solid blue;
     list-style: none;
     padding-left: 0px;
+    margin: 0px;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .day-number-box {
+    position: absolute;
+    display: flex;
+    justify-content: right;
+    align-items: flex-end;
+    width: 30px;
+    height: 30px;
+    margin-top: -20px;
+    margin-left: -20px;
+    border-radius: 0.5rem 0.5rem 0 0.5rem;
+
+    background: linear-gradient(135deg, blue 0%,green 100%);
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-header {
