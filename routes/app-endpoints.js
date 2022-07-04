@@ -61,6 +61,10 @@ router.get('/transactions', (req, res, next) => {
     res.render('./pages/transactions-listing');
 });
 
+router.get('/wallets', (req, res, next) => {
+    res.render('./pages/wallets-listing');
+});
+
 
 
 

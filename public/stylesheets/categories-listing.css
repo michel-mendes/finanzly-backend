@@ -25,22 +25,36 @@ body[mwa-page="categories-listing"] .toolbar {
 
 body[mwa-page="categories-listing"] .toolbar > #leftSide {
     display: flex;
-    flex-basis: 65px;
+    flex-basis: 150px
 }
 
-body[mwa-page="categories-listing"] .toolbar > #leftSide > img {
-    width: 60%;
-    height: 60%;
-    margin: auto;
-    cursor: pointer;
+body[mwa-page="categories-listing"] .toolbar #leftSide .back-button-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+body[mwa-page="categories-listing"] .toolbar #leftSide .img-back-button{
+    width: 32px;
+    height: 32px;
+    margin-left: 10px;
+    margin-right: 10px;
     opacity: .5;
+    cursor: pointer;
+}
+
+body[mwa-page="categories-listing"] .toolbar #leftSide .page-title-container{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding-left: 20px;
 }
 
 body[mwa-page="categories-listing"] .toolbar > #rightSide {
     display: flex;
     justify-content: right;
     padding: 8px;
-    flex-basis: calc(100% - 65px);
+    flex-basis: calc(100% - 150px);
 }
 
 body[mwa-page="categories-listing"] .toolbar > #rightSide > #bntNewCategory {
