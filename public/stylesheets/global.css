@@ -409,6 +409,77 @@ body[mwa-page="wallets-listing"] .toolbar #rightSide .commands-container{
     padding-right: 20px;
     padding-left: 20px;
 }
+
+body[mwa-page="wallets-listing"] main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+body[mwa-page="wallets-listing"] main .list-container{
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 8px 8px;
+    background-color: rgb(240, 240, 240);
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list .list-header {
+    margin: 10px;
+    text-align: center;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list .list-item {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .icon-container img {
+    margin: 5px;
+    width: 55px;
+    height: 55px;
+    font-size: 9px;
+    text-align: center;
+    border: red solid 2px;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .name-container {
+    flex-basis: 100%;
+    display: flex;
+    align-items: center;
+    border: blue 2px solid;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .balance-container {
+    min-width: 120px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    font-size: 14px;
+    border: yellow 2px solid;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container {
+    position: relative;
+    right: 0;
+    border: 3px solid red;
+}
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */

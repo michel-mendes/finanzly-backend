@@ -25,7 +25,7 @@ body[mwa-page="categories-listing"] .toolbar {
 
 body[mwa-page="categories-listing"] .toolbar > #leftSide {
     display: flex;
-    flex-basis: 150px
+    /* flex-basis: 250px */
 }
 
 body[mwa-page="categories-listing"] .toolbar #leftSide .back-button-container{
@@ -54,7 +54,7 @@ body[mwa-page="categories-listing"] .toolbar > #rightSide {
     display: flex;
     justify-content: right;
     padding: 8px;
-    flex-basis: calc(100% - 150px);
+    /* flex-basis: calc(100% - 250px); */
 }
 
 body[mwa-page="categories-listing"] .toolbar > #rightSide > #bntNewCategory {
