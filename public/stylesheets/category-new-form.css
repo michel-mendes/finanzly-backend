@@ -85,31 +85,6 @@ input:focus{
     justify-content: space-around;
 }
 
-.btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 13px;
-    text-decoration: none;
-    color: black;
-    margin: 10px;
-    flex-basis: 50%;
-    height: 35px;
-    background-color: rgb(228, 254, 228);
-    border: rgb(145, 205, 145) 2px solid;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.btn:hover {
-    color: white;
-    font-weight: bold;
-    background-color: rgb(82, 150, 82);
-    border: rgb(49, 99, 49) 2px solid;
-    border-radius: 5px;
-}
-
 /* Modal Section */
 /* The Modal (background) */
 body[mwa-page="categories-listing"] .modal {

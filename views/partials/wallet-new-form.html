@@ -1,0 +1,39 @@
+<div id="modalAddWallet" class="modal">
+    <div class="modal-content">
+        <span class="btnCloseModal" id="buttonCloseModal">&times;</span>
+
+        <div class="new-wallet-box">
+            <h1 id="modalTitle">Nova / Edição de Carteira</h1>
+            
+            <form action="#">
+                <input type="number" name="id" id="editId" hidden>
+                <input type="number" name="userId" id="editUserId" hidden>
+            
+                <div>
+                    <label for="editName" id="labelName" class="field-border">
+                        <span>Nome da carteira</span>
+                        <input type="text" name="name" id="editName" class="borderless">
+                    </label>
+                </div>
+
+                <div>
+                    <label for="editName" id="labelName" class="field-border">
+                        <span>Símbolo da moeda (Ex: R$)</span>
+                        <input type="text" name="currencySymbol" id="editSymbol" class="borderless">
+                    </label>
+                    
+                    <label for="editName" id="labelName" class="field-border">
+                        <span>Saldo inicial</span>
+                        <input type="number" name="balance" id="editBalance" class="borderless">
+                    </label>
+                </div>
+            
+                <div class="button-container">
+                    <a class="btn btn-cl-red" id="btnCancel">Cancelar</a>
+                    <a class="btn btn-cl-green" id="btnSave">Salvar</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

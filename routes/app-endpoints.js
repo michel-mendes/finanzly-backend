@@ -50,19 +50,34 @@ router.get('/registration/success', function(req, res, next) {
 });
 
 router.get('/categories', (req, res, next) => {
-    let categoryServices = require('../database/models/categories/categories-services');
+    if ( !req.session.loggedIn ) {
+        res.redirect( '/app/login' )
+    }
+    else {
+        let categoryServices = require('../database/models/categories/categories-services');
 
-    categoryServices.getCategoriesFromUser( req.session.userId )
-    .then( result => { res.render('./pages/categories-listing', { categoriesList: result, userId: req.session.userId }) } )
-    .catch( next );
+        categoryServices.getCategoriesFromUser( req.session.userId )
+        .then( result => { res.render('./pages/categories-listing', { categoriesList: result, userId: req.session.userId }) } )
+        .catch( next );
+    }
 });
 
 router.get('/transactions', (req, res, next) => {
-    res.render('./pages/transactions-listing');
+    if ( !req.session.loggedIn ) {
+        res.redirect( '/app/login' )
+    }
+    else {
+        res.render('./pages/transactions-listing');
+    }
 });
 
 router.get('/wallets', (req, res, next) => {
-    res.render('./pages/wallets-listing');
+    if ( !req.session.loggedIn ) {
+        res.redirect( '/app/login' )
+    }
+    else {
+        res.render('./pages/wallets-listing');
+    }
 });
 
 
