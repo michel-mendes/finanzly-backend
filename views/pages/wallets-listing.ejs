@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/global.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="module" src="/javascripts/wallet-new-form.js" defer></script>
     <title>Minhas carteiras</title>
 </head>
 <body mwa-page="wallets-listing">
@@ -25,7 +26,7 @@
             <div class="commands-container">
                 <span class="material-icons search-icon">search</span>
 
-                <button class="btn btn-cl-green">
+                <button class="btn btn-cl-green" id="bntNewWallet">
                     <span class="btn-caption">ADICIONAR CARTEIRA</span>
                     <span class="btn-icon material-icons">add</span>
                 </button>
@@ -123,6 +124,8 @@
 
         </section>
     </main>
+
+    <%- include('../partials/wallet-new-form.html'); %>
 
 </body>
 </html>

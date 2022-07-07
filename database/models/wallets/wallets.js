@@ -8,7 +8,8 @@ const Wallet = database.define('wallets', {
                     },
     userId:         Sequelize.INTEGER,
     name:           Sequelize.STRING,
-    currencySymbol: Sequelize.STRING
+    currencySymbol: Sequelize.STRING,
+    balance:        Sequelize.DOUBLE
 });
 
 // Relashionship "userId"

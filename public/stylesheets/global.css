@@ -530,6 +530,20 @@ body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container 
 }
 
 /* Modal Content */
+body[mwa-page="wallets-listing"] .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
 body[mwa-page="wallets-listing"] .modal-content {
     background-color: #fefefe;
     margin: auto;
