@@ -435,8 +435,8 @@ body[mwa-page="wallets-listing"] main .wallets-list{
 }
 
 body[mwa-page="wallets-listing"] main .wallets-list .list-header {
-    margin: 10px;
     text-align: center;
+    padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 0.5px solid rgba(0,0,0,.12);
 }
@@ -447,6 +447,17 @@ body[mwa-page="wallets-listing"] main .wallets-list .list-item {
     background-color: white;
     position: relative;
     transition: all 300ms;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list #noWalletsToShow {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+}
+
+body[mwa-page="wallets-listing"] main .wallets-list #noWalletsToShow #ctaCreateNewWallet {
+    cursor: pointer;
+    color: green;
 }
 
 body[mwa-page="wallets-listing"] main .wallets-list .list-item:hover {
@@ -461,6 +472,7 @@ body[mwa-page="wallets-listing"] main .wallets-list .list-item .icon-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
 }
 
 body[mwa-page="wallets-listing"] main .wallets-list .list-item .icon-container img {
@@ -513,24 +525,30 @@ body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container 
     transition: all 300ms;
 }
 
-body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container #btnEditWallet,
-body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container #btnDeleteWallet {
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container span[name="btnEditWallet"],
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container span[name="btnDeleteWallet"] {
     transition: all 100ms;
     cursor: pointer;
 }
 
-body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container #btnEditWallet:hover {
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container span[name="btnEditWallet"]:hover {
     font-size: 30px;
     color: green;
 }
 
-body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container #btnDeleteWallet:hover {
+body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container span[name="btnDeleteWallet"]:hover {
     font-size: 30px;
     color: red;
 }
 
+body[mwa-page="wallets-listing"] main .wallet-editor-container {
+    border-radius: 8px 8px;
+    background-color: rgb(240, 240, 240);
+    box-shadow: 0 0px 24px 0 rgba(0,0,0,.20);    
+}
+
 /* Modal Content */
-body[mwa-page="wallets-listing"] .modal {
+body[mwa-page="wallets-listing"] .modal-form {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -544,26 +562,60 @@ body[mwa-page="wallets-listing"] .modal {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   }
 
-body[mwa-page="wallets-listing"] .modal-content {
+body[mwa-page="wallets-listing"] .modal-form .modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 650px;
+    max-width: 500px;
     /* width: 80%; */
   }
 
- body[mwa-page="wallets-listing"] .modal-content .new-wallet-box {
+body[mwa-page="wallets-listing"] .modal-form #modalTitle {
+    font-size: 23px;
+    text-align: center;
+    padding-bottom: 10px;
+    /* margin-bottom: 30px; */
+    border-bottom: solid 1px lightgray;
+}
+
+ body[mwa-page="wallets-listing"] .modal-form .new-wallet-box {
     font-family: 'Roboto', sans-serif;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin: auto;
     padding: 10px;
     max-width: 500px;
   }
+
+body[mwa-page="wallets-listing"] .modal-form .new-category-box label {
+    cursor: pointer;
+}
+
+body[mwa-page="wallets-listing"] .modal-form #labelName {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 12px;
+}
+
+body[mwa-page="wallets-listing"] .modal-form input[type="text"], body[mwa-page="wallets-listing"] .modal-form input[type="number"] {
+    text-align: center;
+}
+
+body[mwa-page="wallets-listing"] .modal-form input:focus{
+    outline: none;
+}
+
+body[mwa-page="wallets-listing"] .modal-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
   
   /* The Close Button */
-  body[mwa-page="wallets-listing"] .btnCloseModal {
+  body[mwa-page="wallets-listing"] .modal-form #btnCloseModal {
      color: #aaaaaa;
     float: right;
     font-size: 28px;
@@ -571,11 +623,32 @@ body[mwa-page="wallets-listing"] .modal-content {
     cursor: pointer;
   }
   
-  body[mwa-page="wallets-listing"] .btnCloseModal:hover, .btnCloseModal:focus {
+  body[mwa-page="wallets-listing"] .modal-form #btnCloseModal:hover, body[mwa-page="wallets-listing"] .modal-form #btnCloseModal:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
   }
+
+body[mwa-page="wallets-listing"] .modal-form .button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+body[mwa-page="wallets-listing"] .modal-form .button-container a {
+  flex: 1;
+}
+
+body[mwa-page="wallets-listing"] .modal-form .symbol-balance-container {
+  display: flex;
+  gap: 20px;
+}
+
+body[mwa-page="wallets-listing"] .modal-form .symbol-balance-container #labelName {
+  flex: 1;
+}
   /* End of modal section */
 /* -------------------------------------------------------------------------- */
 
@@ -650,3 +723,16 @@ button[disabled] {
 
 
 /* -------------------------------------------------------------------------- */
+
+/* Global CSS */
+
+.field-border {
+    border: 1px lightgray solid;
+    border-radius: 7px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.borderless {
+    border: none;
+}

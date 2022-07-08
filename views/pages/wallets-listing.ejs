@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/global.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script type="module" src="/javascripts/wallet-new-form.js" defer></script>
+    <script type="module" src="/javascripts/wallets-listing.js" defer></script>
     <title>Minhas carteiras</title>
 </head>
 <body mwa-page="wallets-listing">
@@ -26,7 +26,7 @@
             <div class="commands-container">
                 <span class="material-icons search-icon">search</span>
 
-                <button class="btn btn-cl-green" id="bntNewWallet">
+                <button class="btn btn-cl-green" id="btnNewWallet">
                     <span class="btn-caption">ADICIONAR CARTEIRA</span>
                     <span class="btn-icon material-icons">add</span>
                 </button>
@@ -36,92 +36,85 @@
 
     <main>
         <section class="list-container">
+            
             <ul class="wallets-list">
                 <div class="list-header">
                     <span>Aqui estão todas as suas carteiras cadastradas</span>
                 </div>
                 
-                <li class="list-item">
-                    <div class="icon-container">
-                        <img src="https://picsum.photos/40" alt="Ícone da carteira">
-                    </div>
-                    
-                    <div class="name-container">
-                        <span id="walletName">Nome da carteira</span>
-                    </div>
-
-                    <div class="balance-container">
-                        <span id="walletBalance">+ R$ 1.587,00</span>
-                    </div>
-
-                    <div class="tools-container">
-                        <span class="material-icons" id="btnEditWallet">edit</span>
-                        <span class="material-icons" id="btnDeleteWallet">delete</span>
-                    </div>
-                </li>
-
-                <li class="list-item">
-                    <div class="icon-container">
-                        <img src="https://picsum.photos/40" alt="Ícone da carteira">
-                    </div>
-                    
-                    <div class="name-container">
-                        <span id="walletName">Nome da carteira</span>
-                    </div>
-
-                    <div class="balance-container">
-                        <span id="walletBalance">+ R$ 1.587,00</span>
-                    </div>
-
-                    <div class="tools-container">
-                        <span class="material-icons" id="btnEditWallet">edit</span>
-                        <span class="material-icons" id="btnDeleteWallet">delete</span>
-                    </div>
-                </li>
-
-                <li class="list-item">
-                    <div class="icon-container">
-                        <img src="https://picsum.photos/40" alt="Ícone da carteira">
-                    </div>
-                    
-                    <div class="name-container">
-                        <span id="walletName">Nome da carteira</span>
-                    </div>
-
-                    <div class="balance-container">
-                        <span id="walletBalance">+ R$ 1.587,00</span>
-                    </div>
-
-                    <div class="tools-container">
-                        <span class="material-icons" id="btnEditWallet">edit</span>
-                        <span class="material-icons" id="btnDeleteWallet">delete</span>
-                    </div>
-                </li>
-
-                <li class="list-item">
-                    <div class="icon-container">
-                        <img src="https://picsum.photos/40" alt="Ícone da carteira">
-                    </div>
-                    
-                    <div class="name-container">
-                        <span id="walletName">Nome da carteira</span>
-                    </div>
-
-                    <div class="balance-container">
-                        <span id="walletBalance">+ R$ 1.587,00</span>
-                    </div>
-
-                    <div class="tools-container">
-                        <span class="material-icons" id="btnEditWallet">edit</span>
-                        <span class="material-icons" id="btnDeleteWallet">delete</span>
-                    </div>
-                </li>
-
+                <% if (( walletsList ) && ( walletsList.length < 1 ))  { %>
+                    <li class="list-item">
+                        <span id="noWalletsToShow">
+                            <span>Não há nenhuma carteira cadastrada!</span>
+                            <br>
+                            <br>
+                            <span>Clique <a id="ctaCreateNewWallet"><strong><u>AQUI</u></strong></a> para cadastrar sua primeira carteira</span>
+                        </span>
+                    </li>
+                <% } else { 
+                    walletsList.forEach( (wallet, index) => { %>
+                        <li class="list-item">
+                            <div class="icon-container">
+                                <img src="https://picsum.photos/40" alt="Ícone da carteira">
+                            </div>
+                            
+                            <div class="name-container">
+                                <span id="walletName"><%= wallet.name %></span>
+                            </div>
+        
+                            <div class="balance-container">
+                                <span id="walletBalance">+ <%= wallet.symbol %> <%= wallet.balance %></span>
+                            </div>
+        
+                            <div class="tools-container">
+                                <span class="material-icons" name="btnEditWallet">edit</span>
+                                <span class="material-icons" name="btnDeleteWallet">delete</span>
+                            </div>
+                        </li>
+                    <% } ) %>
             </ul>
+            
+            <% } %>
         </section>
 
-        <section class="wallet-editor-container">
-
+        <section class="wallet-editor-container modal-form" id="walletEditorBox">
+            <div class="modal-content">
+                <span id="btnCloseEditor">&times;</span>
+        
+                <div class="new-wallet-box">
+                    <h1 id="modalTitle">Nova / Edição de Carteira</h1>
+                    
+                    <form action="#">
+                        <input type="number" name="id" id="editId" hidden>
+                        <input type="number" name="userId" id="editUserId" hidden>
+                    
+                        <div>
+                            <label for="editName" id="labelName" class="field-border">
+                                <span>Nome da carteira</span>
+                                <input type="text" name="name" id="editName" class="borderless">
+                            </label>
+                        </div>
+        
+                        <div class="symbol-balance-container">
+                            <label for="editSymbol" id="labelName" class="field-border">
+                                <span>Símbolo da moeda (Ex: R$)</span>
+                                <input type="text" name="currencySymbol" id="editSymbol" class="borderless">
+                            </label>
+                            
+                            <label for="editBalance" id="labelName" class="field-border">
+                                <span>Saldo inicial</span>
+                                <input type="number" name="balance" id="editBalance" class="borderless">
+                            </label>
+                        </div>
+                    
+                        <div class="button-container">
+                            <a class="btn btn-cl-red" id="btnCancel">Cancelar</a>
+                            <a class="btn btn-cl-green" id="btnSave">Salvar</a>
+                        </div>
+                    </form>
+                </div>
+        
+            </div>
         </section>
     </main>
 

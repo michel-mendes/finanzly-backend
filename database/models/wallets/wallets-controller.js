@@ -5,6 +5,7 @@ const validateRequest = require('../../request-validator.js');
 const walletServices = require('./wallets-services.js');
 
 var express = require('express');
+const { tabUsers, tabWallets } = require('../association.user-wallet.js');
 var router = express.Router();
 
 router.get('/', listAllWallets); // List all wallets
@@ -12,6 +13,14 @@ router.get('/:id', listById); // Search wallet by ID
 router.post('/', validateWalletRequest, saveWallet); // Create new wallet
 router.put('/:id', validateWalletRequest, editWallet); // Update user
 router.delete('/:id', deleteWallet); // Delete user
+
+router.get('/user/:userId', (req, res, next) => {
+    
+    walletServices.getWalletsFromUser( req.params.userId )
+        .then( ( result ) => { res.json( result ) } )
+        .catch( next );
+
+})
 
 function validateWalletRequest(req, res, next) {
     const newUserSchema = Joi.object({

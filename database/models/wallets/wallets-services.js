@@ -1,10 +1,12 @@
 const sequelize = require('../../database-controller');
 const { Op } = require('sequelize');
 const tabUserWallet = require('../association.user-wallet');
+const { tabWallets } = require('../association.user-wallet');
 
 module.exports = {
     getAllWallets,
     getWalletById,
+    getWalletsFromUser,
     getWalletsByName,
     insertNewWallet,
     editWallet,
@@ -25,6 +27,16 @@ async function getWalletById( id ) {
     const wallet = await tabUserWallet.tabWallets.findByPk(id);
 
     return wallet;
+}
+
+async function getWalletsFromUser( requestedUserId ) {
+    const userWallets = await tabWallets.findAll( {
+        where: {
+            userId: requestedUserId
+        }
+    });
+
+    return userWallets;
 }
 
 async function getWalletsByName( walletName ) {

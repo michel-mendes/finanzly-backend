@@ -76,7 +76,11 @@ router.get('/wallets', (req, res, next) => {
         res.redirect( '/app/login' )
     }
     else {
-        res.render('./pages/wallets-listing');
+        let walletServices = require('../database/models/wallets/wallets-services');
+
+        walletServices.getWalletsFromUser( req.session.userId )
+        .then( result => { res.render('./pages/wallets-listing', { walletsList: result, userId: req.session.userId }) } )
+        .catch( next );
     }
 });
 

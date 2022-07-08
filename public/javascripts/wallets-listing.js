@@ -3,13 +3,23 @@ import { apiRequest } from '/javascripts/extra-functions.js';
 let modalWallet = document.getElementById("modalAddWallet");
 var modalTitle = document.getElementById("modalTitle");
 
-var bntNewWallet = document.getElementById("bntNewWallet");
-var btnCloseModal = document.getElementById("buttonCloseModal");
+var btnNewWallet = document.getElementById("btnNewWallet");
+var btnCloseModal = document.getElementById("btnCloseModal");
 var btnCancel = document.getElementById("btnCancel");
+var ctaCreateNewWallet = document.getElementById("ctaCreateNewWallet");
 
-bntNewWallet.onclick = function() { openModal() };
+var allEditButtons = document.getElementsByName("btnEditWallet");
+var allDeleteButtons = document.getElementsByName("btnDeleteWallet");
+
+var walletEditorBox = document.getElementById("walletEditorBox");
+
+btnNewWallet.onclick = function() { openModal() };
 btnCloseModal.onclick = function() { closeModal() };
 btnCancel.onclick = function() { closeModal() };
+
+if ( ctaCreateNewWallet ) { ctaCreateNewWallet.onclick = () => { openModal() } };
+
+allEditButtons.forEach( editButton => { editButton.onclick = () => {walletEditorBox.style.display = 'block'} } );
 
 function openModal() {
     // When the user clicks the button, open the modal 
