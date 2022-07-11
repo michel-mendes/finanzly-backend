@@ -77,44 +77,44 @@
             <% } %>
         </section>
 
-        <section class="wallet-editor-container modal-form" id="walletEditorBox">
-            <div class="modal-content">
+        <section class="wallet-editor-container" id="walletEditorBox">
+            <div class="editor-content">
                 <span id="btnCloseEditor">&times;</span>
         
-                <div class="new-wallet-box">
-                    <h1 id="modalTitle">Nova / Edição de Carteira</h1>
+                <div class="edit-wallet-box">
+                    <h1 id="editorTitle">Nova / Edição de Carteira</h1>
                     
                     <form action="#">
-                        <input type="number" name="id" id="editId" hidden>
-                        <input type="number" name="userId" id="editUserId" hidden>
+                        <input type="number" name="id" id="editId2" hidden>
+                        <input type="number" name="userId" id="editUserId2" hidden>
                     
                         <div>
-                            <label for="editName" id="labelName" class="field-border">
+                            <label for="editName2" id="labelName" class="field-border">
                                 <span>Nome da carteira</span>
-                                <input type="text" name="name" id="editName" class="borderless">
+                                <input type="text" name="name" id="editName2" class="borderless">
                             </label>
                         </div>
         
                         <div class="symbol-balance-container">
-                            <label for="editSymbol" id="labelName" class="field-border">
+                            <label for="editSymbol2" id="labelName2" class="field-border">
                                 <span>Símbolo da moeda (Ex: R$)</span>
-                                <input type="text" name="currencySymbol" id="editSymbol" class="borderless">
+                                <input type="text" name="currencySymbol" id="editSymbol2" class="borderless">
                             </label>
                             
-                            <label for="editBalance" id="labelName" class="field-border">
+                            <label for="editBalance2" id="labelName" class="field-border">
                                 <span>Saldo inicial</span>
-                                <input type="number" name="balance" id="editBalance" class="borderless">
+                                <input type="number" name="balance" id="editBalance2" class="borderless">
                             </label>
                         </div>
                     
                         <div class="button-container">
-                            <a class="btn btn-cl-red" id="btnCancel">Cancelar</a>
-                            <a class="btn btn-cl-green" id="btnSave">Salvar</a>
+                            <a class="btn btn-cl-red" id="btnCancelEditing">Cancelar</a>
+                            <a class="btn btn-cl-green" id="btnSaveEditing">Salvar</a>
                         </div>
                     </form>
                 </div>
         
-            </div>
+            </div>    
         </section>
     </main>
 

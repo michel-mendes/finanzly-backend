@@ -544,8 +544,38 @@ body[mwa-page="wallets-listing"] main .wallets-list .list-item .tools-container 
 body[mwa-page="wallets-listing"] main .wallet-editor-container {
     border-radius: 8px 8px;
     background-color: rgb(240, 240, 240);
-    box-shadow: 0 0px 24px 0 rgba(0,0,0,.20);    
+    box-shadow: 0 0px 24px 0 rgba(0,0,0,.20);
+
+    display: none;
+    padding: 20px;
+    height: 500px;
 }
+
+body[mwa-page="wallets-listing"] .wallet-editor-container #btnCloseEditor {
+   color: #aaaaaa;
+   float: right;
+   font-size: 28px;
+   font-weight: bold;
+   cursor: pointer;
+ }
+
+ body[mwa-page="wallets-listing"] .wallet-editor-container .editor-content {
+    background-color: #fefefe;
+    margin: auto;
+    border: 1px solid #888;
+    max-width: 500px;
+    /* width: 80%; */
+  }
+
+  body[mwa-page="wallets-listing"] .wallet-editor-container .edit-wallet-box {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: auto;
+    padding: 10px;
+    max-width: 500px;
+  }
 
 /* Modal Content */
 body[mwa-page="wallets-listing"] .modal-form {
