@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Import AXIOS Library -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <link rel="stylesheet" href="/stylesheets/global.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="module" src="/javascripts/wallets-listing.js" defer></script>
@@ -63,12 +67,26 @@
                             </div>
         
                             <div class="balance-container">
-                                <span id="walletBalance">+ <%= wallet.symbol %> <%= wallet.balance %></span>
+                                <% let className; 
+                                   let value = wallet.actualBalance;
+
+                                    if ( wallet.actualBalance >= 0 ) 
+                                        className = "walletBalancePositive"
+                                    else
+                                        className = "walletBalanceNegative"
+                                %>
+                                <span class="<%= className %>" id="walletBalance"><strong><%= wallet.currencySymbol %> <%= Number(value).toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2}) %></strong></span>
                             </div>
         
                             <div class="tools-container">
-                                <span class="material-icons" name="btnEditWallet">edit</span>
-                                <span class="material-icons" name="btnDeleteWallet">delete</span>
+                                <span class="material-icons" name="btnEditWallet" walletId="<%= wallet.id %>">edit</span>
+                                <span class="material-icons" name="btnDeleteWallet" walletId="<%= wallet.id %>">delete</span>
+                            </div>
+
+                            <div style="display: none;">
+                                <span id="name<%= wallet.id %>"><%= wallet.name %></span>
+                                <span id="currencySymbol<%= wallet.id %>"><%= wallet.currencySymbol %></span>
+                                <span id="intialBalance<%= wallet.id %>"><%= wallet.initialBalance %></span>
                             </div>
                         </li>
                     <% } ) %>
@@ -83,7 +101,7 @@
         
                 <div class="edit-wallet-box">
                     <h1 id="editorTitle">Nova / Edição de Carteira</h1>
-                    
+
                     <form action="#">
                         <input type="number" name="id" id="editId2" hidden>
                         <input type="number" name="userId" id="editUserId2" hidden>
@@ -96,7 +114,7 @@
                         </div>
         
                         <div class="symbol-balance-container">
-                            <label for="editSymbol2" id="labelName2" class="field-border">
+                            <label for="editSymbol2" id="labelName" class="field-border">
                                 <span>Símbolo da moeda (Ex: R$)</span>
                                 <input type="text" name="currencySymbol" id="editSymbol2" class="borderless">
                             </label>
@@ -109,7 +127,7 @@
                     
                         <div class="button-container">
                             <a class="btn btn-cl-red" id="btnCancelEditing">Cancelar</a>
-                            <a class="btn btn-cl-green" id="btnSaveEditing">Salvar</a>
+                            <a class="btn btn-cl-green" id="btnSaveEditing" walletId="">Salvar</a>
                         </div>
                     </form>
                 </div>
@@ -120,5 +138,8 @@
 
     <%- include('../partials/wallet-new-form.html'); %>
 
+    <!-- Top notification bar start-->
+    <%- include('../partials/top-notification-bar.html'); %>
+    <!-- Top notification bar end-->
 </body>
 </html>

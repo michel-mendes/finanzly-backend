@@ -1,43 +1,65 @@
 import { apiRequest } from '/javascripts/extra-functions.js';
 
-var modalWallet = document.getElementById("modalAddWallet");
-var boxWalletEditor = document.getElementById("walletEditorBox");
-var modalTitle = document.getElementById("modalTitle");
-var editorTitle = document.getElementById("editorTitle");
-
+// Getting page controls
 var btnNewWallet = document.getElementById("btnNewWallet");
-var btnCloseModal = document.getElementById("btnCloseModal");
-var btnCancel = document.getElementById("btnCancel");
+var ctaCreateNewWallet = document.getElementById("ctaCreateNewWallet"); // Only shown when there are no wallets to show
 
- var btnCloseEditor = document.getElementById("btnCloseEditor");
- var btnCancelEdition = document.getElementById("btnCancelEditing");
-var ctaCreateNewWallet = document.getElementById("ctaCreateNewWallet");
-
+// Getteing the wallets list controls
 var allEditButtons = document.getElementsByName("btnEditWallet");
 var allDeleteButtons = document.getElementsByName("btnDeleteWallet");
 
-var walletEditorBox = document.getElementById("walletEditorBox");
+// Getting modal controls
+var modalWallet = document.getElementById("modalAddWallet");
+var modalTitle = document.getElementById("modalTitle");
+var btnCloseModal = document.getElementById("btnCloseModal");
+var btnSaveModal = document.getElementById("btnSave");
+var btnCancel = document.getElementById("btnCancel");
 
+// Getting wallet editor controls
+var boxWalletEditor = document.getElementById("walletEditorBox");
+var editorTitle = document.getElementById("editorTitle");
+var btnSaveEditing = document.getElementById("btnSaveEditing");
+var btnCloseEditor = document.getElementById("btnCloseEditor");
+var btnCancelEdition = document.getElementById("btnCancelEditing");
+
+// Setting up the controls events
 btnNewWallet.onclick = function() { openModal() };
 btnCloseModal.onclick = function() { closeModal() };
+btnSaveModal.onclick = () => { saveWallet() };
 btnCancel.onclick = function() { closeModal() };
 btnCloseEditor.onclick = () => { closeEditor() };
 btnCancelEdition.onclick = () => { closeEditor() };
-
+allEditButtons.forEach( editButton => { editButton.onclick = () => { openWalletEditor( editButton ) } } );
 if ( ctaCreateNewWallet ) { ctaCreateNewWallet.onclick = () => { openModal() } };
 
-allEditButtons.forEach( editButton => { editButton.onclick = () => { openWalletEditor() } } );
 
+// Here are the functions that will be triggered by the buttons
 function openModal() {
     // When the user clicks the button, open the modal 
-    modalTitle.innerHTML = 'Adicionar categoria';
+    modalTitle.innerHTML = 'ADICIONAR CARTEIRA';
+    document.getElementById("editName").value = '';
+    document.getElementById("editSymbol").value = '';
+    document.getElementById("editBalance").value = '';
     
     modalWallet.style.display = "block";
 }
 
-function openWalletEditor() {
+function openWalletEditor( buttonSender ) {
     // When the user clicks the button, open the modal 
-    editorTitle.innerHTML = 'Editar categoria';
+    let walletId = buttonSender.getAttribute("walletId");
+    btnSaveEditing.setAttribute('walletId', walletId);
+    
+    let thisWallet = {
+        name: document.getElementById(`name${walletId}`).innerText,
+        currencySymbol: document.getElementById(`currencySymbol${walletId}`).innerText,
+        initialBalance: document.getElementById(`intialBalance${walletId}`).innerText
+    }
+
+    editorTitle.innerHTML = 'EDITAR CARTEIRA';
+
+    document.getElementById("editName2").value = thisWallet.name;
+    document.getElementById("editSymbol2").value = thisWallet.currencySymbol;
+    document.getElementById("editBalance2").value = thisWallet.initialBalance;
     
     boxWalletEditor.style.display = "block";
 }
@@ -63,4 +85,34 @@ window.onclick = function(event) {
     if (event.target == modalWallet) {
       closeModal();
     }
+}
+
+function saveWallet() {
+    let walletData = {
+        name: document.getElementById("editName").value,
+        currencySymbol: document.getElementById("editSymbol").value,
+        initialBalance: document.getElementById("editBalance").value     
+    }
+
+    axios.post('/wallets', walletData)
+    .then( (result) => {
+        showNotification( `Carteira cadastrada com sucesso!` );
+        setTimeout(refreshPage, 2000);
+    })
+    .catch( (e) => {
+        showNotification( `Erro: ${ e.response.data }` );
+    })
+}
+
+i am here
+function editWallet() {
+    let walletData = {
+        name: document.getElementById("editName").value,
+        currencySymbol: document.getElementById("editSymbol").value,
+        initialBalance: document.getElementById("editBalance").value     
+    }
+}
+
+function refreshPage() {
+    location.reload()
 }

@@ -50,28 +50,38 @@ async function getWalletsByName( walletName ) {
 }
 
 async function insertNewWallet( parameters ) {
-    const wallet = await tabUserWallet.tabWallets.findOne({ where: { name: parameters.name,
-                                                   userId: parameters.userId }
-                                                 });
+    try {    
+        const wallet = await tabUserWallet.tabWallets.findOne({ where: { name: parameters.name,
+                                                       userId: parameters.userId }
+                                                     });
 
-    if ( wallet ) {
-        return {
-            error: true,
-            message: `A wallet with that name already exists for this user`
-        }
-    }
-    else {
-        // Creates a new wallet
-        try {
-            return await tabUserWallet.tabWallets.create( parameters );
-        }
-        catch (e) {
+        if ( wallet ) {
             return {
                 error: true,
-                message: e
-            };
+                message: `A wallet with that name already exists for this user`
+            }
         }
-    }    
+        else {
+            // Creates a new wallet
+            try {
+                parameters.actualBalance = parameters.initialBalance;
+                
+                return await tabUserWallet.tabWallets.create( parameters );
+            }
+            catch (e) {
+                return {
+                    error: true,
+                    message: `${e}`
+                };
+            }
+        }
+    }
+    catch (e) {
+        return {
+            error: true,
+            message: `${e}`
+        }
+    }
 }
 
 async function editWallet( parameters ) {

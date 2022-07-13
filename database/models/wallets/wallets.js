@@ -9,7 +9,8 @@ const Wallet = database.define('wallets', {
     userId:         Sequelize.INTEGER,
     name:           Sequelize.STRING,
     currencySymbol: Sequelize.STRING,
-    balance:        Sequelize.DOUBLE
+    initialBalance: Sequelize.DOUBLE,
+    actualBalance:  Sequelize.DOUBLE
 });
 
 // Relashionship "userId"
