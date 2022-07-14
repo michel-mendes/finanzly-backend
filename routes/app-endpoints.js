@@ -67,7 +67,13 @@ router.get('/transactions', (req, res, next) => {
         res.redirect( '/app/login' )
     }
     else {
-        res.render('./pages/transactions-listing');
+        
+        // Retrieves the wallet in which the user recorded the last transaction
+        if ( !req.session.selectedWallet ) {
+            req.session.selectedWallet = -1;
+        }
+        
+        res.render('./pages/transactions-listing', { selectedWallet: req.session.selectedWallet });
     }
 });
 

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <style>
+        /* * {
+    border: 1px solid black;
+} */
+
+.wallet-list-container {
+    margin: auto;
+    border: solid silver 1px;
+    border-radius: 8px;
+    max-width: 500px;
+}
+
+.wallet-list-container .header {
+    border-bottom: solid silver 1px;
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.wallet-list-container .post-header {
+    display: flex;
+    justify-content: right;
+    padding: 5px 15px 5px 0;
+    margin: 0 5px 0 5px;
+    border-bottom: solid silver 1px;
+}
+
+.wallet-list-container .list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding-left: 0px;
+    margin: 0px;
+}
+
+.wallet-list-container .list .list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.wallet-list-container .list .list-item:hover {
+    background-color: aqua;
+}
+
+.wallet-list-container .footer {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px;
+    border-top: solid silver 1px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.wallet-list-container .footer button {
+    flex-basis: 30%;
+    padding: 10px;
+}
+    </style>
+</head>
+<body>
+    <div class="wallet-list-container">
+        <div class="header">
+            <span>Selecione a carteia abaixo</span>
+        </div>
+        
+        <div class="post-header">
+            <span>Saldo</span>
+        </div>
+    
+        <ul class="list">
+            <li class="list-item">
+                <span>Carteira 1</span>
+                <span>
+                    <span>R$</span>
+                    <span>1.850,00</span>
+                </span>
+            </li>
+    
+            <li class="list-item">
+                <span>Carteira 2</span>
+            </li>
+    
+            <li class="list-item">
+                <span>Carteira 3</span>
+            </li>
+    
+            <li class="list-item">
+                <span>Carteira 4</span>
+            </li>
+        </ul>
+    
+        <div class="footer">
+            <button>CANCELAR</button>
+            <button>SELECIONAR</button>
+        </div>
+    </div>
+</body>
+</html>

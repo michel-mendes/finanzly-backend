@@ -122,7 +122,7 @@ body[mwa-page="transactions-listing"] .toolbar .img-back-button{
 
 body[mwa-page="transactions-listing"] .toolbar #leftSide{
     display: flex;;
-    flex-basis: 380px;
+    flex-basis: 600px;
 }
 
 body[mwa-page="transactions-listing"] .toolbar #leftSide .back-button-container{
@@ -138,13 +138,36 @@ body[mwa-page="transactions-listing"] .toolbar #leftSide .img-back-button{
     margin-right: 10px;
 }
 
+body[mwa-page="transactions-listing"] .toolbar #leftSide .no-wallet-selected-container{
+    display: flex;
+    flex-basis: 100%;
+    margin: 3px;
+}
+
+body[mwa-page="transactions-listing"] .toolbar #leftSide .select-wallet-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-left: 10px;
+}
+
+body[mwa-page="transactions-listing"] .toolbar #leftSide .select-wallet-container span{
+    font-size: 12px;
+}
+
+body[mwa-page="transactions-listing"] .toolbar #leftSide .select-wallet-container #ctaSelectWallet{
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
 body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container{
     display: flex;
     flex-basis: 100%;
     margin: 3px;
 }
 
-body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-icon{
+body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-icon{
     width: 48px;
     height: auto;
 }

@@ -18,6 +18,19 @@
                 <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar" onclick="history.back()">
             </div>
 
+            <% if ( selectedWallet == -1 ) {%>
+            
+            <div class="no-wallet-selected-container">
+                <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
+                <div class="select-wallet-container">
+                    <span>Nenhuma carteira foi selecionada</span>
+                    <span>Clique <span id="ctaSelectWallet">aqui</span> e selecione uma agora</span>
+                </div>
+            </div>
+            
+            <% }
+            else { %>
+            
             <div class="wallet-container">
                 <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
                 <div class="wallet-info">
@@ -27,9 +40,12 @@
                     </span>
                 </div>
             </div>
+
+            <% } %>
         </div>
 
         <div id="rightSide">
+            <% if ( selectedWallet > 0 ) { %>
             <div class="commands-container">
                 <span class="material-icons">calendar_month</span>
                 <span class="material-icons search-icon">search</span>
@@ -39,6 +55,7 @@
                     <span class="btn-icon material-icons">add</span>
                 </button>
             </div>
+            <% } %>
         </div>
     </header>
 

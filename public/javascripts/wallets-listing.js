@@ -27,10 +27,11 @@ btnNewWallet.onclick = function() { openModal() };
 btnCloseModal.onclick = function() { closeModal() };
 btnSaveModal.onclick = () => { saveWallet() };
 btnCancel.onclick = function() { closeModal() };
-btnSaveEditing.onclick = () => { editWallet() }
+btnSaveEditing.onclick = () => { editWallet( document.getElementById("editId2").value ) }
 btnCloseEditor.onclick = () => { closeEditor() };
 btnCancelEdition.onclick = () => { closeEditor() };
-allEditButtons.forEach( editButton => { editButton.onclick = () => { openWalletEditor( editButton ) } } );
+allEditButtons.forEach( editButton => { editButton.onclick = () => { openWalletEditor( editButton.getAttribute("walletId") ) } } );
+allDeleteButtons.forEach( deleteButton => { deleteButton.onclick = () => { deleteWallet( deleteButton.getAttribute('walletId') ) } } );
 if ( ctaCreateNewWallet ) { ctaCreateNewWallet.onclick = () => { openModal() } };
 
 
@@ -45,11 +46,10 @@ function openModal() {
     modalWallet.style.display = "block";
 }
 
-function openWalletEditor( buttonSender ) {
+function openWalletEditor( walletId ) {
     // When the user clicks the button, open the modal 
     editorTitle.innerHTML = 'EDITAR CARTEIRA';
 
-    let walletId = buttonSender.getAttribute("walletId");
     document.getElementById('editId2').value = walletId;
     document.getElementById("editName2").value = document.getElementById(`name${walletId}`).innerText;
     document.getElementById("editSymbol2").value = document.getElementById(`currencySymbol${walletId}`).innerText;
@@ -98,9 +98,7 @@ function saveWallet() {
     })
 }
 
-function editWallet() {
-    let walletId = document.getElementById('editId2').value;
-
+function editWallet( walletId ) {
     let walletData = {
         name: document.getElementById("editName2").value,
         currencySymbol: document.getElementById("editSymbol2").value,
@@ -119,4 +117,21 @@ function editWallet() {
 
 function refreshPage() {
     location.reload()
+}
+
+function deleteWallet( walletId ) {
+    const walletName = document.getElementById(`name${walletId}`).innerText;
+
+    const deletionConfirmed = confirm( `Deseja excluir a carteira "${walletName}"?` )
+    
+    if ( deletionConfirmed ) {
+        axios.delete( `/wallets/${walletId}` )
+        .then( result => {
+            showNotification( `Carteira exluída com sucesso!` );
+            setTimeout(refreshPage, 2000);
+        })
+        .catch( error => {
+            showNotification( `Erro: ${error.response.data}` );
+        })
+    }
 }
