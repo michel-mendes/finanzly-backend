@@ -27,6 +27,7 @@ btnNewWallet.onclick = function() { openModal() };
 btnCloseModal.onclick = function() { closeModal() };
 btnSaveModal.onclick = () => { saveWallet() };
 btnCancel.onclick = function() { closeModal() };
+btnSaveEditing.onclick = () => { editWallet() }
 btnCloseEditor.onclick = () => { closeEditor() };
 btnCancelEdition.onclick = () => { closeEditor() };
 allEditButtons.forEach( editButton => { editButton.onclick = () => { openWalletEditor( editButton ) } } );
@@ -46,20 +47,13 @@ function openModal() {
 
 function openWalletEditor( buttonSender ) {
     // When the user clicks the button, open the modal 
-    let walletId = buttonSender.getAttribute("walletId");
-    btnSaveEditing.setAttribute('walletId', walletId);
-    
-    let thisWallet = {
-        name: document.getElementById(`name${walletId}`).innerText,
-        currencySymbol: document.getElementById(`currencySymbol${walletId}`).innerText,
-        initialBalance: document.getElementById(`intialBalance${walletId}`).innerText
-    }
-
     editorTitle.innerHTML = 'EDITAR CARTEIRA';
 
-    document.getElementById("editName2").value = thisWallet.name;
-    document.getElementById("editSymbol2").value = thisWallet.currencySymbol;
-    document.getElementById("editBalance2").value = thisWallet.initialBalance;
+    let walletId = buttonSender.getAttribute("walletId");
+    document.getElementById('editId2').value = walletId;
+    document.getElementById("editName2").value = document.getElementById(`name${walletId}`).innerText;
+    document.getElementById("editSymbol2").value = document.getElementById(`currencySymbol${walletId}`).innerText;
+    document.getElementById("editBalance2").value = document.getElementById(`intialBalance${walletId}`).innerText;
     
     boxWalletEditor.style.display = "block";
 }
@@ -104,13 +98,23 @@ function saveWallet() {
     })
 }
 
-i am here
 function editWallet() {
+    let walletId = document.getElementById('editId2').value;
+
     let walletData = {
-        name: document.getElementById("editName").value,
-        currencySymbol: document.getElementById("editSymbol").value,
-        initialBalance: document.getElementById("editBalance").value     
+        name: document.getElementById("editName2").value,
+        currencySymbol: document.getElementById("editSymbol2").value,
+        initialBalance: document.getElementById("editBalance2").value     
     }
+
+    axios.put(`/wallets/${walletId}`, walletData)
+    .then( (result) => {
+        showNotification( `Carteira alterada com sucesso!` );
+        setTimeout(refreshPage, 2000);
+    })
+    .catch( (e) => {
+        showNotification( `Erro: ${ e.response.data }` );
+    })
 }
 
 function refreshPage() {

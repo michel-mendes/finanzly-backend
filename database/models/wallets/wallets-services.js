@@ -87,26 +87,27 @@ async function insertNewWallet( parameters ) {
 async function editWallet( parameters ) {
     const wallet = await getWalletById( parameters.id );
 
-    const existingWallet = await tabUserWallet.tabWallets.findOne({ where: { name: parameters.email,
+    const existingWallet = await tabUserWallet.tabWallets.findOne({ where: { name: parameters.name,
                                                                userId: parameters.userId } });
     
     if ( !wallet ) {
         return {
             error: true,
-            message: `Wallet not found!`
+            message: `Carteira não encontrada!`
         }
     }
     
     if ( existingWallet ) {
         return {
             error: true,
-            message: `A wallet with that name already exists for this user`
+            message: `Já existe uma carteira com esse nome!`
         }
     }
     
     const editedWallet = {
         name: parameters.name,
-        currencySymbol: parameters.currencySymbol
+        currencySymbol: parameters.currencySymbol,
+        initialBalance: parameters.initialBalance
     }
 
     Object.assign(wallet, editedWallet);

@@ -11,7 +11,7 @@ var router = express.Router();
 router.get('/', listAllWallets); // List all wallets
 router.get('/:id', listById); // Search wallet by ID
 router.post('/', saveWallet); // Create new wallet
-router.put('/:id', validateWalletRequest, editWallet); // Update user
+router.put('/:id', editWallet); // Update user
 router.delete('/:id', deleteWallet); // Delete user
 
 router.get('/user/:userId', (req, res, next) => {
@@ -80,13 +80,15 @@ function saveWallet( req, res, next ) {
 
 function editWallet( req, res, next ) {
     
+    if ( !req.body.userId ) { req.body.userId = req.session.userId };
+    
     req.body.id = req.params.id;
 
     walletServices.editWallet( req.body )
         .then( function ( promiseResult ) {
             
             if (promiseResult.error) {
-                res.status(400).json( promiseResult );
+                res.status(500).json( promiseResult.message );
             }
             else {
                 res.status(200).json( promiseResult );
