@@ -854,3 +854,28 @@ button[disabled] {
 .borderless {
     border: none;
 }
+
+.blur-element {
+/*     
+    For this filter to work correctly, this class must be added to the component where the filter will be applied.
+    If in doubt, read the post below to understand better.
+
+    https://stackoverflow.com/questions/27583937/how-can-i-make-a-css-glass-blur-effect-work-for-an-overlay
+*/
+    
+    filter: blur(3px);
+      -webkit-filter: blur(3px); /* Safari */
+      -moz-filter: blur(3px); /* Firefox */
+      -o-filter: blur(3px);
+      -ms-filter: blur(3px); /* Internet Explorer/Edge */
+    
+    /* Disables the user from selecting text from this element */
+    user-select: none; /* supported by Chrome and Opera */
+     -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+     -moz-user-select: none; /* Firefox */
+     -ms-user-select: none; /* Internet Explorer/Edge */
+  
+    /* Disable clicks here */
+    pointer-events: none;
+  }
