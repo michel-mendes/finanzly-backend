@@ -100,7 +100,7 @@ body {
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
-/* Transactions Page Styles                                                   */
+/* Transactions Page Styles ||                                                */
 /* -------------------------------------------------------------------------- */
 
 body[mwa-page="transactions-listing"] {
@@ -372,7 +372,22 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     text-align: right;
 }
 
-/* -------------------------------------------------------------------------- */
+body[mwa-page="transactions-listing"] #walletsListModalWrapper {
+    transition: all 250ms;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .3);
+    opacity: 0;
+}
+
+/* || Transactions Listing Page End------------------------------------------ */
 
 /* -------------------------------------------------------------------------- */
 /* Wallets Page Styles                                                        */

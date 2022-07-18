@@ -1,10 +1,11 @@
 .wallet-list-container {
-    display: none; /* When hidden */
- /* display: block;   When shown */
+    display: block;
     position: relative;
     /* border: solid 1px black; */
     max-width: 500px;
+    flex-basis: 500px;
     margin: auto;
+    background-color: white;
     box-shadow: 2px 2px 15px 3px rgba(0,0,0,.2);
   }
   
