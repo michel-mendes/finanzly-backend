@@ -97,7 +97,7 @@ async function editWallet( parameters ) {
         }
     }
     
-    if ( existingWallet ) {
+    if (( existingWallet ) && ( Number(existingWallet.id) !== Number(parameters.id) )) {
         return {
             error: true,
             message: `Já existe uma carteira com esse nome!`

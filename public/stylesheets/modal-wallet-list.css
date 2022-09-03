@@ -106,3 +106,8 @@
     cursor: pointer;
     color: white;
   }  
+  .wallet-list-container .footer #btnSelect_WalletSelectionModal:disabled:hover {
+    background-color: white;
+    cursor: not-allowed;
+    color: silver;
+  }  

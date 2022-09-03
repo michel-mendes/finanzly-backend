@@ -76,7 +76,7 @@ async function editCategory( parameters ) {
         }
     }
     
-    if ( existingCategory ) {
+    if (( existingCategory ) && ( Number(existingCategory.id) !== Number(parameters.id) )) {
         return {
             error: true,
             message: `Você já possui uma categoria com o nome \'${ parameters.name }\'`

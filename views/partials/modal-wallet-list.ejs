@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="/stylesheets/modal-wallet-list.css">
 
  -->
-<div class="wallet-list-container">
+<div id="walletsListModalWrapper">
+  <div class="wallet-list-container" id="walletListContainer">
     <div class="header">
         <span class="title">Selecione a carteia abaixo</span>
         <span class="fa fa-times" id="btnCloseWalletList" aria-hidden="true"></span>
@@ -16,7 +17,7 @@
         <span>Saldo</span>
     </div>
 
-    <ul class="list">
+    <ul class="list" id="listContainer">
       <li class="list-item" onclick="switchItems( this )">
         <span>Carteira 1</span>
         <div>
@@ -28,20 +29,80 @@
 
     <div class="footer">
         <button id="btnCancel_WalletSelectionModal"> <i class="bi bi-x-lg"></i> CANCELAR</button>
-        <button id="btnSelect_WalletSelectionModal"> <i class="bi bi-check2"></i> SELECIONAR</button>
+        <button id="btnSelect_WalletSelectionModal" disabled> <i class="bi bi-check2"></i> SELECIONAR</button>
     </div>
+  </div>
 </div>
 
 <script>
+  var selectedWallet
+  var btnCancel = document.getElementById('btnCancel_WalletSelectionModal')
+  let btnSelect = document.getElementById('btnSelect_WalletSelectionModal')
+
+  btnCancel.onclick = () => { cancelWalletSelection() }
+  btnSelect.onclick = () => { confirmWalletSelection() }
+
   function switchItems( clickedItem ) {
+  
     // find all the elements in your channel list and loop over them
     Array.prototype.slice.call( document.querySelectorAll('ul.list li.list-item') ).forEach( ( item ) => {
      
       // remove the selected class
-      item.classList.remove('selected-item');
+      item.classList.remove('selected-item')
 
-    });
+    })
     
     // add the selected class to the element that was clicked
-    clickedItem.classList.add('selected-item');}
+    clickedItem.classList.add('selected-item')
+
+    selectedWallet = clickedItem.getAttribute('mwaWalletId')
+    btnSelect.disabled = false
+  }
+
+  async function getWalletsList() {
+    let listContainer = document.getElementById( 'listContainer' )
+    let walletsList
+    let htmlContent
+    
+    try {
+      result = await axios.get( `/wallets/user/${userId}` )
+      walletsList = result.data
+
+      listContainer.innerHTML = ''
+      htmlContent = ''
+
+      console.log(walletsList)
+      walletsList.forEach( wallet => {
+      
+        htmlContent += `<li class="list-item" onclick="switchItems( this )" mwaWalletId="${wallet.id}">`
+        htmlContent += `<span>${wallet.name}</span>`
+        htmlContent += '<div>'
+        htmlContent += `<span>${wallet.currencySymbol}</span>`
+        htmlContent += `<span>${Number(wallet.actualBalance).toFixed(2)}</span>`
+        htmlContent += '</div>'
+        htmlContent += '</li>'
+
+      })
+
+      listContainer.innerHTML = htmlContent
+    }
+    catch (e) {
+      console.log(`Erro: ${e}`)
+    }
+  }
+
+  function confirmWalletSelection() {
+    let myModal = document.getElementById('walletsListModalWrapper')
+
+    myModal.style.display = 'none'
+    btnSelect.disabled = true
+  }
+  
+  function cancelWalletSelection() {
+    let myModal = document.getElementById('walletsListModalWrapper')
+
+    selectedWallet = -1
+    myModal.style.display = 'none'
+    btnSelect.disabled = true
+  }
 </script>

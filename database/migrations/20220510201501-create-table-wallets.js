@@ -25,6 +25,14 @@ module.exports = {
           type:           DataTypes.STRING,
           allowNull:      false
       },
+      initialBalance: {
+          type:           DataTypes.DOUBLE,
+          allowNull:      false
+      },
+      actualBalance: {
+          type:           DataTypes.DOUBLE,
+          allowNull:      false
+      },
       createdAt: {
         type:             DataTypes.DATE
       },

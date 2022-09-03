@@ -73,7 +73,10 @@ router.get('/transactions', (req, res, next) => {
             req.session.selectedWallet = -1;
         }
         
-        res.render('./pages/transactions-listing', { selectedWallet: req.session.selectedWallet });
+        res.render('./pages/transactions-listing', {
+            userId: req.session.userId,
+            selectedWallet: req.session.selectedWallet
+        });
     }
 });
 
@@ -96,6 +99,28 @@ router.get('/wallets', (req, res, next) => {
 async function authenticateUser(req, res) {
     let userServ = require('../database/models/users/users-services');
         
+    let authenticationResponse = await userServ.authenticateUser( req.body.userIdentification, req.body.password )
+
+    if ( authenticationResponse.error ) {
+        
+        res.json( authenticationResponse )
+
+    }
+    else {
+
+        req.session.loggedIn = true;
+        req.session.userId = authenticationResponse.id;
+        req.session.userFirstName = authenticationResponse.firstName;
+
+        res.json({
+            error: false,
+            message: 'Login efetuado com sucesso!'
+        });
+
+    }
+
+
+    /*
     userServ.authenticateUser( req.body.userIdentification, req.body.password )
         .then( result => {
             let user = result;
@@ -120,6 +145,7 @@ async function authenticateUser(req, res) {
                 message: 'Erro!'
             });
         });
+        */
 }
 
 module.exports = router;
