@@ -25,6 +25,9 @@ function closeWalletListModal() {
     appContent.classList.toggle('blur-element')
     walletsListModalWrapper.style.display = 'none'
     walletsListModalWrapper.style.opacity = '0'
+
+    doWalletSelect()
+    getTransactions()
     // alert(selectedWallet)
 }
 
@@ -47,21 +50,40 @@ async function doWalletSelect() {
 
         try {
             let response = await axios.get(`/wallets/${ walletId }`)
+            let walletContainer = document.getElementById('selectedWalletContainer')
             let htmlContent = ''
 
             htmlContent += `<div class="wallet-container">`
             htmlContent += `<img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">`
             htmlContent += `<div class="wallet-info">`
-            htmlContent += `<span id="toolbarWalletName">${ response.data.name }<i class="material-icons change-wallet-icon">arrow_drop_down</i></span>`
+            htmlContent += `<span id="toolbarWalletName">${ response.data.name }<i class="material-icons change-wallet-icon" onclick="openWalletsListModal()">arrow_drop_down</i></span>`
             htmlContent += `<span id="toolbarWalletBalance">`
-            htmlContent += `<strong>${ response.data.actualBalance }</strong>`
+            htmlContent += `<strong>${ response.data.currencySymbol } ${ Number(response.data.actualBalance).toFixed(2) }</strong>`
             htmlContent += `</span>`
             htmlContent += `</div>`
             htmlContent += `</div>`
+
+            walletContainer.innerHTML = htmlContent
         }
         catch (e) {
             alert(`e`)
         }
 
     }
+}
+
+async function getTransactions() {
+    
+    try {
+        let container = document.getElementById('transactionsContainer')
+        let result = await axios.get( '/transactions' )
+        let transactions = result.data
+
+        container.innerHTML = '<pre>' + JSON.stringify( transactions, '', 4 ) + '</pre>'
+        alert('Certinho!')
+    }
+    catch ( e ) {
+        showNotification( e )
+    }
+
 }

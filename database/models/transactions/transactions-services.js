@@ -11,10 +11,16 @@ module.exports = {
     deleteTransaction
 };
 
-async function getAllTransactions( associate ) {
+async function getAllTransactions( userId = new Number(0) ) {
 
-    if ( associate ) {
-        // return await tabTransactions.findAll({include: ['transactionWallets']});
+    if ( userId ) {
+        let sqlQuery = {
+            where: {
+                userId: userId
+            }
+        }
+
+        return await tabTransactions.findAll( sqlQuery )
     }
     else {
         return await tabTransactions.findAll();
@@ -28,28 +34,75 @@ async function getTransactionById( id ) {
     return transaction;
 }
 
-async function getTransactionsByText( mySearchQuery ) {
+async function getTransactionsByText( params ) {
     
+    let userId
+    let searchString
     let queryOptions = {};
 
-    if ( mySearchQuery ) {
-        queryOptions = {
-            where: {
+    if ( params ) {
+        userId = params.userId
+        searchString = params.searchString
+    }
+
+     if ( userId ) {
+         queryOptions.where = {
+            userId: userId
+         }
+     }
+    
+    if ( searchString ) {
+
+        if ( queryOptions.where ) {
+            
+            queryOptions.where[ Op.and ] = {
                 [Op.or]: [
                     sequelize.where( 
                         sequelize.fn( 'upper', sequelize.col( 'description' ) ),
                         Op.like,
-                        sequelize.fn( 'upper', `%${mySearchQuery}%` )
+                        sequelize.fn( 'upper', `%${searchString}%` )
                     ),
                     sequelize.where( 
                         sequelize.fn( 'upper', sequelize.col( 'extraInfo' ) ),
                         Op.like,
-                        sequelize.fn( 'upper', `%${mySearchQuery}%` )
+                        sequelize.fn( 'upper', `%${searchString}%` )
                     )
                 ]
             }
-        };
+
+        } else {
+            queryOptions.where = {
+                [Op.or]: [
+                    sequelize.where( 
+                        sequelize.fn( 'upper', sequelize.col( 'description' ) ),
+                        Op.like,
+                        sequelize.fn( 'upper', `%${searchString}%` )
+                    ),
+                    sequelize.where( 
+                        sequelize.fn( 'upper', sequelize.col( 'extraInfo' ) ),
+                        Op.like,
+                        sequelize.fn( 'upper', `%${searchString}%` )
+                    )
+                ]
+            }
+        }
+        
+        // queryOptions.where = {
+        //         [Op.or]: [
+        //             sequelize.where( 
+        //                 sequelize.fn( 'upper', sequelize.col( 'description' ) ),
+        //                 Op.like,
+        //                 sequelize.fn( 'upper', `%${searchString}%` )
+        //             ),
+        //             sequelize.where( 
+        //                 sequelize.fn( 'upper', sequelize.col( 'extraInfo' ) ),
+        //                 Op.like,
+        //                 sequelize.fn( 'upper', `%${searchString}%` )
+        //             )
+        //         ]
+        //     }
     }
+
     /*
     SELECT * FROM `transactions` AS `transactions` WHERE (upper(`description`) LIKE upper('%mySearchQuery%') OR upper(`extraInfo`) LIKE upper('%mySearchQuery%'));
     */
@@ -59,17 +112,21 @@ async function getTransactionsByText( mySearchQuery ) {
     return transaction;
 }
 
+async function getTransactionsByDate(startDate = new Date(), endDate = new Date()) {
+    startDate.setHours(21, 00, 00, 000)
+    endDate.setHours(20, 59, 59, 999)
+}
+
 async function insertNewTransaction( parameters ) {
 
-    // Creates a new transaction and return the new transaction Model
+    // Creates a new transaction
     try {
-        return await tabTransactions.create( parameters );
+        await tabTransactions.create( parameters );
+
+        return 'Transação cadastrada com sucesso!'
     }
     catch (e) {
-        return {
-            error: true,
-            message: e
-        };
+        throw `Erro interno >> '${ e }'`
     }
 }
 

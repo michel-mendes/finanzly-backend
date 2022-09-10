@@ -9,7 +9,8 @@
             <input type="checkbox" name="" id="cbNewTransaction" hidden>
             
             <form action="POST">
-                <input type="number" name="id" id="editId" hidden>
+                <input type="number" name="id" id="editId" value="0" hidden>
+                <input type="number" id="editUserId" value="<%= user %>" hidden>
                 
                 <div class="wallet-category-section">
                     <div class="wallet-box grid-container field-border">

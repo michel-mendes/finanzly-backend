@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="/stylesheets/main-page.css">
     <link rel="stylesheet" href="/stylesheets/transaction-new-form.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Just for person icon right user name -->
+
+    <!-- Import AXIOS Library -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
     <title>My Wallet</title>
 </head>
 <body>
@@ -46,7 +50,7 @@
     </div>
 
     <!-- 'Add / Edit transaction' modal start-->
-    <%- include('../partials/transaction-new-form.html'); %>
+    <%- include('../partials/transaction-new-form.html', {user: userId}); %>
     <!-- 'Add / Edit transaction' modal end-->
     
     <!-- Top notification bar start-->

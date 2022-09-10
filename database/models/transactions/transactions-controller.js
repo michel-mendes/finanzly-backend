@@ -15,11 +15,21 @@ router.post('/', saveTransaction); // Create new transaction
 router.put('/:id', editTransaction); // Update transaction
 router.delete('/:id', deleteTransaction); // Delete category
 
+router.get('/fromUser/:userId', async () => { // Gte user transactions grouped by date
+
+});
+
 function listTransactions( req, res, next ) {
     // Query strings
-    // search: String; -> If assinged will try to find records that match the "search" parameter value
+    // userid: Number; -> If assigned will get all transactions from that user
+    // search: String; -> If assigned will try to find records that match the "search" parameter value
+
+    let queryOptions = {
+        userId: req.query.userid,
+        searchString: req.query.search
+    }
     
-    transactionsServices.getTransactionsByText( req.query.search )
+    transactionsServices.getTransactionsByText( queryOptions )
     .then( result => res.json( result ) )
     .catch( next );
 }
@@ -43,17 +53,14 @@ function listById(req, res, next) {
 function saveTransaction( req, res, next ) {
 
     transactionsServices.insertNewTransaction( req.body )
-        .then( function ( promiseResult ) {
+        .then( promiseResult => {
             
-            if (promiseResult.error) {
-                res.status(400).json( promiseResult );
-            }
-            else {
-                res.status(200).json( promiseResult );
-            }
+            res.status(200).json( promiseResult );
 
         })
-        .catch( next );
+        .catch( error => {
+            res.status(500).send( error )
+        });
 }
 
 function editTransaction( req, res, next ) {

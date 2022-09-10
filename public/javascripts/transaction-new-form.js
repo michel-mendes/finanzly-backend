@@ -14,7 +14,7 @@ let btnSave             = document.getElementById('btnSave');
 let btnCancel           = document.getElementById('btnCancel');
 
 // Assign buttons events
-btnSave.onclick             = function() { apiRequest('app', 'POST', getFormValues()) };
+btnSave.onclick             = function() { saveTransaction() };
 btnCancel.onclick           = function() { closeModal() };
 
 btnAddTransaction.onclick   = function() {
@@ -53,16 +53,45 @@ function closeModal() {
 
 // Create an object with the field values ​​to pass through the API
 function getFormValues() {
-    return {
-        id:             document.getElementById('editId'),
-        categoryId:     document.getElementById('editCategoryId'),
-        walletId:       document.getElementById('editWalletId'),
-        date:           document.getElementById('editDate'),
-        description:    document.getElementById('editDescription'),
-        extraInfo:      document.getElementById('editExtraInfo'),
-        value:          document.getElementById('editValue')
+    let date
+    let transactionData = {
+        id:             document.getElementById('editId').value,
+        userId:         document.getElementById('editUserId').value,
+        categoryId:     document.getElementById('editCategoryId').value,
+        walletId:       document.getElementById('editWalletId').value,
+        date:           document.getElementById('editDate').value,
+        description:    document.getElementById('editDescription').value,
+        extraInfo:      document.getElementById('editExtraInfo').value,
+        value:          document.getElementById('editValue').value
         // creditValue:    document.getElementById('editId'),
         // debitValue:     document.getElementById('editId'),
         // csvImportId:    document.getElementById('editId')
     }
+
+    // date = new Date( transactionData.date )
+    // date.setHours(3, 0, 0, 0)
+    // date = parseDate( transactionData.date )
+    transactionData.date = parseDate( transactionData.date )
+
+    return transactionData
 }
+
+async function saveTransaction() {
+    try {
+        let data = getFormValues()
+        let result = await axios.post( '/transactions', data )
+        let response = result.data
+
+        showNotification(`${ response }`)
+    }
+    catch (e) {
+        console.log(e)
+        showNotification( e.response.data )
+    }
+}
+
+function parseDate(input) {
+    var parts = input.match(/(\d+)/g);
+    // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+    return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
+  }

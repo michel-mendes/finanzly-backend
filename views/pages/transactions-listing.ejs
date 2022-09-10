@@ -19,8 +19,8 @@
     <!--  -->
 
     <script>
-        var userId = <%= userId %>
-        var walletId = <%= selectedWallet %>
+        var userId = "<%= userId %>"
+        var walletId = "<%= selectedWallet %>"
     </script>
 
     <title>Minhas transações</title>
@@ -38,24 +38,28 @@
 
                 <% if ( selectedWallet == -1 ) {%>
                 
-                <div class="no-wallet-selected-container">
-                    <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
-                    <div class="select-wallet-container">
-                        <span>Nenhuma carteira foi selecionada</span>
-                        <span>Clique <span id="ctaSelectWallet">aqui</span> e selecione uma agora</span>
+                <div id="selectedWalletContainer">
+                    <div class="no-wallet-selected-container">
+                        <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
+                        <div class="select-wallet-container">
+                            <span>Nenhuma carteira foi selecionada</span>
+                            <span>Clique <span id="ctaSelectWallet">aqui</span> e selecione uma agora</span>
+                        </div>
                     </div>
                 </div>
                 
                 <% }
                 else { %>
                 
-                <div class="wallet-container">
-                    <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
-                    <div class="wallet-info">
-                        <span id="toolbarWalletName">Caixa Economica Federal do Brasil <i class="material-icons change-wallet-icon">arrow_drop_down</i></span>
-                        <span id="toolbarWalletBalance">
-                            <strong>+ R$ 1.257,50</strong>
-                        </span>
+                <div id="selectedWalletContainer">
+                    <div class="wallet-container">
+                        <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
+                        <div class="wallet-info">
+                            <span id="toolbarWalletName">Caixa Economica Federal do Brasil <i class="material-icons change-wallet-icon">arrow_drop_down</i></span>
+                            <span id="toolbarWalletBalance">
+                                <strong>+ R$ 1.257,50</strong>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -78,7 +82,7 @@
         </header>
 
         <main>
-            <section class="transactions-list">
+            <section class="transactions-list" id="transactionsContainer">
                 
                 <ul class="transactions-day-group">
                     

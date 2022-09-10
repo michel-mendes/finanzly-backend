@@ -8,6 +8,7 @@ const Transaction = database.define('transactions', {
                     },
     categoryId:     Sequelize.INTEGER,
     walletId:       Sequelize.INTEGER,
+    userId:         Sequelize.INTEGER,
     date:           Sequelize.DATE,
     description:    Sequelize.STRING,
     extraInfo:      Sequelize.STRING,
