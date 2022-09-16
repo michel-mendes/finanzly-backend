@@ -26,7 +26,11 @@ function listTransactions( req, res, next ) {
 
     let queryOptions = {
         userId: req.query.userid,
-        searchString: req.query.search
+        walletId: req.query.walletid,
+        searchString: req.query.search,
+        startDate: req.query.start,
+        endDate: req.query.end,
+        groupByDate: req.query.groupdate
     }
     
     transactionsServices.getTransactionsByText( queryOptions )

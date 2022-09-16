@@ -71,14 +71,14 @@
       listContainer.innerHTML = ''
       htmlContent = ''
 
-      console.log(walletsList)
+      // console.log(walletsList)
       walletsList.forEach( wallet => {
       
         htmlContent += `<li class="list-item" onclick="switchItems( this )" mwaWalletId="${wallet.id}">`
         htmlContent += `<span>${wallet.name}</span>`
         htmlContent += '<div>'
         htmlContent += `<span>${wallet.currencySymbol}</span>`
-        htmlContent += `<span>${Number(wallet.actualBalance).toFixed(2)}</span>`
+        htmlContent += ` <span>${Number(wallet.actualBalance).toFixed(2)}</span>`
         htmlContent += '</div>'
         htmlContent += '</li>'
 

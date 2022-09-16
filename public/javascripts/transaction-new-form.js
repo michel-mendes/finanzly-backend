@@ -85,7 +85,6 @@ async function saveTransaction() {
         showNotification(`${ response }`)
     }
     catch (e) {
-        console.log(e)
         showNotification( e.response.data )
     }
 }

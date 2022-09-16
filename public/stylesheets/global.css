@@ -357,12 +357,24 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     margin-right: 5px;
 }
 
+body[mwa-page="transactions-listing"] .transactions-day-group .positive-transaction-value {
+    color: blue;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .negative-transaction-value {
+    color: red;
+}
+
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container #transactionCategoryName {
     font-size: 12px;
     font-weight: bold;
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container #transactionDescription {
+    font-size: 11px;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container #transactionExtraInfo {
     font-size: 11px;
 }
 

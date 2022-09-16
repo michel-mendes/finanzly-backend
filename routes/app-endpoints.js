@@ -62,23 +62,51 @@ router.get('/categories', (req, res, next) => {
     }
 });
 
-router.get('/transactions', (req, res, next) => {
-    if ( !req.session.loggedIn ) {
-        res.redirect( '/app/login' )
-    }
-    else {
-        
-        // Retrieves the wallet in which the user recorded the last transaction
-        if ( !req.session.selectedWallet ) {
-            req.session.selectedWallet = -1;
+router.get('/transactions', async (req, res, next) => {
+    
+    try {
+        if ( !req.session.loggedIn ) {
+            res.redirect( '/app/login' )
         }
-        
-        res.render('./pages/transactions-listing', {
-            userId: req.session.userId,
-            selectedWallet: req.session.selectedWallet
-        });
+        else {
+            
+            let selectedWallet = {}
+    
+            // Retrieves the wallet in which the user recorded the last transaction
+            if ( !req.session.selectedWallet ) {
+                req.session.selectedWallet = -1;
+            }
+            else {
+                let tabWallets = require('../database/models/wallets/wallets-services')
+    
+                selectedWallet = await tabWallets.getWalletById( req.session.selectedWallet )
+            }
+            
+            res.render('./pages/transactions-listing', {
+                userId: req.session.userId,
+                selectedWallet: req.session.selectedWallet,
+                wallet: selectedWallet
+            });
+        }
     }
+    catch (e) {
+        res.next()
+    }
+
 });
+
+router.post('/transactions/setSelectedWallet', (req, res, next) => {
+    
+    try {
+        req.session.selectedWallet = req.body.selectedWalletId
+
+        res.send('OK')
+    }
+    catch (e) {
+        res.send(`ERRO >>> '${e}'`)
+    }
+
+})
 
 router.get('/wallets', (req, res, next) => {
     if ( !req.session.loggedIn ) {

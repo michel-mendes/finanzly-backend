@@ -55,9 +55,9 @@
                     <div class="wallet-container">
                         <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
                         <div class="wallet-info">
-                            <span id="toolbarWalletName">Caixa Economica Federal do Brasil <i class="material-icons change-wallet-icon">arrow_drop_down</i></span>
+                            <span id="toolbarWalletName"><%= wallet.name %><i class="material-icons change-wallet-icon">arrow_drop_down</i></span>
                             <span id="toolbarWalletBalance">
-                                <strong>+ R$ 1.257,50</strong>
+                                <strong><%= wallet.actualBalance %></strong>
                             </span>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
 
             <div id="rightSide">
                 <% if ( selectedWallet > 0 ) { %>
-                <div class="commands-container">
+                <div class="commands-container" id="commandsContainer">
                     <span class="material-icons">calendar_month</span>
                     <span class="material-icons search-icon">search</span>
 
@@ -84,6 +84,7 @@
         <main>
             <section class="transactions-list" id="transactionsContainer">
                 
+                <!--
                 <ul class="transactions-day-group">
                     
                     <div class="group-header">
@@ -121,153 +122,11 @@
                                 </div>
                             </li>
 
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
-
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
-
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
-
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
                         </div>
                     </div>
                 </ul>
+            -->
 
-                <ul class="transactions-day-group">
-                    
-                    <div class="group-header">
-                        <div class="day-number-box">
-                            <span id="groupDayNumber">25</span>
-                        </div>
-        
-                        <div class="month-year-box">
-                            <span id="groupMonthYear">
-                                <span>terça-feira</span><br>
-                                <span>janeiro 2022</span>
-                            </span>
-                        </div>
-
-                        <div class="group-total-value">
-                            <span class="total-title">Total</span>
-                            <span id="transactionsTotalValue">- 1.999.550,00</span>
-                        </div>
-                    </div>
-
-                    <div class="group-body">
-                        <div class="group-items-container">
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
-                            
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
-
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
-
-                            <li class="transaction-item" transactionId="<ID_HERE>">
-                                <div class="item-category-icon-container">
-                                    <img src="https://picsum.photos/40" alt="Ícone da categoria">
-                                </div>
-
-                                <div class="item-body-container">
-                                    <span id="transactionCategoryName">Nome da categoria aqui</span>
-                                    <span id="transactionDescription">Descrição da transação aqui</span>
-                                </div>
-
-                                <div class="item-value-container">
-                                    <span id="transactionValue">- 999.450,29</span>
-                                </div>
-                            </li>
-                        </div>
-                    </div>
-                </ul>
             </section>
         </main>
 
@@ -275,5 +134,9 @@
     <!-- End of the visible app content -->
 
     <%- include('../partials/modal-wallet-list.ejs'); %>
+
+    <!-- Top notification bar start-->
+    <%- include('../partials/top-notification-bar.html'); %>
+    <!-- Top notification bar end-->
 </body>
 </html>

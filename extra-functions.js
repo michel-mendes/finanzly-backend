@@ -42,4 +42,4 @@ function parseDate( date ) {
     return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
 }
 
-export {apiRequest, getFullDate, parseDate}
+module.exports = { apiRequest, getFullDate, parseDate };
