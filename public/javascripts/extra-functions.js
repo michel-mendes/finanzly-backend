@@ -42,4 +42,22 @@ function parseDate( date ) {
     return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
 }
 
-export {apiRequest, getFullDate, parseDate}
+function hexToStr( hex ) {
+    var hex = hex.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+}
+
+function strToHex( str ) {
+    var hex = '';
+    for(var i=0;i<str.length;i++) {
+        hex += ''+str.charCodeAt(i).toString(16);
+    }
+    return hex;
+}
+
+function addString( targetString, stringToPut, index ) {
+    return targetString.substring(0, index) + stringToPut + targetString.substring(index, targetString.length);
+}

@@ -26,7 +26,7 @@
         </div>
 
         <div class="nav-links">
-            <a href="#" id="menuBtnAddTransaction">Adicionar transação</a>
+            <!-- <a href="#" id="menuBtnAddTransaction">Adicionar transação</a> -->
             <a href="/app/transactions">Transações</a>
             <a href="/app/categories">Categorias</a>
             <a href="/app/wallets">Carteiras</a>
@@ -42,19 +42,45 @@
             </label>
         </div>
 
-        <div style="border: 1px red solid">
+        <div style="border: 1px red solid; padding: 10px; margin: 5px;">
+            <span style="width: 100%; text-align: center; display: block;">DIV Testes</span>
             <span>ID do usuáro....: </span> <%= userId %> <br>
             <span>Nome do usuário.: </span> <%= userFirstName %> <br><br>
             <button onclick="showNotification('Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum beatae sequi repellendus ullam? Esse, facere repudiandae perferendis labore quae est distinctio veniam suscipit aperiam voluptatum totam sequi architecto, corrupti velit?<br><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum beatae sequi repellendus ullam? Esse, facere repudiandae perferendis labore quae est distinctio veniam suscipit aperiam voluptatum totam sequi architecto, corrupti velit?<br><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum beatae sequi repellendus ullam? Esse, facere repudiandae perferendis labore quae est distinctio veniam suscipit aperiam voluptatum totam sequi architecto, corrupti velit?')">Mostra mensagem</button>
         </div>
+
+        <div style="border: 1px red solid; padding: 10px; margin: 5px;">
+            <span>Selecione um arquivo</span><br><br>
+            <input type="file" id="editSelectFile"><br><br><br>
+            <button onclick="sendFile()">Enviar...</button><br><br>
+
+            <div id="divResponse"></div>
+
+        </div>
+
     </div>
 
     <!-- 'Add / Edit transaction' modal start-->
-    <%- include('../partials/transaction-new-form.html', {user: userId}); %>
+    <%#- include('../partials/transaction-new-form.html', {user: userId}); %>
     <!-- 'Add / Edit transaction' modal end-->
     
     <!-- Top notification bar start-->
     <%- include('../partials/top-notification-bar.html'); %>
     <!-- Top notification bar end-->
+
+    <script>
+        async function sendFile() {
+
+            let formData = new FormData()
+            let response
+            let divResponse = document.getElementById( 'divResponse' )
+            
+            formData.append('file', document.getElementById('editSelectFile').files[0])
+            response = await axios.post( '/app/test', formData )
+
+            divResponse.innerHTML = '<pre>' + JSON.stringify(response.data, '', 4) + '<pre>'
+
+        }
+    </script>
 </body>
 </html>

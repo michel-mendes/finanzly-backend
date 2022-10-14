@@ -37,9 +37,55 @@ function getFullDate() {
 }
 
 function parseDate( date ) {
-    var parts = date.match(/(\d+)/g);
-    // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
-    return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
+    
+    try {
+        var parts = date.match(/(\d+)/g);
+        // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+        return new Date(parts[0], parts[1]-1, parts[2]); // months are 0-based
+    }
+    catch ( error ) {
+        throw `Erro {parseDate} >> ${ error }`
+    }
+
 }
 
-module.exports = { apiRequest, getFullDate, parseDate };
+function getFullDateName_PtBr( date = new Date() ) {
+
+    const brDayNames = [
+        'domingo',
+        'segunda-feira',
+        'terça-feira',
+        'quarta-feira',
+        'quinta-feira',
+        'sexta-feira',
+        'sábado']
+
+    const brMonthNames = [
+        "janeiro",
+        "fevereiro",
+        "março",
+        "abril",
+        "maio",
+        "junho",
+        "julho",
+        "agosto",
+        "setembro",
+        "outubro",
+        "novembro",
+        "dezembro"
+    ]
+
+    return {
+        dayNumber: new Date( date ).getDate(),
+        dayName: brDayNames[ new Date( date ).getDay() ],
+        monthName: brMonthNames[ new Date( date ).getMonth() ],
+        yearNumber: new Date( date ).getFullYear()
+    }
+
+}
+
+function addString( targetString, stringToPut, index ) {
+    return targetString.substring(0, index) + stringToPut + targetString.substring(index, targetString.length);
+}
+
+module.exports = { apiRequest, getFullDate, parseDate, getFullDateName_PtBr , addString};

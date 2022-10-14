@@ -1,5 +1,3 @@
-import { apiRequest } from '/javascripts/extra-functions.js';
-
 // Getting page controls
 var btnNewWallet = document.getElementById("btnNewWallet");
 var ctaCreateNewWallet = document.getElementById("ctaCreateNewWallet"); // Only shown when there are no wallets to show

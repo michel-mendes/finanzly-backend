@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var fileUpload = require('express-fileupload');
 var cookieSession = require('cookie-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -29,6 +30,8 @@ let sessionOptions = {
 }
 
 app.use( cookieSession( sessionOptions ) );
+app.use( fileUpload() );
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -1,76 +1,144 @@
-import { apiRequest } from '/javascripts/extra-functions.js';
-import { getFullDate } from '/javascripts/extra-functions.js';
-
 // Get the modal
-let modalTransaction = document.getElementById("modalTransaction");
+var modalTransaction = document.getElementById("modalTransaction");
 
 // Get the constrols
-let modalTitle          = document.getElementById('modalTitle');
-let cbNewTransaction    = document.getElementById('cbNewTransaction');  //Verifies if is a new transaction or an existing one
-let editDate            = document.getElementById('editDate');
-let btnAddTransaction   = document.getElementById("menuBtnAddTransaction");
-let btnCloseModal       = document.getElementsByClassName("btnCloseModal")[0];
-let btnSave             = document.getElementById('btnSave');
-let btnCancel           = document.getElementById('btnCancel');
+var modalTitle          = document.getElementById('modalTitle')
+var cbNewTransaction    = document.getElementById('cbNewTransaction')  //Verifies if is a new transaction or an existing one
+var editWalletId        = document.getElementById('editWalletId')
+var categoryComboBox    = document.getElementById('inputCategoryAutoComplete')
+var editDate            = document.getElementById('editDate')
+var btnAddTransaction   = document.getElementById("menuBtnAddTransaction")
+var btnCloseModal       = document.getElementsByClassName("btnCloseModal")[0]
+var btnSave             = document.getElementById('btnSave')
+var btnCancel           = document.getElementById('btnCancel')
+var inputCollection     = document.getElementsByTagName('input')
 
 // Assign buttons events
-btnSave.onclick             = function() { saveTransaction() };
-btnCancel.onclick           = function() { closeModal() };
-
-btnAddTransaction.onclick   = function() {
-    // When the user clicks the button, open the modal 
-    modalTitle.innerHTML = 'Adicionar transação';
-    cbNewTransaction.checked = true;
-    editDate.value = getFullDate();
-    
-    modalTransaction.style.display = "block";
-}
+btnSave.onclick             = function() { saveTransaction() }
+btnCancel.onclick           = function() { closeNewTransactionModal() }
 
 btnCloseModal.onclick       = function() {
     // When the user clicks on <span> (x), close the modal
-    closeModal();
+    closeNewTransactionModal()
 }
 
 window.onclick              = function(event) {
     // When the user clicks anywhere outside of the modal, close it
     if (event.target == modalTransaction) {
-      closeModal();
+      closeNewTransactionModal()
     }
 }
+
+// Triggers "onkeydown" event only if the keys CTRL + ENTER are pressed
+// tags: ctrl+enter, ctrl + enter , control + enter , control+enter
+// --------------------------------------------------------------------------
+window.onkeydown            = async ( key ) => {
+
+    let keyCode = key.keyCode
+
+    if ( ( key.ctrlKey ) && ( keyCode == 13 ) && ( modalTransaction.style.display == "block" ) ) {
+        await saveTransaction()
+    }
+
+}
+// --------------------------------------------------------------------------
 
 window.onkeyup              = function( key ) {
-    let keyCode = key.keyCode;
+    let keyCode = key.keyCode
 
     if ( (keyCode === 27) && ( modalTransaction.style.display == "block" ) ) { //Pressed esc key
-        closeModal();
+        closeNewTransactionModal();
+    }
+
+    if ( (keyCode === 45) && ( modalTransaction.style.display != "block" ) ) { //Pressed ins key
+        openNewTransactionModal()
     }
 }
 
-function closeModal() {
+for ( let i = 0; i < inputCollection.length; i++ ) {
+
+    if ( ( inputCollection.item(i).getAttribute('type') == 'number' ) || ( inputCollection.item(i).getAttribute('type') == 'date' ) ) continue
+    
+    inputCollection.item(i).onkeyup = () => { inputCollection.item(i).value = inputCollection.item(i).value.toUpperCase() }
+
+}
+
+function openNewTransactionModal( transactionData ) {
+    
+    modalTransaction.style.display = "block"
+
+    if ( !transactionData ) {
+        //New transaction
+        modalTitle.innerHTML = 'Adicionar transação'
+        cbNewTransaction.checked = true
+
+        editWalletId.value = walletId
+        categoryComboBox.value = ''
+        editDate.value = getFullDate()
+
+        categoryComboBox.focus()
+    }
+    else {
+        // Editing existing transaction
+        modalTitle.innerHTML = 'Alteração de transação'
+        cbNewTransaction.checked = false
+
+        document.getElementById('editId').value = transactionData.id
+        document.getElementById('editWalletId').value = transactionData.walletId
+        document.getElementById('inputCategoryAutoComplete').value = transactionData.fromCategory.name
+        document.getElementById('editDate').value = new Date(transactionData.date).toISOString().substring(0, 10);
+        document.getElementById('editDescription').value = transactionData.description
+        document.getElementById('editExtraInfo').value = transactionData.extraInfo
+        document.getElementById('editValue').value = transactionData.value
+
+        categoryComboBox.focus()
+    }
+
+}
+
+function closeNewTransactionModal() {
     modalTransaction.style.display = "none";
+
+    document.getElementById('editCategoryId').value = ''
+    document.getElementById('editWalletId').value = ''
+    document.getElementById('editDate').value = ''
+    document.getElementById('editDescription').value = ''
+    document.getElementById('editExtraInfo').value = ''
+    document.getElementById('editValue').value = ''
 }
 
 
 // Create an object with the field values ​​to pass through the API
 function getFormValues() {
-    let date
+    
+    let categories = document.getElementsByTagName('option')
+    
     let transactionData = {
         id:             document.getElementById('editId').value,
         userId:         document.getElementById('editUserId').value,
-        categoryId:     document.getElementById('editCategoryId').value,
+
+        categoryId:     (  () => {
+            let value = -1
+
+            for (let i = 0; i < categories.length; i++) {
+                
+                if ( categories.item(i).innerHTML == categoryComboBox.value ) {
+                    value = categories.item(i).getAttribute('categoryId')
+                    break
+                }
+            };
+
+            return value
+        })(),
+
         walletId:       document.getElementById('editWalletId').value,
         date:           document.getElementById('editDate').value,
         description:    document.getElementById('editDescription').value,
         extraInfo:      document.getElementById('editExtraInfo').value,
         value:          document.getElementById('editValue').value
-        // creditValue:    document.getElementById('editId'),
-        // debitValue:     document.getElementById('editId'),
-        // csvImportId:    document.getElementById('editId')
+
     }
 
-    // date = new Date( transactionData.date )
-    // date.setHours(3, 0, 0, 0)
-    // date = parseDate( transactionData.date )
     transactionData.date = parseDate( transactionData.date )
 
     return transactionData
@@ -79,10 +147,18 @@ function getFormValues() {
 async function saveTransaction() {
     try {
         let data = getFormValues()
-        let result = await axios.post( '/transactions', data )
+        
+        if ( data.categoryId == -1 ) {
+            showNotification('A categoria selecionada não existe!')
+            return
+        }
+
+        let result = cbNewTransaction.checked ? await axios.post( '/transactions', data ) : await axios.put( `/transactions/${ data.id }`, data )
         let response = result.data
 
         showNotification(`${ response }`)
+        closeNewTransactionModal()
+        doWalletSelect() /* declared in 'transactions-listing.js' */
     }
     catch (e) {
         showNotification( e.response.data )

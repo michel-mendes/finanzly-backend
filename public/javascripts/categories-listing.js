@@ -1,5 +1,3 @@
-import { apiRequest } from '/javascripts/extra-functions.js';
-
 // Get the user ID in the document
 var myUserId = document.getElementById("myUserId").innerText;
 document.getElementById("myUserId").remove();
@@ -44,11 +42,11 @@ function deleteCategory( buttonElement ) {
     let deletionOnServerConfirmed = false;
 
     if ( deletionConfirmed ) {
-        apiRequest('/categories/' + categoryId, 'DELETE')
+        axios.delete('/categories/' + categoryId)
         .then( response => {
 
-            if (response.error) {
-                return showNotification( response.message );
+            if (response.data.error) {
+                return showNotification( response.data.message );
             }
 
             showNotification( "Categoria excluída com sucesso!" );
@@ -88,11 +86,11 @@ function saveCategoryChanges() {
                           })() // IIFE
     }
 
-    apiRequest('/categories/' + editorEditId.value, 'PUT', bodyData)
+    axios.put('/categories/' + editorEditId.value, bodyData)
     .then( response => {
         
-        if (response.error) {
-            return showNotification( response.message );
+        if (response.data.error) {
+            return showNotification( response.data.message );
         }
         
         showNotification( "Categoria atualizada com sucesso!" );

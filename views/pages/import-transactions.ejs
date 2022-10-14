@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/global.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Import AXIOS Library -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <title>Minhas transações</title>
+</head>
+<body mwa-page="transactions-listing">
+    
+    <!-- Start of the visible app content -->
+    <div id="app-content">
+        
+        <header class="toolbar">
+            <div id="leftSide">
+                <div class="back-button-container">
+                    <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar" onclick="history.back()">
+                </div>
+                              
+                <div id="selectedWalletContainer">
+                    <div class="select-wallet-container">
+                        <span>Importação de transações</span>
+                        <span>Importando para a carteira: <span><%= selectedWallet.name %></span></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="rightSide">
+
+                <div mwa-page="import-transactions" class="bank-select-container">
+                    <select class="select-banks" id="selectBanksList">
+                        <option value="n/a">-- Selecione uma instituição abaixo --</option>
+                        <option value="bb">Banco do Brasil</option>
+                        <option value="inter">Banco Inter</option>
+                        <option value="cef">Caixa Econômica Federal</option>
+                    </select>
+                </div>
+
+                <div class="commands-container" id="commandsContainer">
+                    <input type="file" name="csvFile" id="inputSelectFile" onchange="if ( this.files[0] ) { alert('Tem arquivo') }" hidden>
+
+                    <button class="btn btn-cl-blue" id="menuBtnSelectFile">
+                        <span class="btn-caption">IMPORTAR .CSV</span>
+                        <span class="btn-icon material-icons">description</span>
+                    </button>
+                </div>
+
+            </div>
+        </header>
+
+        <main mwa-page="import-transactions">
+            <section class="import-list" id="importsContainer">
+            
+
+            </section>
+        </main>
+
+    </div>
+    <!-- End of the visible app content -->
+
+    <!-- Top notification bar start-->
+    <%- include('../partials/top-notification-bar.html'); %>
+    <!-- Top notification bar end-->
+
+    <input type="text" value="<%= userId %>" id="inputUserId" hidden>
+    <input type="text" value="<%= walletId %>" id="inputWalletId" hidden>
+
+    <datalist id="lsCategoriesList">
+        <% userCategoriesList.forEach(category => { %>
+            <option categoryId="<%= category.id %>" label="<%= category.transactionType == 'D' ? 'Gastos' : 'Recebimetos' %>"><%= category.name %></option>
+        <% }) %>
+    </datalist>
+
+    <script src="/javascripts/extra-functions.js"></script>
+    <script src="/javascripts/import-transactions.js"></script>
+</body>
+</html>

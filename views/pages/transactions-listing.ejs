@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="/stylesheets/global.css">
+    <link rel="stylesheet" href="/stylesheets/transaction-new-form.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="/javascripts/transactions-listing.js" defer></script>
-
+    
     <!-- Import AXIOS Library -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -37,8 +37,8 @@
                 </div>
 
                 <% if ( selectedWallet == -1 ) {%>
-                
-                <div id="selectedWalletContainer">
+                               
+                    <div id="selectedWalletContainer">
                     <div class="no-wallet-selected-container">
                         <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
                         <div class="select-wallet-container">
@@ -72,7 +72,7 @@
                     <span class="material-icons">calendar_month</span>
                     <span class="material-icons search-icon">search</span>
 
-                    <button class="btn btn-cl-green">
+                    <button class="btn btn-cl-green" id="menuBtnAddTransaction">
                         <span class="btn-caption">ADICIONAR TRANSAÇÃO</span>
                         <span class="btn-icon material-icons">add</span>
                     </button>
@@ -133,10 +133,19 @@
     </div>
     <!-- End of the visible app content -->
 
+    <!-- 'Wallet selection' modal start-->
     <%- include('../partials/modal-wallet-list.ejs'); %>
+    <!-- 'Wallet selection' modal end-->
 
+    <!-- 'Add / Edit transaction' modal start-->
+    <%- include('../partials/transaction-new-form.html', {user: userId, userCategoriesList: userCategoriesList}); %>
+    <!-- 'Add / Edit transaction' modal end-->
+    
     <!-- Top notification bar start-->
     <%- include('../partials/top-notification-bar.html'); %>
     <!-- Top notification bar end-->
+
+    <script src="/javascripts/extra-functions.js"></script>
+    <script src="/javascripts/transactions-listing.js"></script>
 </body>
 </html>

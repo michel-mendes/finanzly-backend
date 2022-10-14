@@ -205,6 +205,14 @@ body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wall
     font-size: 14px;
 }
 
+body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info #toolbarWalletBalance .negative-value{
+    color: red;
+}
+
+body[mwa-page="transactions-listing"] .toolbar #leftSide .wallet-container .wallet-info #toolbarWalletBalance .positive-value{
+    color: blue;
+}
+
 body[mwa-page="transactions-listing"] .toolbar #rightSide{
     display: flex;
     justify-content: right;
@@ -317,15 +325,18 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item {
     display: flex;
+    position: relative;
     flex-direction: row;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 6px;
-
-    transition: background-color 300ms;
 }
 
-body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item:hover {
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item:hover .item-category-icon-container,
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item:hover .item-body-container,
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item:hover .item-value-container {
+    background-color: rgb(204, 240, 212);
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item:hover .item-toolbox {
+    right: -60px;
     background-color: rgb(204, 240, 212);
 }
 
@@ -338,8 +349,10 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     align-items: center;
     justify-content: center;
     flex-basis: 45px;
-    margin-left: 10px;
-    margin-right: 10px;
+    padding: 10px;
+    z-index: 10;
+    background-color: rgb(240, 240, 240);
+    transition: background-color 300ms;
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .item-body-container {
@@ -347,6 +360,11 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     flex-direction: column;
     gap: 3px;
     flex-basis: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 10;
+    background-color: rgb(240, 240, 240);
+    transition: background-color 300ms;
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .item-value-container {
@@ -354,7 +372,38 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     align-items: center;
     justify-content: right;
     flex-basis: 170px;
-    margin-right: 5px;
+    /* background-color: white; */
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    z-index: 10;
+    background-color: rgb(240, 240, 240);
+    transition: background-color 300ms;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .item-toolbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 30px;
+    padding-right: 10px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: absolute;
+    right: 6px;
+    z-index: 9;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+    transition: right 300ms, background-color 300ms;;
+
+    background-color: white;
+    border: 1px solid silver;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .item-toolbox .tool-button {
+    cursor: pointer;
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .positive-transaction-value {
@@ -794,7 +843,127 @@ body[mwa-page="wallets-listing"] .modal-form .symbol-balance-container {
 body[mwa-page="wallets-listing"] .modal-form .symbol-balance-container #labelName {
   flex: 1;
 }
-  /* End of modal section */
+/* End of modal section */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/* Import Transactions Page Styles ||                                         */
+/* -------------------------------------------------------------------------- */
+
+main[mwa-page="import-transactions"] #importsContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex-basis: 100%;
+    justify-content: center;
+}
+
+main[mwa-page="import-transactions"] .negative-value {
+    color: red;
+}
+
+main[mwa-page="import-transactions"] .positive-value {
+    color: blue;
+}
+
+main[mwa-page="import-transactions"] .neutral-value {
+    color: lightgoldenrodyellow;
+}
+
+main[mwa-page="import-transactions"] .stroked {
+    text-decoration: line-through;
+}
+
+div[mwa-page="import-transactions"].bank-select-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 30px 20px 20px;
+    /* border: red solid 2px; */
+}
+
+select.select-banks {
+    height: 30px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+main[mwa-page="import-transactions"] table {
+    width: 100%;
+    border-spacing: 5px;
+    border-collapse: collapse;
+    /* border: red 1px dotted; */
+}
+
+main[mwa-page="import-transactions"] table thead tr {
+    height: 35px;
+    text-align: center;
+}
+
+main[mwa-page="import-transactions"] table thead td {
+    background-color: grey;
+    color: beige;
+    font-weight: bolder;
+}
+
+main[mwa-page="import-transactions"] table tbody td {
+    height: 40px;
+    background-color: lightgray;
+}
+
+main[mwa-page="import-transactions"] table td {
+    border: grey 1px dotted;
+}
+
+main[mwa-page="import-transactions"] table td .monofont {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+main[mwa-page="import-transactions"] table input {
+    width: 100%;
+    height: 25px;
+    padding-left: 5px;
+}
+
+main[mwa-page="import-transactions"] .data-row {
+    /* display: flex; */
+    height: 25px;
+}
+
+main[mwa-page="import-transactions"] .col-number-transaction {
+    text-align: center;
+    width: 21px;
+}
+
+main[mwa-page="import-transactions"] .col-date {
+    width: 100px;
+    text-align: center;
+}
+
+main[mwa-page="import-transactions"] table tbody .col-value {
+    width: 100px;
+    text-align: right;
+}
+
+main[mwa-page="import-transactions"] .col-category {
+    width: 400px;
+    /* text-align: right; */
+}
+
+main[mwa-page="import-transactions"] .col-command {
+    width: 60px;
+    /* text-align: right; */
+}
+
+main[mwa-page="import-transactions"] .save-button-container {
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+    width: 100%;
+}
+
+/* -------------------------------------------------------------------------- */
+/* END OF -> Import Transactions Styles                                       */
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */

@@ -1,8 +1,3 @@
-const { routesDir } = require('../../../app');
-
-const Joi = require('joi');
-const validateRequest = require('../../request-validator.js');
-
 // Here are the functions to handle each endpoint
 const categoriesServices = require('./categories-services');
 

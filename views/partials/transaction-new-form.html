@@ -1,68 +1,73 @@
 <!-- The Transaction Modal Window -->
-<div id="modalTransaction" class="modal">
+<div mwa-page="transaction-new-form" id="modalTransaction" class="modal">
 <!-- Modal content -->
     <div class="modal-content">
         <span class="btnCloseModal">&times;</span>
       
         <div class="transaction-box">
             <h1 id="modalTitle">Adicionar / Alterar Transação</h1>
-            <input type="checkbox" name="" id="cbNewTransaction" hidden>
+            <input type="checkbox" id="cbNewTransaction" hidden>
             
             <form action="POST">
-                <input type="number" name="id" id="editId" value="0" hidden>
+                <input type="number" id="editId" value="0" hidden>
                 <input type="number" id="editUserId" value="<%= user %>" hidden>
+                <input type="number" id="editWalletId" hidden>
+                <input type="number" id="editCategoryId" hidden>
                 
                 <div class="wallet-category-section">
-                    <div class="wallet-box grid-container field-border">
+                                        
+                    <label for="inputCategoryAutoComplete" class="category-box flex-container field-border">
+                        
                         <div class="section-title">
-                            <label for="editWalletId" class="full-label">Carteira</label>
+                            <span class="full-label">Categoria</label>
                         </div>
-                        <div class="section-edit">
-                            <input type="number" name="walletId" id="editWalletId" placeholder="ID da carteira" class="selection-edit boderderless text-center">
-                        </div>
+
                         <div class="section-selection">
                             <img class="wallet-icon" src="/images/wallet.png" alt="">
-                            <span class="wallet-selection-text">${nomeCarteira}</span>
-                            <i class="wallet-selection-arrow">></i>
+                            
+                            <input id="inputCategoryAutoComplete" tabindex="1" style="width: auto; flex: 1;" list="lsCategoriesList" placeholder="Digite o nome da categoria para pesquisar..." class="borderless">
+                            <datalist id="lsCategoriesList">
+                                <% userCategoriesList.forEach(category => { %>
+                                    <option categoryId="<%= category.id %>" label="<%= category.transactionType == 'D' ? 'Gastos' : 'Recebimetos' %>"><%= category.name %></option>
+                                <% }) %>
+                            </datalist>
+                            
                         </div>
-                    </div>
-                    
-                    <div class="category-box grid-container field-border">
-                        <div class="section-title">
-                            <label for="editCategoryId" class="full-label">Categoria</label>
-                        </div>
-                        <div class="section-edit">
-                            <input type="number" name="categoryId" id="editCategoryId" placeholder="ID da categoria" class="selection-edit boderderless text-center">
-                        </div>
-                        <div class="section-selection">
-                            <img class="wallet-icon" src="/images/wallet.png" alt="">
-                            <span class="wallet-selection-text">${nomeCategoria}</span>
-                            <i class="wallet-selection-arrow">></i>
-                        </div>
-                    </div>
+
+                    </label>
+
                 </div>
                 <div class="fields-section">
                     <label class="section-date flex-section field-border" for="editDate">
                         <span class="full-label">Data</span>
-                        <input class="selection-edit boderderless text-center" type="date" name="date" id="editDate">
+                        <input class="selection-edit boderderless text-center" tabindex="2" type="date" name="date" id="editDate">
                     </label>
                     
                     <label class="section-description flex-section field-border" for="editDescription">
                         <span class="full-label">Histórico</span>
-                        <input class="selection-edit boderderless" type="text" name="description" id="editDescription">
+                        <input class="selection-edit boderderless" tabindex="3" type="text" name="description" id="editDescription">
                     </label>
                     <label class="section-value flex-section field-border" for="editValue">
                         <span class="full-label">Valor</span>
-                        <input class="selection-edit boderderless text-right" type="number" name="value" id="editValue" step="0.01" min="0.01" placeholder="0.00">
+                        <input class="selection-edit boderderless text-right" tabindex="4" type="number" name="value" id="editValue" step="0.01" min="0.01" placeholder="0.00">
                     </label>
                     <label class="section-extra-details flex-section field-border" for="editExtraInfo">
                         <span class="full-label boderderless">Detalhes adicionais</span>
-                        <input class="selection-edit boderderless" type="text" name="extraInfo" id="editExtraInfo">
+                        <input class="selection-edit boderderless" tabindex="5" type="text" name="extraInfo" id="editExtraInfo">
                     </label>
                 </div>
                 <div class="button-container">
-                    <a class="btn" id='btnCancel'>Cancelar</a>
-                    <a class="btn" id="btnSave">Salvar</a>
+                    
+                    <a class="btn" id='btnCancel' tabindex="6">
+                        <span>Cancelar</span>
+                        <span>Esc</span>
+                    </a>
+                    
+                    <a class="btn" id="btnSave" tabindex="7">
+                        <span>Salvar</span>
+                        <span>Ctrl + ENTER</span>
+                    </a>
+
                 </div>            
             </form>
         </div>
@@ -70,4 +75,4 @@
     </div>
 </div>
 
-<script type="module" src="/javascripts/transaction-new-form.js"></script>
+<script src="/javascripts/transaction-new-form.js"></script>

@@ -1,5 +1,3 @@
-import { apiRequest } from '/javascripts/extra-functions.js';
-
 let modalCategory = document.getElementById("modalAddCategory");
 var modalTitle = document.getElementById("modalTitle");
 
@@ -74,7 +72,7 @@ async function saveCategory() {
 
     // alert(JSON.stringify(categoryData, ' ', 4));
     
-    apiRequest('/categories', 'POST', categoryData)
+    axios.post('/categories', categoryData)
     .then( response => {
         showNotification( "Categoria cadastrada com sucesso!" );
 

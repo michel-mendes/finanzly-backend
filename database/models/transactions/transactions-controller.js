@@ -1,8 +1,3 @@
-// const { routesDir } = require('../../../app');
-
-const Joi = require('joi');
-const validateRequest = require('../../request-validator.js');
-
 // Here are the functions to handle each endpoint
 const transactionsServices = require('./transactions-services');
 
@@ -67,36 +62,31 @@ function saveTransaction( req, res, next ) {
         });
 }
 
-function editTransaction( req, res, next ) {
+async function editTransaction( req, res, next ) {
     
-    req.body.id = req.params.id;
+    try {
+        req.body.id = req.params.id;
 
-    transactionsServices.editTransaction( req.body )
-        .then( function ( promiseResult ) {
-            
-            if (promiseResult.error) {
-                res.status(400).json( promiseResult );
-            }
-            else {
-                res.status(200).json( promiseResult );
-            }
+        let response = await transactionsServices.editTransaction( req.body )
 
-        })
-        .catch( next );
+        res.status(200).send( response )
+    }
+    catch ( e ) {
+        res.status(500).send( e )
+    }
+    
 }
 
-function deleteTransaction(req, res, next) {
+async function deleteTransaction(req, res, next) {
 
-    transactionsServices.deleteTransaction( req.params.id )
-        .then( function ( deleteResult ) { 
-            if ( deleteResult.error ) {
-                res.status(400).json( deleteResult );
-            }
-            else {
-                res.json( deleteResult );
-            }
-        } )
-        .catch( next );
+    try {
+        let response = await transactionsServices.deleteTransaction( req.params.id )
+
+        res.status(200).send( response )
+    }
+    catch ( e ) {
+        res.status(500).send( e )
+    }
 
 }
 

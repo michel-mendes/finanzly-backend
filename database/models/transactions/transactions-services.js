@@ -2,6 +2,7 @@ const sequelize = require('../../database-controller');
 const { Op } = require('sequelize');
 const tabTransactions = require('./transactions');
 const tabCategories = require('../categories/categories-services')
+const tabWallets = require('../wallets/wallets-services')
 const tabTransactionsAndCategories = require('../association.transacation-category')
 const extras = require('../../../extra-functions')
 const util = require('util');
@@ -10,6 +11,7 @@ module.exports = {
     getAllTransactions,
     getTransactionById,
     getTransactionsByText,
+    getTransactionByCsvId,
     insertNewTransaction,
     editTransaction,
     deleteTransaction
@@ -36,6 +38,20 @@ async function getTransactionById( id ) {
     const transaction = await tabTransactions.findByPk( id );
 
     return transaction;
+}
+
+async function getTransactionByCsvId( userId, walletId, csvId ) {
+
+    let transaction = await tabTransactions.findAll({
+        where: {
+            userId: userId,
+            walletId: walletId,
+            csvImportId: csvId
+        }
+    })
+
+    return transaction
+
 }
 
 async function getTransactionsByText( params ) {
@@ -101,31 +117,37 @@ async function getTransactionsByText( params ) {
     console.log('\n\n')
     */
 
-    transactionsList = await tabTransactionsAndCategories.tabTransactions.findAll( {where: whereOperations, include: ['fromCategory', 'fromWallet']} );
+    transactionsList = await tabTransactionsAndCategories.tabTransactions.findAll( {
+        where: whereOperations,
+        order: [['date', 'DESC']],
+        include: ['fromCategory', 'fromWallet']
+    } );
 
     if ( groupByDate ) {
-        let groupedTransactions = {}
+                
+        const groupedTransactions = {}
 
         transactionsList.forEach( transaction => {
 
-            let groupItem = new Date( transaction.date ).toISOString().slice(0, 10).replace(/-/g, '')
+            let monthGroup = `${ extras.getFullDateName_PtBr( transaction.date ).monthName }-${ extras.getFullDateName_PtBr( transaction.date ).yearNumber }`
+            let dateGroup = new Date( transaction.date ).toISOString().split('T')[0]
 
-            if ( !groupedTransactions[ groupItem ] ) {
-                groupedTransactions[ groupItem ] = []
+            if ( !groupedTransactions[ monthGroup ] ) {
+                groupedTransactions[ monthGroup ] = {}
+            }
+            
+            if ( !groupedTransactions[ monthGroup ][ dateGroup ] ) {
+                groupedTransactions[monthGroup][ dateGroup ] = []
             }
 
-            groupedTransactions[ groupItem ].push( transaction )
+            groupedTransactions[ monthGroup ][ dateGroup ].push( transaction )
         })
 
         transactionsList = groupedTransactions
+
     }
 
     return transactionsList;
-}
-
-async function getTransactionsByDate(startDate = new Date(), endDate = new Date()) {
-    startDate.setHours(21, 00, 00, 000)
-    endDate.setHours(20, 59, 59, 999)
 }
 
 async function insertNewTransaction( parameters ) {
@@ -133,6 +155,7 @@ async function insertNewTransaction( parameters ) {
     // Creates a new transaction
     try {
         let category = await tabCategories.getCategoryById( parameters.categoryId )
+        let wallet = await tabWallets.getWalletById( parameters.walletId )
         
         // console.log(`Data recebida -> ${new Date(parameters.date).toJSON()}`)
 
@@ -146,8 +169,15 @@ async function insertNewTransaction( parameters ) {
         }
 
         let insertionResult = await tabTransactions.create( parameters );
-        // console.log('Resultado do cadastro:\n')
-        // console.log( JSON.stringify(insertionResult, '', 4) )
+
+        if ( parameters.debitValue > 0 ) {
+            wallet.actualBalance = Number(wallet.actualBalance) - Number(parameters.debitValue)
+            await tabWallets.editWallet( wallet )
+        }
+        else {
+            wallet.actualBalance = Number(wallet.actualBalance) + Number(parameters.creditValue)
+            await tabWallets.editWallet( wallet )
+        }
 
         return 'Transação cadastrada com sucesso!'
     }
@@ -157,35 +187,83 @@ async function insertNewTransaction( parameters ) {
 }
 
 async function editTransaction( parameters ) {
-    const transaction = await getTransactionById( parameters.id );    
-       
-    const editedTransaction = {
-        categoryId:     parameters.categoryId,
-        walletId:       parameters.walletId,
-        date:           parameters.date,      
-        description:    parameters.description,
-        extraInfo:      parameters.extraInfo,
-        value:          parameters.value,
-        creditValue:    parameters.creditValue,
-        debitValue:     parameters.debitValue,
-        csvImportId:    parameters.csvImportId
+    
+    try {
+
+        let transaction = await getTransactionById( parameters.id )
+        let actualCategory = await tabCategories.getCategoryById( transaction.categoryId )
+        let newCategory = await tabCategories.getCategoryById( parameters.categoryId )
+        let wallet = await tabWallets.getWalletById( parameters.walletId )
+
+        let newWalletBalance = 0    
+        let debitValue = newCategory.transactionType == 'D' ? parameters.value : 0
+        let creditValue = newCategory.transactionType == 'C' ? parameters.value : 0
+           
+        const editedTransaction = {
+            categoryId:     parameters.categoryId,
+            date:           parameters.date,      
+            description:    parameters.description,
+            extraInfo:      parameters.extraInfo,
+            value:          parameters.value,
+            creditValue:    creditValue,
+            debitValue:     debitValue,
+        }
+        console.log('edited transaction = ')
+        console.log(editedTransaction)
+
+        if ( newCategory.transactionType == actualCategory.transactionType ) {
+            newWalletBalance = newCategory.transactionType == 'D' ? Number(wallet.actualBalance) + Number(transaction.value) - Number(editedTransaction.value) : Number(wallet.actualBalance) - Number(transaction.value) + Number(editedTransaction.value)
+        }
+        else {
+            newWalletBalance = newCategory.transactionType == 'D' ? Number(wallet.actualBalance) - Number(transaction.value) - Number(editedTransaction.value) : Number(wallet.actualBalance) + Number(transaction.value) + Number(editedTransaction.value)
+        }
+    
+        Object.assign(transaction, editedTransaction);
+        console.log('transaction = ')
+        console.log(transaction)
+        
+        await transaction.save();
+        wallet.actualBalance = newWalletBalance
+        await tabWallets.editWallet( wallet )
+
+        return 'Transação alterada com sucesso!'
+
+    }
+    catch ( e ) {
+        throw `Erro interno >> ${ e }`
     }
 
-    Object.assign(transaction, editedTransaction);
-    
-    return await transaction.save();
 }
 
 async function deleteTransaction( id ) {
-    const transaction = await getTransactionById( id );
+    
+    try {
+        let transaction = await getTransactionById( id );
+        let wallet = await tabWallets.getWalletById( transaction.walletId )
 
-    if ( !transaction ) {
-        return {
-            error: true,
-            message: `Transação não encontrada!`
+        if ( !transaction ) {
+            return {
+                error: true,
+                message: `Transação não encontrada!`
+            }
         }
+
+        if ( transaction.creditValue > 0 ) {
+            wallet.actualBalance -= transaction.creditValue
+
+            await tabWallets.editWallet( wallet )
+        }
+        else {
+            wallet.actualBalance += transaction.debitValue
+
+            await tabWallets.editWallet( wallet )
+        }
+
+        await transaction.destroy();
+        return `Transação excluída com sucesso!`
+    }
+    catch ( e ) {
+        throw `Erro ao excluir transação >> "${ e }"`
     }
 
-    await transaction.destroy();
-    return {message: `Transação excluída com sucesso!`}
 }

@@ -2,6 +2,7 @@ const sequelize = require('../../database-controller');
 const { Op } = require('sequelize');
 const tabUserWallet = require('../association.user-wallet');
 const { tabWallets } = require('../association.user-wallet');
+const { tabTransactions } = require('../association.user-wallet')
 
 module.exports = {
     getAllWallets,
@@ -85,6 +86,7 @@ async function insertNewWallet( parameters ) {
 }
 
 async function editWallet( parameters ) {
+
     const wallet = await getWalletById( parameters.id );
 
     const existingWallet = await tabUserWallet.tabWallets.findOne({ where: { name: parameters.name,
@@ -103,14 +105,32 @@ async function editWallet( parameters ) {
             message: `Já existe uma carteira com esse nome!`
         }
     }
-    
-    const editedWallet = {
-        name: parameters.name,
-        currencySymbol: parameters.currencySymbol,
-        initialBalance: parameters.initialBalance
+
+    // Recalculate actual balance in case of "initialBalance" field value change
+    if ( parameters.initialBalance ) {
+        
+        if ( ( parameters.initialBalance > wallet.initialBalance ) || ( parameters.initialBalance < wallet.initialBalance ) ) {
+
+            let walletTransactions = await tabTransactions.findAll({
+                where: {
+                    walletId: wallet.id
+                }
+            })
+
+            let newBalance = Number(parameters.initialBalance)
+
+            for ( let i = 0; i < walletTransactions.length; i++ ) {
+                newBalance += Number(walletTransactions[ i ].creditValue)
+                newBalance -= Number(walletTransactions[ i ].debitValue)
+            }
+
+            parameters.actualBalance = newBalance
+
+        }
+
     }
 
-    Object.assign(wallet, editedWallet);
+    Object.assign(wallet, parameters);
     
     return await wallet.save();
 }
