@@ -25,7 +25,7 @@
                         <div class="section-selection">
                             <img class="wallet-icon" src="/images/wallet.png" alt="">
                             
-                            <input id="inputCategoryAutoComplete" tabindex="1" style="width: auto; flex: 1;" list="lsCategoriesList" placeholder="Digite o nome da categoria para pesquisar..." class="borderless">
+                            <input id="inputCategoryAutoComplete" tabindex="1" style="width: auto; flex: 1;" list="lsCategoriesList" placeholder="Digite o nome da categoria para pesquisar..." class="borderless" onkeyup="setInputUppercase( this )">
                             <datalist id="lsCategoriesList">
                                 <% userCategoriesList.forEach(category => { %>
                                     <option categoryId="<%= category.id %>" label="<%= category.transactionType == 'D' ? 'Gastos' : 'Recebimetos' %>"><%= category.name %></option>
@@ -45,7 +45,7 @@
                     
                     <label class="section-description flex-section field-border" for="editDescription">
                         <span class="full-label">Histórico</span>
-                        <input class="selection-edit boderderless" tabindex="3" type="text" name="description" id="editDescription">
+                        <input class="selection-edit boderderless" tabindex="3" type="text" name="description" id="editDescription" onkeyup="setInputUppercase( this )">
                     </label>
                     <label class="section-value flex-section field-border" for="editValue">
                         <span class="full-label">Valor</span>
@@ -53,7 +53,7 @@
                     </label>
                     <label class="section-extra-details flex-section field-border" for="editExtraInfo">
                         <span class="full-label boderderless">Detalhes adicionais</span>
-                        <input class="selection-edit boderderless" tabindex="5" type="text" name="extraInfo" id="editExtraInfo">
+                        <input class="selection-edit boderderless" tabindex="5" type="text" name="extraInfo" id="editExtraInfo" onkeyup="setInputUppercase( this )">
                     </label>
                 </div>
                 <div class="button-container">

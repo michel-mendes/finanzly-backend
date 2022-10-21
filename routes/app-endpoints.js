@@ -351,9 +351,9 @@ async function decodeTxtCef( csvData, userId, walletId ) {
 
         for (let i = 1; i < csvData.length; i++) {
 
-            let date =  String( csvData[i][1] ).slice(4) + '-' + 
-                        String( csvData[i][1] ).slice(2, 4) + '-' +
-                        String( csvData[i][1] ).slice(0, 2)
+            let date =  String( csvData[i][1] ).slice(0, 4) + '-' + 
+                        String( csvData[i][1] ).slice(4, 6) + '-' +
+                        String( csvData[i][1] ).slice(6, 8)
             
             date = xtraFunctions.parseDate( date )
 

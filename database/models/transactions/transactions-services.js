@@ -14,10 +14,13 @@ module.exports = {
     getTransactionByCsvId,
     insertNewTransaction,
     editTransaction,
-    deleteTransaction
+    deleteTransaction,
+    getGainsAndExpensesByWeek,
+    generateListGroupedByCategory,
+    generateListGroupedByDate
 };
 
-async function getAllTransactions( userId = new Number(0) ) {
+async function getAllTransactions( userId ) {
 
     if ( userId ) {
         let sqlQuery = {
@@ -60,6 +63,7 @@ async function getTransactionsByText( params ) {
     let searchString
     let startDate, endDate
     let groupByDate
+    let groupByCategory
     let whereOperations = {}
     let transactionsList
 
@@ -70,6 +74,7 @@ async function getTransactionsByText( params ) {
         startDate = params.startDate ? extras.parseDate( params.startDate ) : undefined
         endDate = params.endDate ? extras.parseDate( params.endDate ) : undefined
         groupByDate = params.groupByDate
+        groupByCategory = params.groupByCategory
 
         if ( userId ) {
             whereOperations['userId'] = userId
@@ -125,25 +130,13 @@ async function getTransactionsByText( params ) {
 
     if ( groupByDate ) {
                 
-        const groupedTransactions = {}
+        transactionsList = generateListGroupedByDate( transactionsList )
 
-        transactionsList.forEach( transaction => {
+    }
 
-            let monthGroup = `${ extras.getFullDateName_PtBr( transaction.date ).monthName }-${ extras.getFullDateName_PtBr( transaction.date ).yearNumber }`
-            let dateGroup = new Date( transaction.date ).toISOString().split('T')[0]
-
-            if ( !groupedTransactions[ monthGroup ] ) {
-                groupedTransactions[ monthGroup ] = {}
-            }
-            
-            if ( !groupedTransactions[ monthGroup ][ dateGroup ] ) {
-                groupedTransactions[monthGroup][ dateGroup ] = []
-            }
-
-            groupedTransactions[ monthGroup ][ dateGroup ].push( transaction )
-        })
-
-        transactionsList = groupedTransactions
+    if ( groupByCategory ) {
+                
+        transactionsList = generateListGroupedByCategory( transactionsList )
 
     }
 
@@ -208,8 +201,8 @@ async function editTransaction( parameters ) {
             creditValue:    creditValue,
             debitValue:     debitValue,
         }
-        console.log('edited transaction = ')
-        console.log(editedTransaction)
+        // console.log('edited transaction = ')
+        // console.log(editedTransaction)
 
         if ( newCategory.transactionType == actualCategory.transactionType ) {
             newWalletBalance = newCategory.transactionType == 'D' ? Number(wallet.actualBalance) + Number(transaction.value) - Number(editedTransaction.value) : Number(wallet.actualBalance) - Number(transaction.value) + Number(editedTransaction.value)
@@ -219,8 +212,8 @@ async function editTransaction( parameters ) {
         }
     
         Object.assign(transaction, editedTransaction);
-        console.log('transaction = ')
-        console.log(transaction)
+        // console.log('transaction = ')
+        // console.log(transaction)
         
         await transaction.save();
         wallet.actualBalance = newWalletBalance
@@ -265,5 +258,115 @@ async function deleteTransaction( id ) {
     catch ( e ) {
         throw `Erro ao excluir transação >> "${ e }"`
     }
+
+}
+
+function generateListGroupedByDate( transactionsList ) {
+
+    const groupedTransactions = {}
+
+    transactionsList.forEach( transaction => {
+
+        let monthGroup = `${ extras.getFullDateName_PtBr( transaction.date ).monthName }-${ extras.getFullDateName_PtBr( transaction.date ).yearNumber }`
+        let dateGroup = new Date( transaction.date ).toISOString().split('T')[0]
+
+        if ( !groupedTransactions[ monthGroup ] ) {
+            groupedTransactions[ monthGroup ] = {}
+        }
+        
+        if ( !groupedTransactions[ monthGroup ][ dateGroup ] ) {
+            groupedTransactions[monthGroup][ dateGroup ] = []
+        }
+
+        groupedTransactions[ monthGroup ][ dateGroup ].push( transaction )
+    })
+
+    return groupedTransactions    
+
+}
+
+function generateListGroupedByCategory( transactionsList, groupByTransactionTypes ) {
+
+    let groupedTransactions = {}
+
+    transactionsList.forEach( transaction => {
+
+        if ( !groupedTransactions[ transaction.fromCategory.name ] ) {
+            groupedTransactions[ transaction.fromCategory.name ] = {
+                type: transaction.fromCategory.transactionType,
+                transactions: []
+            }
+        }
+
+        groupedTransactions[ transaction.fromCategory.name ].transactions.push( transaction )
+
+    })
+
+    if ( groupByTransactionTypes ) {
+        groupedTransactions = groupByType( groupedTransactions )
+    }
+
+    // console.log( JSON.stringify( groupedTransactions, '', 4) )
+    return groupedTransactions
+
+
+    function groupByType( groups ) {
+
+        let typeGroups = {}
+        let categories = Object.keys( groups )
+
+        for ( let i = 0; i < categories.length; i++) {
+
+            let type = groups[ categories[i] ].type
+            
+            if ( !typeGroups[ type ] ) {
+                typeGroups[ type ] = {}
+            }
+
+            if ( !typeGroups[ type ][ categories[i] ] ) {
+                typeGroups[ type ][ categories[i] ] = {}
+            }
+
+            typeGroups[ type ][ categories[i] ] = groups[ categories[i] ]
+
+        }
+
+        return typeGroups
+
+    }
+
+}
+
+async function getGainsAndExpensesByWeek( transactions, start, end ) {
+
+    if ( !start || !end ) {
+        return `Parâmetros não enviados na query string:\n'start': Deverá ser informada a data inicial para consulta\n'end': Deverá ser informada a data final para consulta`
+    }
+    
+    let startDate = extras.parseDate(start)
+    let endDate = extras.parseDate(end)
+    let weeks = {}
+    
+    weeks = extras.getWeeks( startDate, endDate)
+    
+    for ( let i = 1; i <= weeks.weeksCount; i++ ) {
+
+        weeks.weeksList[i].totalGains = 0
+        weeks.weeksList[i].totalExpenses = 0
+        // console.log(`Inicial - ${ weeks.weeksList[i].firstDay }, Final - ${ weeks.weeksList[i].lastDay }`)
+
+        transactions.forEach( transaction => {
+
+            if ( transaction.date >= new Date(weeks.weeksList[i].firstDay) && transaction.date <= new Date(weeks.weeksList[i].lastDay) ) {
+                // console.log(`Data Transação - ${transaction.date}`)
+                weeks.weeksList[i].totalGains += transaction.creditValue > 0 ? transaction.value : 0
+                weeks.weeksList[i].totalExpenses += transaction.debitValue > 0 ? transaction.value : 0
+            }
+
+        })
+
+    }
+
+    return weeks
 
 }

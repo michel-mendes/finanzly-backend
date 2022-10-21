@@ -49,7 +49,7 @@ async function sendCsvFile() {
 
         formData.append( 'csvFile', inputFile.files[0] )
         response = await axios.post( `/app/transactions/import?bank=${ selectedBank }`, formData )
-        importsContainer.innerHTML = await importBancoDoBrasil( response.data )
+        importsContainer.innerHTML = await buildImportTable( response.data )
         inputFile.value = ''
 
     }
@@ -159,8 +159,11 @@ function setUpperCaseAndCursorPosition( inputField ) {
 
 }
 
-async function importBancoDoBrasil( csvData ) {
+async function buildImportTable( csvData ) {
 
+    let selectBanks = document.getElementById('selectBanksList')
+    let bankName = selectBanks.options[ selectBanks.selectedIndex ].text
+    
     try {
 
             let html = '<table>'
@@ -242,7 +245,7 @@ async function importBancoDoBrasil( csvData ) {
 
     }
     catch ( error ) {
-        return `Erro ao importar CSV do Banco do Brasil, verifique se é a instituição correta.`
+        return `Erro inesperado durate a leitura dos dados, verifique se a origem do arquivo CSV é realmente de "${ bankName }"`
     }
 
 }

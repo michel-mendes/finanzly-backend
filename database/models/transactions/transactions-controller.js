@@ -10,7 +10,21 @@ router.post('/', saveTransaction); // Create new transaction
 router.put('/:id', editTransaction); // Update transaction
 router.delete('/:id', deleteTransaction); // Delete category
 
-router.get('/fromUser/:userId', async () => { // Gte user transactions grouped by date
+router.get('/test/test', async (req, res, next) => { // localhost:3000/transactions/test
+
+    let transactions = await transactionsServices.getTransactionsByText({
+        userId: req.session.userId,
+        walletId: req.session.selectedWalletId,
+        startDate: req.query.start,
+        endDate: req.query.end
+    })
+
+    let result = {
+        gainsAndExpensesByWeek: await transactionsServices.getGainsAndExpensesByWeek( transactions, req.query.start, req.query.end ),
+        transactionsGroupedByCategory: await transactionsServices.generateListGroupedByCategory( transactions, req.query.groupbytype )
+    }
+
+    res.send( result )
 
 });
 
@@ -25,7 +39,8 @@ function listTransactions( req, res, next ) {
         searchString: req.query.search,
         startDate: req.query.start,
         endDate: req.query.end,
-        groupByDate: req.query.groupdate
+        groupByDate: req.query.groupdate,
+        groupByCategory: req.query.groupcategory
     }
     
     transactionsServices.getTransactionsByText( queryOptions )

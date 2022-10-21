@@ -11,11 +11,17 @@
 
     <!-- Import AXIOS Library -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <!-- Import ChartJS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Import my extra funtions library -->
+    <script src="/javascripts/extra-functions.js"></script>
 
     <title>My Wallet</title>
 </head>
-<body>
-    <div class="nav">
+<body mwa-page="dashboard">
+    <section class="nav">
         <input type="checkbox" id="nav-check">
         
         <div class="nav-header">
@@ -42,23 +48,25 @@
             </label>
         </div>
 
-        <div style="border: 1px red solid; padding: 10px; margin: 5px;">
-            <span style="width: 100%; text-align: center; display: block;">DIV Testes</span>
-            <span>ID do usuáro....: </span> <%= userId %> <br>
-            <span>Nome do usuário.: </span> <%= userFirstName %> <br><br>
-            <button onclick="showNotification('Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum beatae sequi repellendus ullam? Esse, facere repudiandae perferendis labore quae est distinctio veniam suscipit aperiam voluptatum totam sequi architecto, corrupti velit?<br><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum beatae sequi repellendus ullam? Esse, facere repudiandae perferendis labore quae est distinctio veniam suscipit aperiam voluptatum totam sequi architecto, corrupti velit?<br><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum beatae sequi repellendus ullam? Esse, facere repudiandae perferendis labore quae est distinctio veniam suscipit aperiam voluptatum totam sequi architecto, corrupti velit?')">Mostra mensagem</button>
+    </section>
+
+    <section class="dashboard-content">
+        <div class="charts-container">
+            <div class="bar-chart-container">
+                <canvas id="monthChart"></canvas>
+            </div>
+    
+            <div class="doughnut-charts-container">
+                <div class="doughnut-container">
+                    <canvas id="gainsByCategoryChart"></canvas>
+                </div>
+    
+                <div class="doughnut-container">
+                    <canvas id="expensesByCategoryChart"></canvas>
+                </div>
+            </div>
         </div>
-
-        <div style="border: 1px red solid; padding: 10px; margin: 5px;">
-            <span>Selecione um arquivo</span><br><br>
-            <input type="file" id="editSelectFile"><br><br><br>
-            <button onclick="sendFile()">Enviar...</button><br><br>
-
-            <div id="divResponse"></div>
-
-        </div>
-
-    </div>
+    </section>
 
     <!-- 'Add / Edit transaction' modal start-->
     <%#- include('../partials/transaction-new-form.html', {user: userId}); %>
@@ -69,18 +77,213 @@
     <!-- Top notification bar end-->
 
     <script>
-        async function sendFile() {
+        let today = new Date()
+        let firstDay = new Date( today.getFullYear(), today.getMonth(), 1 )
+        let lastDay = new Date( today.getFullYear(), today.getMonth() + 1, 0 )
+        let btnGetReport = document.getElementById('btnGetReport')
 
-            let formData = new FormData()
-            let response
-            let divResponse = document.getElementById( 'divResponse' )
-            
-            formData.append('file', document.getElementById('editSelectFile').files[0])
-            response = await axios.post( '/app/test', formData )
+        // buildChart()
+        const ctx = document.getElementById( 'monthChart' )
+        const ctx2 = document.getElementById( 'gainsByCategoryChart' )
+        const ctx3 = document.getElementById( 'expensesByCategoryChart' )
+        buildCharts()
+        // buildEarningsAndExpensesChart()
+        
+        async function buildCharts() {
 
-            divResponse.innerHTML = '<pre>' + JSON.stringify(response.data, '', 4) + '<pre>'
+            try {
+
+                let result = await axios.get(`/transactions/test/test?start=2022-08-19&end=2022-09-18&groupbytype=true`)
+                let weeksList = result.data.gainsAndExpensesByWeek.weeksList
+                let weeksCount = result.data.gainsAndExpensesByWeek.weeksCount
+                let categoriesList = result.data.transactionsGroupedByCategory
+                
+                let weeksNamesArray = []
+                let gainsArray = []
+                let expensesArray = []
+
+                let gainsCategories = categoriesList.C
+                let gainsCategoriesNames = Object.keys( gainsCategories )
+                let totalGainsByCategory = []
+
+                let expensesCategories = categoriesList.D
+                let expensesCategoriesNames = Object.keys( expensesCategories )
+                let totalExpensesByCategory = []
+
+                for ( let i = 1; i <= weeksCount; i++ ) {
+
+                    weeksNamesArray.push( `Semana ${i}` )
+                    gainsArray.push( weeksList[i].totalGains )
+                    expensesArray.push( weeksList[i].totalExpenses )
+                    // console.log( result.data.gainsAndExpensesByWeek.weeksList[i].firstDay )
+
+                }
+
+                for ( let i = 0; i < gainsCategoriesNames.length; i++ ) {
+                    let totalGains = 0
+
+                    gainsCategories[ gainsCategoriesNames[ i ] ].transactions.forEach( transaction => {
+                        totalGains += transaction.value
+                    });
+
+                    totalGainsByCategory.push( totalGains )
+                }
+
+                for ( let i = 0; i < expensesCategoriesNames.length; i++ ) {
+                    let totalExpenses = 0
+
+                    expensesCategories[ expensesCategoriesNames[ i ] ].transactions.forEach( transaction => {
+                        totalExpenses += transaction.value
+                    });
+
+                    totalExpensesByCategory.push( totalExpenses )
+                }
+
+                buildEarningsAndExpensesChart( weeksNamesArray, gainsArray, expensesArray )
+                buildgainsByCategoryChart( ctx2, gainsCategoriesNames, totalGainsByCategory, 'Ganhos no período' )
+                buildgainsByCategoryChart( ctx3, expensesCategoriesNames, totalExpensesByCategory, 'Despesas no período' )
+                
+                // console.log( totalGainsByCategory )
+                // console.log( totalExpensesByCategory )
+                // console.log( result.data )
+
+            }
+            catch (e) {
+
+                throw `Erro >>> ${ e }`
+
+            }
 
         }
+
+        async function buildEarningsAndExpensesChart( weeksNames, gainsArray, expensesArray ) {
+
+            //let transactions = await getTransactionsData()
+            //let EarningsAndExpenses = await getEarningsAndExpenses( transactions )
+
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: weeksNames,
+                    datasets: [{
+                        label: 'Ganhos',
+                        data: gainsArray,
+                        backgroundColor: [
+                            'rgba(0, 0, 255, 0.2)',
+                            'rgba(0, 0, 255, 0.2)',
+                            'rgba(0, 0, 255, 0.2)',
+                            'rgba(0, 0, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 0, 255, 1)',
+                            'rgba(0, 0, 255, 1)',
+                            'rgba(0, 0, 255, 1)',
+                            'rgba(0, 0, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }, {
+                        label: 'Gastos',
+                        data: expensesArray,
+                        backgroundColor: [
+                            'rgba(255, 0, 0, 0.2)',
+                            'rgba(255, 0, 0, 0.2)',
+                            'rgba(255, 0, 0, 0.2)',
+                            'rgba(255, 0, 0, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 0, 0, 1)',
+                            'rgba(255, 0, 0, 1)',
+                            'rgba(255, 0, 0, 1)',
+                            'rgba(255, 0, 0, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Relatório de Ganhos x Gastos'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            })
+        
+            // myChart.height = 200;
+
+        }
+
+        
+        async function buildgainsByCategoryChart( canvasElement, categoriesNamesArray, valuesArray, chartTitle ) {
+
+            const myChart = new Chart( canvasElement, {
+                type: 'doughnut',
+                data: {
+                    labels: categoriesNamesArray,
+                    datasets: [{
+                        label: 'Total',
+                        data: valuesArray,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 2500
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: chartTitle
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                display: false
+                            }
+                        }]
+                    }
+                }
+            })
+
+            console.log( myChart )
+            
+        }
+
+        let testDate = today.getFullYear()
+
+        document.getElementById( 'dateToday' ).innerText = today
+        document.getElementById( 'dateFirstDay' ).innerText = firstDay
+        document.getElementById( 'dateLastDay' ).innerText = lastDay
+        // document.getElementById( 'test' ).innerText = testDate
     </script>
 </body>
 </html>

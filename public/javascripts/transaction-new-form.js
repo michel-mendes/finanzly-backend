@@ -11,7 +11,6 @@ var btnAddTransaction   = document.getElementById("menuBtnAddTransaction")
 var btnCloseModal       = document.getElementsByClassName("btnCloseModal")[0]
 var btnSave             = document.getElementById('btnSave')
 var btnCancel           = document.getElementById('btnCancel')
-var inputCollection     = document.getElementsByTagName('input')
 
 // Assign buttons events
 btnSave.onclick             = function() { saveTransaction() }
@@ -53,14 +52,6 @@ window.onkeyup              = function( key ) {
     if ( (keyCode === 45) && ( modalTransaction.style.display != "block" ) ) { //Pressed ins key
         openNewTransactionModal()
     }
-}
-
-for ( let i = 0; i < inputCollection.length; i++ ) {
-
-    if ( ( inputCollection.item(i).getAttribute('type') == 'number' ) || ( inputCollection.item(i).getAttribute('type') == 'date' ) ) continue
-    
-    inputCollection.item(i).onkeyup = () => { inputCollection.item(i).value = inputCollection.item(i).value.toUpperCase() }
-
 }
 
 function openNewTransactionModal( transactionData ) {
@@ -149,7 +140,9 @@ async function saveTransaction() {
         let data = getFormValues()
         
         if ( data.categoryId == -1 ) {
-            showNotification('A categoria selecionada não existe!')
+            showNotification(`Categoria "${ categoryComboBox.value }" não encontrada!`)
+            categoryComboBox.value = ''
+            categoryComboBox.focus()
             return
         }
 

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/stylesheets/global.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="module" src="/javascripts/wallets-listing.js" defer></script>
+    <script src="/javascripts/extra-functions.js"></script>
     <title>Minhas carteiras</title>
 </head>
 <body mwa-page="wallets-listing">
@@ -18,7 +19,9 @@
     <header class="toolbar">
         <div id="leftSide">
             <div class="back-button-container">
-                <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar" onclick="history.back()">
+                <a href="/app/dashboard">
+                    <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar" onclick="history.back()">
+                </a>
             </div>
 
             <div class="page-title-container">

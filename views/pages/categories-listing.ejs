@@ -14,6 +14,7 @@
 
     <script src="/javascripts/categories-listing.js" type="module" defer></script>
     <script src="/javascripts/category-new-form.js" type="module" defer></script>
+    <script src="/javascripts/extra-functions.js"></script>
     <title>My Wallet App - Categorias</title>
 </head>
 <body mwa-page="categories-listing">
@@ -24,7 +25,9 @@
     <header class="toolbar">
         <div id="leftSide">
             <div class="back-button-container">
-                <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar" onclick="history.back()">
+                <a href="/app/dashboard">
+                    <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar" onclick="history.back()">
+                </a>
             </div>
 
             <div class="page-title-container">

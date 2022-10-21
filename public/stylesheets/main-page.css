@@ -3,10 +3,54 @@
     box-sizing: border-box;
   }
   
-  body {
+  body[mwa-page="dashboard"] {
     margin: 0px;
     font-family: 'segoe ui';
   }
+  
+  body[mwa-page="dashboard"] .dashboard-content {
+    /* border: 3px dashed purple; */
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body[mwa-page="dashboard"] .charts-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  body[mwa-page="dashboard"] .bar-chart-container {
+    height: 400px;
+    width: 400px;
+  }
+
+  body[mwa-page="dashboard"] .doughnut-charts-container {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    justify-content: space-evenly;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  body[mwa-page="dashboard"] .doughnut-charts-container .doughnut-container {
+    width: 400px;
+  }
+
+  body[mwa-page="dashboard"] #monthChart,
+  body[mwa-page="dashboard"] #gainsByCategoryChart,
+  body[mwa-page="dashboard"] #expensesByCategoryChart {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+
+  /* body[mwa-page="dashboard"] #gainsByCategoryChart { */
+    /* border: 3px black solid; */
+    /* width: 200px; */
+  /* } */
   
   .nav {
     height: 50px;
@@ -74,6 +118,8 @@
   .nav > #nav-check {
     display: none;
   }
+
+
   
   @media (max-width:600px) {
     .nav > .nav-btn {
