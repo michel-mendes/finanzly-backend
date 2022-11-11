@@ -2,66 +2,53 @@
 var btnNewWallet = document.getElementById("btnNewWallet");
 var ctaCreateNewWallet = document.getElementById("ctaCreateNewWallet"); // Only shown when there are no wallets to show
 
-// Getteing the wallets list controls
-var allEditButtons = document.getElementsByName("btnEditWallet");
-var allDeleteButtons = document.getElementsByName("btnDeleteWallet");
-
 // Getting modal controls
 var modalWallet = document.getElementById("modalAddWallet");
-var modalTitle = document.getElementById("modalTitle");
+var titleCaption = document.getElementById("titleCaption");
 var btnCloseModal = document.getElementById("btnCloseModal");
 var btnSaveModal = document.getElementById("btnSave");
+var btnDeleteWallet = document.getElementById('btnDeleteWallet')
 var btnCancel = document.getElementById("btnCancel");
-
-// Getting wallet editor controls
-var boxWalletEditor = document.getElementById("walletEditorBox");
-var editorTitle = document.getElementById("editorTitle");
-var btnSaveEditing = document.getElementById("btnSaveEditing");
-var btnCloseEditor = document.getElementById("btnCloseEditor");
-var btnCancelEdition = document.getElementById("btnCancelEditing");
+var walletsList = document.querySelectorAll('.list-item')
 
 // Setting up the controls events
 btnNewWallet.onclick = function() { openModal() };
 btnCloseModal.onclick = function() { closeModal() };
 btnSaveModal.onclick = () => { saveWallet() };
 btnCancel.onclick = function() { closeModal() };
-btnSaveEditing.onclick = () => { editWallet( document.getElementById("editId2").value ) }
-btnCloseEditor.onclick = () => { closeEditor() };
-btnCancelEdition.onclick = () => { closeEditor() };
-allEditButtons.forEach( editButton => { editButton.onclick = () => { openWalletEditor( editButton.getAttribute("walletId") ) } } );
-allDeleteButtons.forEach( deleteButton => { deleteButton.onclick = () => { deleteWallet( deleteButton.getAttribute('walletId') ) } } );
+btnDeleteWallet.onclick = () => {
+    let editingWalletId = document.getElementById("editId").value
+    deleteWallet( editingWalletId )
+}
+
+walletsList.forEach( (item) => {
+    let walletId = item.getAttribute('walletid')
+    let walletName = document.getElementById( `name${walletId}` ).innerText
+    let currencySymbol = document.getElementById( `currencySymbol${walletId}` ).innerText
+    let initialBalance = document.getElementById( `intialBalance${walletId}` ).innerText
+
+    item.onclick = () => { openModal( walletId, walletName, currencySymbol, initialBalance ) }
+})
+
 if ( ctaCreateNewWallet ) { ctaCreateNewWallet.onclick = () => { openModal() } };
 
 
 // Here are the functions that will be triggered by the buttons
-function openModal() {
+function openModal( editingWalletId = 0, walletName = '', currencySymbol = '', initialBalance = 0 ) {
     // When the user clicks the button, open the modal 
-    modalTitle.innerHTML = 'ADICIONAR CARTEIRA';
-    document.getElementById("editName").value = '';
-    document.getElementById("editSymbol").value = '';
-    document.getElementById("editBalance").value = '';
+    titleCaption.innerHTML = Number(editingWalletId) <= 0 ? 'ADICIONAR CARTEIRA' : 'ALTERANDO CARTEIRA';
+    btnDeleteWallet.style.visibility = Number(editingWalletId) <= 0 ? 'hidden' : 'visible'
+
+    document.getElementById("editId").value = Number( editingWalletId );
+    document.getElementById("editName").value = walletName;
+    document.getElementById("editSymbol").value = currencySymbol;
+    document.getElementById("editBalance").value = initialBalance;
     
     modalWallet.style.display = "block";
 }
 
-function openWalletEditor( walletId ) {
-    // When the user clicks the button, open the modal 
-    editorTitle.innerHTML = 'EDITAR CARTEIRA';
-
-    document.getElementById('editId2').value = walletId;
-    document.getElementById("editName2").value = document.getElementById(`name${walletId}`).innerText;
-    document.getElementById("editSymbol2").value = document.getElementById(`currencySymbol${walletId}`).innerText;
-    document.getElementById("editBalance2").value = document.getElementById(`intialBalance${walletId}`).innerText;
-    
-    boxWalletEditor.style.display = "block";
-}
-
 function closeModal() {
     modalWallet.style.display = "none";
-}
-
-function closeEditor() {
-    boxWalletEditor.style.display = "none";
 }
 
 window.onkeyup = function( key ) {
@@ -79,38 +66,25 @@ window.onclick = function(event) {
     }
 }
 
-function saveWallet() {
-    let walletData = {
-        name: document.getElementById("editName").value,
-        currencySymbol: document.getElementById("editSymbol").value,
-        initialBalance: document.getElementById("editBalance").value     
-    }
+async function saveWallet() {
+    try {
+        let editingWalletId = document.getElementById("editId").value
+        
+        let walletData = {
+            name: document.getElementById("editName").value,
+            currencySymbol: document.getElementById("editSymbol").value,
+            initialBalance: document.getElementById("editBalance").value     
+        }
 
-    axios.post('/wallets', walletData)
-    .then( (result) => {
-        showNotification( `Carteira cadastrada com sucesso!` );
+        let axiosResponse = editingWalletId <= 0 ? await axios.post('/wallets', walletData) : axios.put(`/wallets/${editingWalletId}`, walletData)
+        let notificationText = editingWalletId <= 0 ? `Carteira ${ walletData.name } criada com sucesso` : `Carteira ${ walletData.name } alterada com sucesso`
+        
+        showNotification( notificationText )
         setTimeout(refreshPage, 2000);
-    })
-    .catch( (e) => {
-        showNotification( `Erro: ${ e.response.data }` );
-    })
-}
-
-function editWallet( walletId ) {
-    let walletData = {
-        name: document.getElementById("editName2").value,
-        currencySymbol: document.getElementById("editSymbol2").value,
-        initialBalance: document.getElementById("editBalance2").value     
     }
-
-    axios.put(`/wallets/${walletId}`, walletData)
-    .then( (result) => {
-        showNotification( `Carteira alterada com sucesso!` );
-        setTimeout(refreshPage, 2000);
-    })
-    .catch( (e) => {
-        showNotification( `Erro: ${ e.response.data }` );
-    })
+    catch ( e ) {
+        showNotification( `Erro >> ${ e }` );
+    }
 }
 
 function refreshPage() {
