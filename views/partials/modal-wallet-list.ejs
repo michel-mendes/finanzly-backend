@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/stylesheets/modal-wallet-list.css">
 
  -->
-<div id="walletsListModalWrapper">
+<div mwa-page="modal-wallet-list" id="walletsListModalWrapper">
   <div class="wallet-list-container" id="walletListContainer">
     <div class="header">
         <span class="title">Selecione a carteia abaixo</span>
@@ -36,9 +36,11 @@
 
 <script>
   var selectedWallet
+  var btnCloseModal = document.getElementById('btnCloseWalletList')
   var btnCancel = document.getElementById('btnCancel_WalletSelectionModal')
   let btnSelect = document.getElementById('btnSelect_WalletSelectionModal')
 
+  btnCloseModal.onclick = () => { cancelWalletSelection() }
   btnCancel.onclick = () => { cancelWalletSelection() }
   btnSelect.onclick = () => { confirmWalletSelection() }
 

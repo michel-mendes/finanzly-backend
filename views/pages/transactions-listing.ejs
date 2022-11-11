@@ -27,7 +27,7 @@
 
     <title>Minhas transações</title>
 </head>
-<body mwa-page="transactions-listing">
+<body mwa-page="transactions-listing" class="page-transition-fade-in">
     
     <!-- Start of the visible app content -->
     <div id="app-content">
@@ -35,14 +35,13 @@
         <header class="toolbar">
             <div id="leftSide">
                 <div class="back-button-container">
-                    <a href="/app/dashboard">
+                    <!-- <a href="/app/dashboard"> -->
+                    <a onclick="fadeRedirect('/app/dashboard')">
                         <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar">
                     </a>
                 </div>
-
-                <% if ( selectedWallet == -1 ) {%>
-                               
-                    <div id="selectedWalletContainer">
+                
+                <div id="selectedWalletContainer">
                     <div class="no-wallet-selected-container">
                         <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
                         <div class="select-wallet-container">
@@ -51,11 +50,9 @@
                         </div>
                     </div>
                 </div>
+                                
                 
-                <% }
-                else { %>
-                
-                <div id="selectedWalletContainer">
+                <!-- <div id="selectedWalletContainer">
                     <div class="wallet-container">
                         <img class="wallet-icon" src="/images/wallet.png" alt="Ícone da carteira">
                         <div class="wallet-info">
@@ -65,23 +62,22 @@
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <% } %>
             </div>
 
             <div id="rightSide">
-                <% if ( selectedWallet > 0 ) { %>
-                <div class="commands-container" id="commandsContainer">
+                
+                <!-- <div class="commands-container" id="commandsContainer">
                     <span class="material-icons">calendar_month</span>
-                    <span class="material-icons search-icon">search</span>
+                    <span class="material-icons search-icon" id="btnSearchTransaction">search</span>
 
                     <button class="btn btn-cl-green" id="menuBtnAddTransaction">
                         <span class="btn-caption">ADICIONAR TRANSAÇÃO</span>
                         <span class="btn-icon material-icons">add</span>
                     </button>
-                </div>
-                <% } %>
+                </div> -->
+                
             </div>
         </header>
 
@@ -98,7 +94,7 @@
         
                         <div class="month-year-box">
                             <span id="groupMonthYear">
-                                <span>terça-feira</span><br>
+                                <span class="day-name">terça-feira</span><br>
                                 <span>janeiro 2022</span>
                             </span>
                         </div>
@@ -144,6 +140,10 @@
     <!-- 'Add / Edit transaction' modal start-->
     <%- include('../partials/transaction-new-form.html', {user: userId, userCategoriesList: userCategoriesList}); %>
     <!-- 'Add / Edit transaction' modal end-->
+
+    <!-- 'Search transactions' modal start-->
+    <%- include('../partials/search-transaction-dialog.html', {}); %>
+    <!-- 'Search transactions' modal end-->
     
     <!-- Top notification bar start-->
     <%- include('../partials/top-notification-bar.html'); %>

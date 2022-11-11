@@ -1,5 +1,3 @@
-const seuqelize = require('../database-controller');
-
 const relationship = {};
 
 relationship.tabUsers = require('./users/users');

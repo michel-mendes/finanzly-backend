@@ -10,7 +10,9 @@ const originalUserScope = {
     firstName:  Sequelize.STRING,
     userName:   Sequelize.STRING,
     email:      Sequelize.STRING,
-    password:   Sequelize.STRING    
+    password:   Sequelize.STRING,
+    dashboardWalletId: Sequelize.INTEGER,
+    transactionsSelectedWalletId: Sequelize.INTEGER
 }
 
 const User = database.define('users', originalUserScope, {

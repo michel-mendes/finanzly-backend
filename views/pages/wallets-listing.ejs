@@ -112,14 +112,14 @@
                         <div>
                             <label for="editName2" id="labelName" class="field-border">
                                 <span>Nome da carteira</span>
-                                <input type="text" name="name" id="editName2" class="borderless">
+                                <input type="text" name="name" id="editName2" class="borderless" onkeyup="setInputUppercase( this )">
                             </label>
                         </div>
         
                         <div class="symbol-balance-container">
                             <label for="editSymbol2" id="labelName" class="field-border">
                                 <span>Símbolo da moeda (Ex: R$)</span>
-                                <input type="text" name="currencySymbol" id="editSymbol2" class="borderless">
+                                <input type="text" name="currencySymbol" id="editSymbol2" class="borderless" onkeyup="setInputUppercase( this )">
                             </label>
                             
                             <label for="editBalance2" id="labelName" class="field-border">

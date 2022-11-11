@@ -1,0 +1,54 @@
+<dialog type="search-dialog" id="searchTransactionsDialog">
+  
+    <div class="header">
+      <h2>Procurar transação</h2>
+      <span class="material-icons" id="btnCloseSearchDialog">close</span>
+    </div>
+  
+    <hr>
+  
+    <div class="content">
+      
+      <div class="date-fields-container">
+        <div class="item">
+          <label for="sdgInputStartDate">
+            <span>Data de início</span>
+            <input type="date" id="sdgInputStartDate">
+          </label>
+        </div>
+  
+        <div class="item">
+          <label for="sdgInputEndDate">
+            <span>Data de término</span>
+            <input type="date" id="sdgInputEndDate">
+          </label>
+        </div>
+      </div>
+  
+      <div class="item">
+        <label for="inputText">
+          <span>Digite abaixo para pesquisar transações</span>
+          <input type="text" id="sdgInputText">
+        </label>
+      </div>
+  
+    </div>
+  
+    <div class="footer">
+      
+      <button class="btn btn-cl-green" id="sdgBtnApplyFilters">
+        <span class="btn-caption">APLICAR FILTROS</span>
+        <span class="btn-icon material-icons">done_outline</span>
+      </button>
+
+      <button class="btn btn-cl-yellow" id="sdgBtnCancel">
+        <span class="btn-caption">CANCELAR</span>
+        <span class="btn-icon material-icons">cancel</span>
+      </button>
+
+    </div>
+  
+  </dialog>
+
+  <link rel="stylesheet" href="/stylesheets/search-transaction-dialog.css">
+  <script src="/javascripts/search-transaction-dialog.js"></script>

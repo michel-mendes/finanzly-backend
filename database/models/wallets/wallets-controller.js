@@ -5,7 +5,7 @@ const validateRequest = require('../../request-validator.js');
 const walletServices = require('./wallets-services.js');
 
 var express = require('express');
-const { tabUsers, tabWallets } = require('../association.user-wallet.js');
+// const { tabUsers, tabWallets } = require('../association.user-wallet.js');
 var router = express.Router();
 
 router.get('/', listAllWallets); // List all wallets
@@ -22,17 +22,6 @@ router.get('/user/:userId', (req, res, next) => {
 
 })
 
-function validateWalletRequest(req, res, next) {
-    const newUserSchema = Joi.object({
-        id:             (req.method = 'PUT') ? Joi.number().required() : Joi.number(),
-        userId:         Joi.string().required(),
-        name:           Joi.string().required(),
-        currencySymbol: Joi.string().required()
-    });
-
-    validateRequest(req, next, newUserSchema);
-}
-
 function listAllWallets(req, res, next) {
     // Query strings:
     // accociate: Boolean; -> If assigned will show the user owner of the wallet
@@ -48,12 +37,12 @@ function listById(req, res, next) {
     
     walletServices.getWalletById( req.params.id )
         .then( function( promiseWallet ) {
-            if ( !promiseWallet ) {
-                res.status(400).json( {
-                    error: true,
-                    message: `Wallet not found!`
-                } )
-            }
+            // if ( !promiseWallet ) {
+            //     res.status(400).json( {
+            //         error: true,
+            //         message: `Wallet not found!`
+            //     } )
+            // }
             
             res.status(200).json( promiseWallet );
         } )

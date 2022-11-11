@@ -5,6 +5,7 @@ var Papa = require('papaparse')
 var tabWallets = require('../database/models/wallets/wallets-services')
 var tabCategories = require('../database/models/categories/categories-services')
 var tabTransactions = require('../database/models/transactions/transactions-services')
+var tabUsers = require('../database/models/users/users-services')
 var { appDirectories } = require('../app');
 
 router.get('/', function(req, res, next) {
@@ -33,14 +34,23 @@ router.get('/logout', function (req, res, next) {
 
 router.post( '/authenticate', bodyParser.urlencoded({extended: true}), authenticateUser );
 
-router.get('/dashboard', function(req, res, next) {
+router.get('/dashboard', async function(req, res, next) {
     if ( !req.session.loggedIn ) {
         res.redirect( '/app/login' )
     }
     else {
+        let user = await tabUsers.getUserById( req.session.userId )
+        let userWallets = await tabWallets.getWalletsFromUser( req.session.userId )
+        let userCategories = await tabCategories.getCategoriesFromUser( req.session.userId )
+
+        let today = new Date()
+        let firstDay = new Date( today.getFullYear(), today.getMonth(), 1 ).toJSON().slice(0, 10)
+        let lastDay = new Date( today.getFullYear(), today.getMonth() + 1, 0 ).toJSON().slice(0, 10)
+                
         res.render( './pages/main-page', {
             userId: req.session.userId,
-            userFirstName: req.session.userFirstName
+            userFirstName: req.session.userFirstName,
+            dashboardWalletId: user.dashboardWalletId
         });
     }
 })
@@ -73,26 +83,30 @@ router.get('/transactions', async (req, res, next) => {
             res.redirect( '/app/login' )
         }
         else {
-            
-            let selectedWallet = {}
-            let userCategoriesList
-    
+        
+            let user = {}
+            let wallet = {}
+            let userCategoriesList = await tabCategories.getCategoriesFromUser( req.session.userId )
+
             // Retrieves the wallet in which the user recorded the last transaction
             if ( !req.session.selectedWallet ) {
-                req.session.selectedWallet = -1;
-            }
-            else {
-                selectedWallet = await tabWallets.getWalletById( req.session.selectedWallet )
 
-                if ( !selectedWallet ) req.session.selectedWallet = -1
-            }
+                user = await tabUsers.getUserById( req.session.userId )
+                wallet = await tabWallets.getWalletById( user.transactionsSelectedWalletId )
 
-            userCategoriesList = await tabCategories.getCategoriesFromUser( req.session.userId )
+                if ( !wallet ) {
+                    req.session.selectedWallet = -1;
+                }
+                else {
+                    req.session.selectedWallet = wallet.id
+                }
+                
+            }
             
-            res.render('./pages/transactions-listing', {
+            res.render(`./pages/transactions-listing`, {
                 userId: req.session.userId,
                 selectedWallet: req.session.selectedWallet,
-                wallet: selectedWallet,
+                wallet: wallet,
                 userCategoriesList: userCategoriesList
             });
         }
@@ -172,15 +186,20 @@ router.post( '/transactions/import', async (req, res, next) => {
 
 })
 
-router.post('/transactions/setSelectedWallet', (req, res, next) => {
+router.post('/transactions/setSelectedWallet', async (req, res, next) => {
     
     try {
+        let user = await tabUsers.getUserById( req.session.userId )
+        user.transactionsSelectedWalletId = req.body.selectedWalletId
+        await tabUsers.editUser( user )
+        
         req.session.selectedWallet = req.body.selectedWalletId
 
-        res.send('OK')
+        res.status(200).send('OK')
     }
     catch (e) {
-        res.send(`ERRO >>> '${e}'`)
+        console.log(e)
+        res.status(500).send(`ERRO >>> '${e}'`)
     }
 
 })

@@ -116,23 +116,28 @@ async function editUser( parameters ) {
         }
     }
     
-    if ( existingUser ) {
+    if ( (existingUser) && ( Number( existingUser.id ) !== Number( parameters.id ) ) ) {
         return {
             error: true,
             message: `The email address ${ parameters.email } is already registered`
         }
     }
     
+    /*
     const editedUser = {
         firstName: parameters.firstName,
         userName: parameters.userName,
         email: parameters.email,
         password: parameters.password
     }
-
     Object.assign(user, editedUser);
+    */
+   
+    Object.assign(user, parameters);
     
-    return await user.save();
+    let response = await user.save();
+
+    return response
 }
 
 async function deleteUser( id ) {

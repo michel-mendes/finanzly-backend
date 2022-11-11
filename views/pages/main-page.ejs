@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/global.css">
-    <link rel="stylesheet" href="/stylesheets/main-page.css">
+    <!-- <link rel="stylesheet" href="/stylesheets/main-page.css"> -->
     <link rel="stylesheet" href="/stylesheets/transaction-new-form.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Just for person icon right user name -->
 
@@ -20,7 +20,7 @@
 
     <title>My Wallet</title>
 </head>
-<body mwa-page="dashboard">
+<body mwa-page="dashboard" class="page-transition-fade-in">
     <section class="nav">
         <input type="checkbox" id="nav-check">
         
@@ -33,9 +33,9 @@
 
         <div class="nav-links">
             <!-- <a href="#" id="menuBtnAddTransaction">Adicionar transação</a> -->
-            <a href="/app/transactions">Transações</a>
-            <a href="/app/categories">Categorias</a>
-            <a href="/app/wallets">Carteiras</a>
+            <a id="btnTransactionsLink" onclick="fadeRedirect('/app/transactions')">Transações</a>
+            <a id="btnCategoriesLink" onclick="fadeRedirect('/app/categories')">Categorias</a>
+            <a id="btnWalletsLink" onclick="fadeRedirect('/app/wallets')">Carteiras</a>
             <a href="#" class="menu-separator">Olá, <%= userFirstName %> <i class="user-icon material-icons">person</i></a>
             <a href="/app/logout" title="Log out"> <i class="user-icon material-icons">logout</i> </a>
         </div>
@@ -50,23 +50,91 @@
 
     </section>
 
-    <section class="dashboard-content">
-        <div class="charts-container">
+    <main class="dashboard-content">
+
+        <section class="charts-container" id="sectionCharts">
+
+            <div class="dashboard-title">
+                <span class="title-text" id="dashboardTitle">Resumo da carteira </span>
+                <div class="period-container">
+                    <span>Início do período: <span id="elStartDate"></span></span>
+                    <span>Fim do período: <span id="elEndDate"></span></span>
+                </div>
+            </div>
+        
             <div class="bar-chart-container">
-                <canvas id="monthChart"></canvas>
-            </div>
-    
-            <div class="doughnut-charts-container">
-                <div class="doughnut-container">
-                    <canvas id="gainsByCategoryChart"></canvas>
+                <div class="chart-header">
+                    <span class="chart-title">Balanço Total no Período</span>
+                    <span class="chart-total-value" id="balancePeriod"></span>
                 </div>
-    
-                <div class="doughnut-container">
-                    <canvas id="expensesByCategoryChart"></canvas>
+                
+                <div class="bar-container">
+                    <canvas id="monthChart"></canvas>
                 </div>
             </div>
-        </div>
-    </section>
+
+            <hr>
+
+            <div class="doughnut-charts-container" id="doughnutChartsContainer">
+                <div>
+                    <div class="chart-header">
+                        <span class="chart-title">Total de Ganhos</span>
+                        <span class="chart-total-value" id="totalGains">+ 1.957,99</span>
+                    </div>
+
+                    <div class="doughnut-container">
+                        <canvas id="gainsByCategoryChart"></canvas>
+                    </div>
+
+                    <div class="total-by-categories" id="gainsList">
+
+                    </div>
+                </div>
+
+                <hr>
+                
+                <div>
+                    <div class="chart-header">
+                        <span class="chart-title">Total de Gastos</span>
+                        <span class="chart-total-value" id="totalExpenses">- 2.587,11</span>
+                    </div>
+                        
+                    <div class="doughnut-container">
+                        <canvas id="expensesByCategoryChart"></canvas>
+                    </div>
+
+                    <div class="total-by-categories" id="expensesList">
+
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+
+        <section class="charts-container dashboard-info-section" id="sectionNoCategories">
+            <div>
+                <span>Você não possui nenhuma categoria.</span><br>
+                <span>Antes de começar a registrar suas transações você precisa criar novas categorias.</span><br>
+                <button class="btn btn-cl-blue" onclick="location.href = '/app/categories'">CADASTRAR CATEGORIA</button>
+            </div>
+        </section>
+        
+        <section class="charts-container dashboard-info-section" id="sectionNoWallets">
+            <div>
+                <span>Você não possui nenhuma carteira.</span><br>
+                <span>Comece adicionando uma nova carteira</span><br>
+                <button class="btn btn-cl-blue" onclick="location.href = '/app/wallets'">CADASTRAR CARTEIRA</button>
+            </div>
+        </section>
+
+        <section class="charts-container dashboard-info-section" id="sectionSelectWallet">
+            <div>
+                <span>Não há nenhuma carteira configurada para ser exibida na sua tela inicial</span>
+                <span>Por favor, escolha uma carteira</span>
+                <button class="btn btn-cl-blue">SELECIONAR CARTEIRA</button>
+            </div>
+        </section>
+    </main>
 
     <!-- 'Add / Edit transaction' modal start-->
     <%#- include('../partials/transaction-new-form.html', {user: userId}); %>
@@ -76,138 +144,229 @@
     <%- include('../partials/top-notification-bar.html'); %>
     <!-- Top notification bar end-->
 
-    <script>
-        let today = new Date()
-        let firstDay = new Date( today.getFullYear(), today.getMonth(), 1 )
-        let lastDay = new Date( today.getFullYear(), today.getMonth() + 1, 0 )
-        let btnGetReport = document.getElementById('btnGetReport')
+    <script>       
+        let btnTransactionsLink = document.getElementById( 'btnTransactionsLink' )
+        let btnCategoriesLink = document.getElementById( 'btnCategoriesLink' )
+        let btnWalletsLink = document.getElementById( 'btnWalletsLink' )
 
-        // buildChart()
-        const ctx = document.getElementById( 'monthChart' )
-        const ctx2 = document.getElementById( 'gainsByCategoryChart' )
-        const ctx3 = document.getElementById( 'expensesByCategoryChart' )
-        buildCharts()
-        // buildEarningsAndExpensesChart()
+        let doughnutCartsContainer = document.getElementById('doughnutChartsContainer')
+        let sectionCharts = document.getElementById( 'sectionCharts' )
+        let sectionNoWallets = document.getElementById( 'sectionNoWallets' )
+        let sectionSelectWallet = document.getElementById( 'sectionSelectWallet' )
+        let sectionNoCategories = document.getElementById( 'sectionNoCategories' )
+
+        let dashboardTitle = document.getElementById('dashboardTitle')
+        let elementStartDate = document.getElementById('elStartDate')
+        let chartTotalBalancePeriod = document.getElementById('balancePeriod')
+        let elementEndDate = document.getElementById('elEndDate')
+        let chartGainsList = document.getElementById('gainsList')
+        let chartExpensesList = document.getElementById('expensesList')
+        let chartLabelTotalGains = document.getElementById('totalGains')
+        let chartLabelTotalExpenses = document.getElementById('totalExpenses')
+
+        const chartBars = document.getElementById( 'monthChart' )
+        const chartGains = document.getElementById( 'gainsByCategoryChart' )
+        const chartExpenses = document.getElementById( 'expensesByCategoryChart' )
         
-        async function buildCharts() {
+        const today = new Date()
+        const firstDay = new Date( today.getFullYear(), today.getMonth(), 1 ).toJSON().slice(0, 10)
+        const lastDay = new Date( today.getFullYear(), today.getMonth() + 1, 0 ).toJSON().slice(0, 10)
+        
+        axios.get(`/report?walletId=<%= dashboardWalletId %>&start=${firstDay}&end=${lastDay}`)
+        .then( ( axiosResponse ) => {
+            loadUserDashboard( axiosResponse.data )
+        } )
+
+        function loadUserDashboard( dashboardData ) {
+            
+            if ( canDrawCharts( dashboardData ) ) {
+                buildCharts( dashboardData )
+            }
+            
+            console.log( dashboardData )
+        }
+        
+        function canDrawCharts( dashboardData ) {
+            if ( dashboardData.totalCategoriesCount > 0 && dashboardData.totalWalletsCount > 0 ) {
+                // The user has no categories or wallets.
+                // Indicate the creation of a wallet.
+
+                btnTransactionsLink.style.display = 'inline-block'
+                btnCategoriesLink.style.display = 'inline-block'
+                sectionNoWallets.style.display = 'none'
+                sectionNoCategories.style.display = 'none'
+                
+                if ( dashboardData.walletDetails ) {
+                    // Wallet found, I'll display your dashboard
+
+                    dashboardTitle.innerText = `Resumo da carteira ${ dashboardData.walletDetails.name }`
+                    elementStartDate.innerText = new Date( today.getFullYear(), today.getMonth(), 1 ).toLocaleDateString()
+                    elementEndDate.innerText = new Date( today.getFullYear(), today.getMonth() + 1, 0 ).toLocaleDateString()
+
+                    sectionCharts.style.display = 'block'
+                    sectionSelectWallet.style.display = 'none'
+
+                    return true
+                }
+                else {
+                    // Wallet not found, please select other wallet
+
+                    sectionCharts.style.display = 'none'
+                    sectionSelectWallet.style.display = 'block'
+
+                    return false
+                }
+            }
+            else if ( dashboardData.totalWalletsCount > 0 ) {
+                // alert( `Não há nenhuma categoria` )
+
+                btnCategoriesLink.style.display = 'inline-block'
+                sectionCharts.style.display = 'none'
+                sectionNoWallets.style.display = 'none'
+                sectionSelectWallet.style.display = 'none'
+                sectionNoCategories.style.display = 'block'
+
+                return false
+            }
+            else {
+                // alert( `Não há nenhuma carteira` )
+
+                sectionCharts.style.display = 'none'
+                sectionNoWallets.style.display = 'block'
+                sectionSelectWallet.style.display = 'none'
+                sectionNoCategories.style.display = 'none'
+
+                return false
+            }            
+        }
+        
+        function buildCharts( dashboardData ) {
 
             try {
+            
+                let htmlContent = ''
 
-                let result = await axios.get(`/transactions/test/test?start=2022-08-19&end=2022-09-18&groupbytype=true`)
-                let weeksList = result.data.gainsAndExpensesByWeek.weeksList
-                let weeksCount = result.data.gainsAndExpensesByWeek.weeksCount
-                let categoriesList = result.data.transactionsGroupedByCategory
-                
+                let weeksList = dashboardData.gainsAndExpensesByWeek.weeksList
+                let weeksCount = dashboardData.gainsAndExpensesByWeek.weeksCount
+                let categoriesList = dashboardData.transactionsGroupedByCategory
+
                 let weeksNamesArray = []
                 let gainsArray = []
                 let expensesArray = []
-
+            
                 let gainsCategories = categoriesList.C
-                let gainsCategoriesNames = Object.keys( gainsCategories )
+                let gainsCategoriesNames = gainsCategories ? Object.keys( gainsCategories ) : []
                 let totalGainsByCategory = []
-
+                let totalGainsPeriod = 0
+                let totalExpensesPeriod = 0
+            
                 let expensesCategories = categoriesList.D
-                let expensesCategoriesNames = Object.keys( expensesCategories )
+                let expensesCategoriesNames = expensesCategories ? Object.keys( expensesCategories ) : []
                 let totalExpensesByCategory = []
-
+            
                 for ( let i = 1; i <= weeksCount; i++ ) {
-
+                
                     weeksNamesArray.push( `Semana ${i}` )
-                    gainsArray.push( weeksList[i].totalGains )
-                    expensesArray.push( weeksList[i].totalExpenses )
-                    // console.log( result.data.gainsAndExpensesByWeek.weeksList[i].firstDay )
-
+                    gainsArray.push( Number(weeksList[i].totalGains).toFixed(2) )
+                    expensesArray.push( Number(weeksList[i].totalExpenses).toFixed(2) )
+                    // console.log( dashboardData.gainsAndExpensesByWeek.weeksList[i].firstDay )
+                
                 }
-
+            
+                htmlContent = ''
+            
                 for ( let i = 0; i < gainsCategoriesNames.length; i++ ) {
                     let totalGains = 0
-
+                
                     gainsCategories[ gainsCategoriesNames[ i ] ].transactions.forEach( transaction => {
                         totalGains += transaction.value
                     });
-
+                
+                    htmlContent += `<div class="detail-item"><span>${ gainsCategoriesNames[ i ] }</span><span>${ Number(totalGains).toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2}) }</span></div>`
+                
                     totalGainsByCategory.push( totalGains )
+                    totalGainsPeriod += totalGains
                 }
-
+            
+                chartGainsList.innerHTML = htmlContent
+                htmlContent = ''
+            
                 for ( let i = 0; i < expensesCategoriesNames.length; i++ ) {
                     let totalExpenses = 0
-
+                
                     expensesCategories[ expensesCategoriesNames[ i ] ].transactions.forEach( transaction => {
                         totalExpenses += transaction.value
                     });
-
-                    totalExpensesByCategory.push( totalExpenses )
-                }
-
-                buildEarningsAndExpensesChart( weeksNamesArray, gainsArray, expensesArray )
-                buildgainsByCategoryChart( ctx2, gainsCategoriesNames, totalGainsByCategory, 'Ganhos no período' )
-                buildgainsByCategoryChart( ctx3, expensesCategoriesNames, totalExpensesByCategory, 'Despesas no período' )
                 
-                // console.log( totalGainsByCategory )
-                // console.log( totalExpensesByCategory )
-                // console.log( result.data )
+                    htmlContent += `<div class="detail-item"><span>${ expensesCategoriesNames[ i ] }</span><span>${ Number(totalExpenses).toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2}) }</span></div>`
+                
+                    totalExpensesByCategory.push( totalExpenses )
+                    totalExpensesPeriod += totalExpenses
+                }
+            
+                chartExpensesList.innerHTML = htmlContent
+                chartLabelTotalGains.innerText = `+ ${ Number(totalGainsPeriod).toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2}) }`
+                chartLabelTotalExpenses.innerText = `- ${ Number(totalExpensesPeriod).toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2}) }`
+                chartTotalBalancePeriod.innerText = Number( totalGainsPeriod - totalExpensesPeriod ).toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})
+            
+                if ( totalGainsPeriod - totalExpensesPeriod >= 0 ) {
+                    chartTotalBalancePeriod.classList.remove( 'negative' )
+                    chartTotalBalancePeriod.classList.remove( 'positive' )
+                
+                    chartTotalBalancePeriod.classList.add( 'positive' )
+                }
+                else {
+                    chartTotalBalancePeriod.classList.remove( 'negative' )
+                    chartTotalBalancePeriod.classList.remove( 'positive' )
+                
+                    chartTotalBalancePeriod.classList.add( 'negative' )
+                }
+            
+                buildEarningsAndExpensesChart( weeksNamesArray, gainsArray, expensesArray )
 
+                // If there's nothing to show on doughnut charts then hide it
+                if ( !categoriesList.C && !categoriesList.D ) {
+                    doughnutCartsContainer.style.display = 'none'
+                }
+                else {
+                    doughnutCartsContainer.style.display = 'flex'
+
+                    drawDoughnutChart( chartGains, gainsCategoriesNames, totalGainsByCategory, 'Ganhos no período' )
+                    drawDoughnutChart( chartExpenses, expensesCategoriesNames, totalExpensesByCategory, 'Despesas no período' )
+                }
+            
             }
             catch (e) {
-
-                throw `Erro >>> ${ e }`
-
+            
+                throw `Erro em "buildCharts()" >>> ${ e }`
+            
             }
 
         }
 
-        async function buildEarningsAndExpensesChart( weeksNames, gainsArray, expensesArray ) {
+        function buildEarningsAndExpensesChart( weeksNames, gainsArray, expensesArray ) {
 
-            //let transactions = await getTransactionsData()
-            //let EarningsAndExpenses = await getEarningsAndExpenses( transactions )
-
-            const myChart = new Chart(ctx, {
+            const myChart = new Chart(chartBars, {
                 type: 'bar',
                 data: {
                     labels: weeksNames,
                     datasets: [{
                         label: 'Ganhos',
                         data: gainsArray,
-                        backgroundColor: [
-                            'rgba(0, 0, 255, 0.2)',
-                            'rgba(0, 0, 255, 0.2)',
-                            'rgba(0, 0, 255, 0.2)',
-                            'rgba(0, 0, 255, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(0, 0, 255, 1)',
-                            'rgba(0, 0, 255, 1)',
-                            'rgba(0, 0, 255, 1)',
-                            'rgba(0, 0, 255, 1)'
-                        ],
+                        backgroundColor: [ 'rgba(0, 0, 255, 0.2)' ],
+                        borderColor: [ 'rgba(0, 0, 255, 1)' ],
                         borderWidth: 1
                     }, {
                         label: 'Gastos',
                         data: expensesArray,
-                        backgroundColor: [
-                            'rgba(255, 0, 0, 0.2)',
-                            'rgba(255, 0, 0, 0.2)',
-                            'rgba(255, 0, 0, 0.2)',
-                            'rgba(255, 0, 0, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 0, 0, 1)',
-                            'rgba(255, 0, 0, 1)',
-                            'rgba(255, 0, 0, 1)',
-                            'rgba(255, 0, 0, 1)'
-                        ],
+                        backgroundColor: [ 'rgba(255, 0, 0, 0.2)' ],
+                        borderColor: [ 'rgba(255, 0, 0, 1)' ],
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Relatório de Ganhos x Gastos'
-                        }
-                    },
                     scales: {
                         y: {
                             beginAtZero: true
@@ -215,13 +374,26 @@
                     }
                 }
             })
-        
-            // myChart.height = 200;
 
         }
-
         
-        async function buildgainsByCategoryChart( canvasElement, categoriesNamesArray, valuesArray, chartTitle ) {
+        function drawDoughnutChart( canvasElement, categoriesNamesArray, valuesArray, chartTitle ) {
+
+            let rgbColors = []
+            let rgbaColors = []
+
+            categoriesNamesArray.forEach( (item) => {
+                const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+                const randomPercent = () => (randomNumber(20, 100) * 0.01).toFixed(2)
+
+                const r = randomNumber(0, 255)
+                const g = randomNumber(0, 255)
+                const b = randomNumber(0, 255)
+                const a = randomPercent()
+
+                rgbaColors.push(`rgba(${r}, ${g}, ${b}, ${a})`)
+                rgbColors.push(`rgb(${r}, ${g}, ${b})`)
+            })
 
             const myChart = new Chart( canvasElement, {
                 type: 'doughnut',
@@ -230,22 +402,8 @@
                     datasets: [{
                         label: 'Total',
                         data: valuesArray,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
+                        backgroundColor: rgbaColors,
+                        borderColor: rgbColors,
                         borderWidth: 1
                     }]
                 },
@@ -253,37 +411,47 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     animation: {
-                        duration: 2500
+                        duration: 1500
                     },
                     plugins: {
-                        title: {
-                            display: true,
-                            text: chartTitle
-                        },
                         legend: {
                             display: false
                         }
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                display: false
-                            }
-                        }]
                     }
                 }
             })
 
-            console.log( myChart )
-            
         }
 
-        let testDate = today.getFullYear()
+        function getRandomColor() {
+            const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+            const randomByte = () => randomNumber(0, 255)
+            const randomPercent = () => (randomNumber(50, 100) * 0.01).toFixed(2)
+            
+            const red = randomByte()
+            const green = randomByte()
+            const blue = randomByte()
+            
+            const randomCssRgba = () => `rgba(${[randomByte(), randomByte(), randomByte(), randomPercent()].join(',')})`
 
-        document.getElementById( 'dateToday' ).innerText = today
-        document.getElementById( 'dateFirstDay' ).innerText = firstDay
-        document.getElementById( 'dateLastDay' ).innerText = lastDay
-        // document.getElementById( 'test' ).innerText = testDate
+        }
+        
+        function getRandomRedColors() {
+            const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+            const randomByte = () => randomNumber(0, 255)
+            const randomPercent = () => (randomNumber(50, 100) * 0.01).toFixed(2)
+            const randomCssRgba = () => `rgba(${[255, 0, 0, randomPercent()].join(',')})`
+
+            return randomCssRgba()
+        }
+
+        function getRandomGreenColors() {
+            const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+            const randomByte = () => randomNumber(0, 255)
+            const randomPercent = () => (randomNumber(50, 100) * 0.01).toFixed(2)
+            const randomCssRgba = () => `rgba(${[0, 255, 0, randomPercent()].join(',')})`
+            return randomCssRgba()
+        }
     </script>
 </body>
 </html>

@@ -52,11 +52,11 @@ async function getWalletsByName( walletName ) {
 
 async function insertNewWallet( parameters ) {
     try {    
-        const wallet = await tabUserWallet.tabWallets.findOne({ where: { name: parameters.name,
+        const existingWallet = await tabUserWallet.tabWallets.findOne({ where: { name: parameters.name,
                                                        userId: parameters.userId }
                                                      });
 
-        if ( wallet ) {
+        if ( existingWallet ) {
             return {
                 error: true,
                 message: `A wallet with that name already exists for this user`
@@ -64,17 +64,14 @@ async function insertNewWallet( parameters ) {
         }
         else {
             // Creates a new wallet
-            try {
-                parameters.actualBalance = parameters.initialBalance;
-                
-                return await tabUserWallet.tabWallets.create( parameters );
-            }
-            catch (e) {
-                return {
-                    error: true,
-                    message: `${e}`
-                };
-            }
+            let newWallet
+            parameters.actualBalance = parameters.initialBalance;
+                    
+            newWallet =  await tabUserWallet.tabWallets.create( parameters );
+            await updateUserDashboardWallet( parameters.userId )
+
+            return newWallet
+
         }
     }
     catch (e) {
@@ -147,4 +144,21 @@ async function deleteWallet( id ) {
 
     await wallet.destroy();
     return {message: `Wallet deleted successfully!`}
+}
+
+async function updateUserDashboardWallet( userId ) {
+    try {
+        let user = await tabUserWallet.tabUsers.findByPk( userId )
+        let allUserWallets
+
+        allUserWallets = await getWalletsFromUser( userId )
+        if ( allUserWallets.length == 1 ) {
+            Object.assign(user, {dashboardWalletId: allUserWallets[0].id})
+
+            await user.save()
+        }
+    }
+    catch (e) {
+        throw `Erro [updateUserDashboardWallet()]: ${e}`
+    }
 }

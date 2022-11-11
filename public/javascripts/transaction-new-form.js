@@ -35,28 +35,29 @@ window.onkeydown            = async ( key ) => {
 
     let keyCode = key.keyCode
 
-    if ( ( key.ctrlKey ) && ( keyCode == 13 ) && ( modalTransaction.style.display == "block" ) ) {
+    if ( ( key.ctrlKey ) && ( keyCode == 13 ) && ( modalTransaction.style.visibility == "visible" ) ) {
         await saveTransaction()
     }
 
 }
 // --------------------------------------------------------------------------
 
-window.onkeyup              = function( key ) {
+window.onkeyup = function( key ) {
     let keyCode = key.keyCode
 
-    if ( (keyCode === 27) && ( modalTransaction.style.display == "block" ) ) { //Pressed esc key
+    if ( (keyCode === 27) && ( modalTransaction.style.visibility == "visible" ) ) { //Pressed esc key
         closeNewTransactionModal();
     }
 
-    if ( (keyCode === 45) && ( modalTransaction.style.display != "block" ) ) { //Pressed ins key
+    if ( (keyCode === 45) && ( modalTransaction.style.visibility == "hidden" || modalTransaction.style.opacity == 0 ) ) { //Pressed ins key
         openNewTransactionModal()
     }
 }
 
 function openNewTransactionModal( transactionData ) {
     
-    modalTransaction.style.display = "block"
+    modalTransaction.style.visibility = "visible"
+    modalTransaction.style.opacity = 1
 
     if ( !transactionData ) {
         //New transaction
@@ -88,7 +89,10 @@ function openNewTransactionModal( transactionData ) {
 }
 
 function closeNewTransactionModal() {
-    modalTransaction.style.display = "none";
+    setTimeout(() => { modalTransaction.style.visibility = "hidden" }, 100)
+    modalTransaction.style.opacity = 0
+    
+    // modalTransaction.style.display = "none";
 
     document.getElementById('editCategoryId').value = ''
     document.getElementById('editWalletId').value = ''

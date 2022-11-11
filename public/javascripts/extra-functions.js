@@ -153,3 +153,15 @@ function setInputUppercase( inputField ) {
 
 }
 // ---------------------------------------------------------------------------
+
+function fadeRedirect( linkAddress ) {
+    let body = document.getElementsByTagName('body')[0]
+
+    body.classList.remove( 'page-transition-fade-in' )
+    body.classList.add( 'page-transition-fade-out' )
+    
+    setTimeout(() => {
+        // alert(linkAddress)
+        location.href = linkAddress
+    }, 80)
+}

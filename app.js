@@ -52,6 +52,7 @@ app.use('/users', require('./database/models/users/users-controller'));
 app.use('/wallets', require('./database/models/wallets/wallets-controller'));
 app.use('/categories', require('./database/models/categories/categories-controller'));
 app.use('/transactions', require('./database/models/transactions/transactions-controller'));
+app.use('/report', require('./database/models/transactions/report-controller'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

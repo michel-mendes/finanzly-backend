@@ -1,58 +1,173 @@
-* {
-    /* border: 1px black solid; */
-    box-sizing: border-box;
-  }
-  
-  body[mwa-page="dashboard"] {
+body[mwa-page="dashboard"] {
     margin: 0px;
-    font-family: 'segoe ui';
+    font-family: 'Roboto', serif;
+    background-color: rgb(228, 228, 228);
   }
   
   body[mwa-page="dashboard"] .dashboard-content {
-    /* border: 3px dashed purple; */
     padding: 10px;
     display: flex;
-    flex-direction: column;
+  }
+
+  body[mwa-page="dashboard"] #btnTransactionsLink,
+  body[mwa-page="dashboard"] #btnCategoriesLink {
+    display: none;
+  }
+
+  body[mwa-page="dashboard"] .dashboard-content .dashboard-title {
+    margin: 10px;
+  }
+
+  body[mwa-page="dashboard"] .dashboard-content .dashboard-title .title-text {
+    display: block;
+    text-align: center;
+    color: gray;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  body[mwa-page="dashboard"] .dashboard-content .dashboard-title .period-container {
+    display: flex;
+    justify-content: space-around;
+    font-size: 14px;
+    color: gray;
+  }
+
+  body[mwa-page="dashboard"] .dashboard-content .dashboard-title .period-container #elStartDate,
+  body[mwa-page="dashboard"] .dashboard-content .dashboard-title .period-container #elEndDate {
+    font-weight: bold;
   }
 
   body[mwa-page="dashboard"] .charts-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 10px;
-    gap: 10px;
+    -webkit-box-shadow: 0 3px 24px 0 rgb(0 0 0 / 12%);
+    box-shadow: 0 3px 24px 0 rgb(0 0 0 / 12%);
+    border-radius: 5px;
+    background-color: white;
+    min-width: 580px;
+    width: 800px;
+    max-width: 90%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  
+
+  body[mwa-page="dashboard"] #sectionCharts,
+  body[mwa-page="dashboard"] #sectionNoWallets,
+  body[mwa-page="dashboard"] #sectionNoCategories,
+  body[mwa-page="dashboard"] #sectionSelectWallet {
+    display: none;
+  }
+
+  body[mwa-page="dashboard"] .dashboard-info-section {
+    text-align: center;
+    padding: 20px;
+  }
+
+  body[mwa-page="dashboard"] .dashboard-info-section span {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  body[mwa-page="dashboard"] .dashboard-info-section button {
+    margin-top: 20px;
+    color: white;
+  }
+
+  body[mwa-page="dashboard"] .chart-header {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  body[mwa-page="dashboard"] .chart-title {
+    color: gray;
+    font-size: 14px;
+  }
+
+  body[mwa-page="dashboard"] .chart-total-value {
+    font-size: 24px;
+  }
+
   body[mwa-page="dashboard"] .bar-chart-container {
-    height: 400px;
-    width: 400px;
+    height: 350px;
+    width: 100%;
+    padding: 10px;
+  }
+
+  body[mwa-page="dashboard"] .bar-chart-container #balancePeriod.positive {
+    color: blue;
+    font-weight: bold;
+  }
+
+  body[mwa-page="dashboard"] .bar-chart-container #balancePeriod.negative {
+    color: red;
+    font-weight: bold;
+  }
+
+  body[mwa-page="dashboard"] .bar-container {
+    height: 83%;
+    /* position: relative; */
+  }
+
+  body[mwa-page="dashboard"] hr {
+    width: 95%;
+    height: 3px;
+    border: lightgrey 1px solid;
+    border-width: 1px 0 0 0;
+  }
+
+  body[mwa-page="dashboard"] .total-by-categories {
+    font-size: 12px;
   }
 
   body[mwa-page="dashboard"] .doughnut-charts-container {
-    flex: 1;
     display: flex;
-    gap: 20px;
-    justify-content: space-evenly;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 20px;
+    padding: 10px;
+  }
+
+  body[mwa-page="dashboard"] .doughnut-charts-container hr {
+    display: none;
+  }
+
+  body[mwa-page="dashboard"] .doughnut-charts-container #totalGains {
+    color: blue;
+    font-weight: bold;
+  }
+
+  body[mwa-page="dashboard"] .doughnut-charts-container #totalExpenses {
+    color: red;
+    font-weight: bold;
+  }
+
+  body[mwa-page="dashboard"] .detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border-bottom: silver 1px solid;
+  }
+
+  body[mwa-page="dashboard"] .detail-item:last-child {
+    border-bottom: none;
   }
 
   body[mwa-page="dashboard"] .doughnut-charts-container .doughnut-container {
-    width: 400px;
-  }
-
-  body[mwa-page="dashboard"] #monthChart,
-  body[mwa-page="dashboard"] #gainsByCategoryChart,
-  body[mwa-page="dashboard"] #expensesByCategoryChart {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  }
-
-  /* body[mwa-page="dashboard"] #gainsByCategoryChart { */
-    /* border: 3px black solid; */
     /* width: 200px; */
-  /* } */
-  
-  .nav {
+    width: 100%;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+ 
+  body[mwa-page="dashboard"] .nav {
     height: 50px;
     width: 100%;
     /* background-color: #4d4d4d; */
@@ -61,11 +176,11 @@
     position: relative;
   }
   
-  .nav > .nav-header {
+  body[mwa-page="dashboard"] .nav > .nav-header {
     display: inline;
   }
   
-  .nav > .nav-header > .nav-title {
+  body[mwa-page="dashboard"] .nav > .nav-header > .nav-title {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -75,75 +190,92 @@
     /* background-color: green; */
   }
 
-  .nav > .nav-header > .nav-title > .img-logo {
+  body[mwa-page="dashboard"] .nav > .nav-header > .nav-title > .img-logo {
       width: 35px;
       height: 35px;
   }
 
-  .nav > .nav-header > .nav-title > .app-title {
+  body[mwa-page="dashboard"] .nav > .nav-header > .nav-title > .app-title {
     margin-left: 10px;
 }
   
-  .nav > .nav-btn {
+body[mwa-page="dashboard"] .nav > .nav-btn {
     display: none;
   }
   
-  .nav > .nav-links {
+  body[mwa-page="dashboard"] .nav > .nav-links {
     display: inline;
     float: right;
     font-size: 18px;
   }
 
-  .nav > .nav-links > .menu-separator {
+  body[mwa-page="dashboard"] .nav > .nav-links > .menu-separator {
       border-left: 1px dotted white;
   }
   
-  .nav > .nav-links > a {
+  body[mwa-page="dashboard"] .nav > .nav-links > a {
     display: inline-block;
     padding: 13px 10px 13px 10px;
     text-decoration: none;
     color: #efefef;
   }
   
-  .nav > .nav-links > a:hover {
+  body[mwa-page="dashboard"] .nav > .nav-links > a:hover {
     background-color: rgba(0, 0, 0, 0.3);
   }
 
-  .nav > .nav-links > a > .user-icon {
+  body[mwa-page="dashboard"] .nav > .nav-links > a > .user-icon {
       margin: 0px;
       padding: 0px;
       font-size: 19px;
   }
   
-  .nav > #nav-check {
+  body[mwa-page="dashboard"] .nav > #nav-check {
     display: none;
   }
 
 
   
   @media (max-width:600px) {
-    .nav > .nav-btn {
+    body[mwa-page="dashboard"] .charts-container {
+      min-width: 400px;
+      justify-content: center;
+    }
+
+    body[mwa-page="dashboard"] .doughnut-charts-container hr {
+      display: block;
+    }
+    
+    body[mwa-page="dashboard"] .doughnut-charts-container .doughnut-container {
+      width: 250px;
+    }
+
+    body[mwa-page="dashboard"] .doughnut-charts-container>div {
+      width: 100%;
+    }
+    
+    body[mwa-page="dashboard"] .nav > .nav-btn {
       display: inline-block;
       position: absolute;
       right: 0px;
       top: 0px;
     }
-    .nav > .nav-btn > label {
+    body[mwa-page="dashboard"] .nav > .nav-btn > label {
       display: inline-block;
       width: 50px;
       height: 50px;
       padding: 13px;
     }
-    .nav > .nav-btn > label:hover,.nav  #nav-check:checked ~ .nav-btn > label {
+    body[mwa-page="dashboard"] .nav > .nav-btn > label:hover,.nav  #nav-check:checked ~ .nav-btn > label {
       background-color: rgba(0, 0, 0, 0.3);
     }
-    .nav > .nav-btn > label > span {
+    body[mwa-page="dashboard"] .nav > .nav-btn > label > span {
       display: block;
       width: 25px;
       height: 10px;
       border-top: 2px solid #eee;
     }
-    .nav > .nav-links {
+    body[mwa-page="dashboard"] .nav > .nav-links {
       position: absolute;
       display: block;
       width: 100%;
@@ -155,20 +287,20 @@
       left: 0px;
     }
 
-    .nav > .nav-links > .menu-separator {
+    body[mwa-page="dashboard"] .nav > .nav-links > .menu-separator {
         border-top: 1px dotted white;
         border-left: 0px;
     }
     
-    .nav > .nav-links > a {
+    body[mwa-page="dashboard"] .nav > .nav-links > a {
       display: block;
       text-align: center;
       width: 100%;
     }
-    .nav > #nav-check:not(:checked) ~ .nav-links {
+    body[mwa-page="dashboard"] .nav > #nav-check:not(:checked) ~ .nav-links {
       height: 0px;
     }
-    .nav > #nav-check:checked ~ .nav-links {
+    body[mwa-page="dashboard"] .nav > #nav-check:checked ~ .nav-links {
       height: calc(100vh - 50px);
       overflow-y: auto;
     }

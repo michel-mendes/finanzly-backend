@@ -1,39 +1,43 @@
-.wallet-list-container {
+div[mwa-page="modal-wallet-list"] .wallet-list-container {
     display: block;
     position: relative;
     /* border: solid 1px black; */
+    border-radius: 5px;
     max-width: 500px;
-    flex-basis: 500px;
+    flex-basis: 80%;
     margin: auto;
     background-color: white;
     box-shadow: 2px 2px 15px 3px rgba(0,0,0,.2);
   }
   
-  .wallet-list-container .header {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 32px;
+    height: 60px;
     padding: 12px 30px;
     overflow: hidden;
     background: rgb(162, 222, 247);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
   }
   
-  .wallet-list-container .header .title {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .header .title {
     width: 100%;
     text-align: center;
+    font-size: 22px;
   }
   
-  .wallet-list-container .header #btnCloseWalletList {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .header #btnCloseWalletList {
     margin-right: -10px;
     cursor: pointer;
   }
   
-  .wallet-list-container .header #btnCloseWalletList:hover {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .header #btnCloseWalletList:hover {
     color: red;
   }
   
-  .wallet-list-container .post-header {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .post-header {
     display: flex;
     justify-content: space-between;
     padding: 3px 10px 3px 10px;
@@ -42,34 +46,35 @@
     font-size: 11px;
   }
   
-  .wallet-list-container .list {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .list {
     padding: 0;
     margin: 0;
   }
   
-  .wallet-list-container .list .list-item {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .list .list-item {
     display: flex;
     justify-content: space-between;
     padding: 10px;
     padding-top: 15px;
     padding-bottom: 15px;
+    cursor: pointer;
   }
   
-  .wallet-list-container .list .list-item:hover {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .list .list-item:hover {
     background: rgba(162, 222, 247, .3);
   }
   
-  .wallet-list-container .list .selected-item {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .list .selected-item {
       color:blue;
       font-weight: bolder;
       border-left:4px solid blue;
   }
   
-  .wallet-list-container .list .selected-item:before {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .list .selected-item:before {
       content: content + 'teste';
   }
   
-  .wallet-list-container .footer {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -78,36 +83,42 @@
     border-top: dashed 1px silver;
   }
   
-  .wallet-list-container .footer button {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .footer button {
     flex-basis: 40%;
     padding: 10px;
   }
   
-  .wallet-list-container .footer #btnCancel_WalletSelectionModal {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .footer #btnCancel_WalletSelectionModal {
     border: 1px solid #DA2632;
     border-radius: 15px;
     font-weight: bolder;
   }
   
-  .wallet-list-container .footer #btnCancel_WalletSelectionModal:hover {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .footer #btnCancel_WalletSelectionModal:hover {
     background-color: #DA2632;
     cursor: pointer;
     color: white;
   }
   
-  .wallet-list-container .footer #btnSelect_WalletSelectionModal {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .footer #btnSelect_WalletSelectionModal {
     border: 1px solid #8CDA26;
     border-radius: 15px;
     font-weight: bolder;
   }
   
-  .wallet-list-container .footer #btnSelect_WalletSelectionModal:hover {
+div[mwa-page="modal-wallet-list"] .wallet-list-container .footer #btnSelect_WalletSelectionModal:hover {
     background-color: #8CDA26;
     cursor: pointer;
     color: white;
   }  
-  .wallet-list-container .footer #btnSelect_WalletSelectionModal:disabled:hover {
+
+div[mwa-page="modal-wallet-list"] .wallet-list-container .footer #btnSelect_WalletSelectionModal:disabled:hover {
     background-color: white;
     cursor: not-allowed;
     color: silver;
-  }  
+
+}
+
+@media (max-width:600px) {
+
+}

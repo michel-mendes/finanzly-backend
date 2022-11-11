@@ -5,7 +5,6 @@ const tabCategories = require('../categories/categories-services')
 const tabWallets = require('../wallets/wallets-services')
 const tabTransactionsAndCategories = require('../association.transacation-category')
 const extras = require('../../../extra-functions')
-const util = require('util');
 
 module.exports = {
     getAllTransactions,
@@ -17,7 +16,8 @@ module.exports = {
     deleteTransaction,
     getGainsAndExpensesByWeek,
     generateListGroupedByCategory,
-    generateListGroupedByDate
+    generateListGroupedByDate,
+    generateTransactionsReport
 };
 
 async function getAllTransactions( userId ) {
@@ -369,4 +369,25 @@ async function getGainsAndExpensesByWeek( transactions, start, end ) {
 
     return weeks
 
+}
+
+async function generateTransactionsReport( userId, walletId, startDate, endDate ) {
+    let userWallets = await tabWallets.getWalletsFromUser( userId )
+    let userCategories = await tabCategories.getCategoriesFromUser( userId )
+    let userTransactions = await getTransactionsByText({
+        userId: userId,
+        walletId: walletId,
+        startDate: startDate,
+        endDate: endDate
+    })
+
+    let result = {
+        gainsAndExpensesByWeek: await getGainsAndExpensesByWeek( userTransactions, startDate, endDate ),
+        transactionsGroupedByCategory: generateListGroupedByCategory( userTransactions, true ),
+        walletDetails: userWallets.find( (wallet) => { return Number(wallet.id) == Number(walletId) } ),
+        totalWalletsCount: userWallets.length,
+        totalCategoriesCount: userCategories.length 
+    }
+
+    return result
 }

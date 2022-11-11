@@ -1,9 +1,13 @@
 var rightSideToolbar = document.getElementById("rightSide")
 var walletsListModalWrapper = document.getElementById("walletsListModalWrapper")
 var walletListContainer = document.getElementById("walletListContainer")
-var commandsContainer = document.getElementById("commandsContainer")
+var commandsContainer
 var ctaSelectWallet = document.getElementById("ctaSelectWallet")
 var modalCheckTimerID
+
+var btnAddTransaction
+var btnImportTransactions
+var btnSearchTransaction
 
 // window.onload = () => { getTransactions() }
 
@@ -29,8 +33,8 @@ function turnCommandsPanelIntoVisible() {
 
     /*if ( !commandsContainer )*/ {
         htmlContent += `<div class="commands-container" id="commandsContainer">`
-        htmlContent += `<span class="material-icons">calendar_month</span>`
-        htmlContent += `<span class="material-icons search-icon">search</span>`
+        // htmlContent += `<span class="material-icons">calendar_month</span>`
+        htmlContent += `<span class="material-icons search-icon" id="btnSearchTransaction">search</span>`
         
         htmlContent += `<button class="btn btn-cl-yellow" id="menuBtnImportTransactions" onclick="location.href='/app/transactions/import?walletId=${ walletId }'">`
         htmlContent += `<span class="btn-caption">IMPORTAR</span>`
@@ -44,17 +48,16 @@ function turnCommandsPanelIntoVisible() {
         htmlContent += `</div>`
 
         rightSideToolbar.innerHTML = htmlContent
-
-        if ( !btnAddTransaction ) {
-            var btnAddTransaction = document.getElementById( 'menuBtnAddTransaction' )
-            var btnImportTransactions = document.getElementById( 'menuBtnImportTransactions' )
-        }
-
-        if ( typeof btnAddTransaction.onclick != 'function' ) {
-            btnAddTransaction.onclick = () => { openNewTransactionModal() }
-        }
-
         commandsContainer = document.getElementById("commandsContainer")
+
+        btnAddTransaction = document.getElementById( 'menuBtnAddTransaction' )
+        btnAddTransaction.onclick = () => { openNewTransactionModal() }
+
+        btnImportTransactions = document.getElementById( 'menuBtnImportTransactions' )
+        
+        btnSearchTransaction = document.getElementById( 'btnSearchTransaction' )
+        btnSearchTransaction.onclick = () => { openSearchTransactionDialog() }
+
     }
 }
 
@@ -82,11 +85,19 @@ function checkModalResult() {
     closeWalletListModal()
 }
 
+function openSearchTransactionDialog() {
+    // "dialogSearchTransaction" is declared in "/javascripts/search-transaction-dialog.js"
+    dialogSearchTransaction.showModal()
+}
+
 async function doWalletSelect() {
     if ( walletId > -1 ) {
 
         try {
             let response = await axios.get(`/wallets/${ walletId }`)
+
+            if ( !response.data ) return
+
             let walletContainer = document.getElementById('selectedWalletContainer')
             let balanceClassName = Number( response.data.actualBalance ) < 0 ? 'class="negative-value"' : 'class="positive-value"'
             let htmlContent = ''
@@ -111,17 +122,18 @@ async function doWalletSelect() {
             // alert( setupResponse.data )
         }
         catch (e) {
-            showNotification(`${e}`)
+            // console.log(e)
+            showNotification(`Erro >> ${ e }`)
         }
 
     }
 }
 
-async function getTransactions() {
+async function getTransactions(startDate, endDate, searchText) {
     
     try {
         let container = document.getElementById('transactionsContainer')
-        let result = await axios.get( `/transactions?userid=${ userId }&walletid=${ walletId }&groupdate=true` )
+        let result = await axios.get( `/transactions?userid=${ userId }&walletid=${ walletId }${ startDate }${ endDate }${ searchText }&groupdate=true` )
         let transactions = result.data
 
         container.innerHTML = buildTransactionsList( transactions )
@@ -187,8 +199,8 @@ function buildTransactionsList( transactionsList ) {
             let dateGroups = Object.keys( transactionsList[ month ] )
             let monthName = month.split('-')[0] + ' de ' + month.split('-')[1] 
 
-            htmlContent += `<div>`
-            htmlContent += `<h2 style="text-align: center; margin: 0px; padding: 0px;">`
+            htmlContent += `<div class="month-separator">`
+            htmlContent += `<h2 style="text-align: center; margin: 2px; padding: 2px;">`
             htmlContent += monthName
             htmlContent += `</h2>`
             htmlContent += `</div>`
@@ -223,14 +235,14 @@ function buildTransactionsList( transactionsList ) {
 
                 htmlContent += `<div class="month-year-box">`
                 htmlContent += `<span id="groupMonthYear">`
-                htmlContent += `<span>${ dayNames[ new Date(transactionsList[ month ][ dateGroup ][0]['date']).getDay() ] }</span><br>`
+                htmlContent += `<span class="day-name">${ dayNames[ new Date(transactionsList[ month ][ dateGroup ][0]['date']).getDay() ] }</span><br>`
                 htmlContent += `<span>${ brMonthNames[ monthNumber ] } de ${ year }</span>`
                 htmlContent += `</span>`
                 htmlContent += `</div>`
 
                 htmlContent += `<div class="group-total-value">`
                 htmlContent += `<span class="total-title">Total do dia</span>`
-                htmlContent += `<span class="${ accumulatedDataFromDay.className }" id="transactionsTotalValue">${(() => {return accumulatedDataFromDay.value > 0 ? '+' : ''})()}${ Number(accumulatedDataFromDay.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) } ${ accumulatedDataFromDay.currencySymbol }</span>`
+                htmlContent += `<span class="${ accumulatedDataFromDay.className }" id="transactionsTotalValue">${(() => {return accumulatedDataFromDay.value > 0 ? '+' : ''})()} ${ accumulatedDataFromDay.currencySymbol } ${ Number(accumulatedDataFromDay.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }</span>`
                 htmlContent += `</div>`
                 htmlContent += `</div>`
 
@@ -251,7 +263,7 @@ function buildTransactionsList( transactionsList ) {
                     htmlContent += `<span id="transactionExtraInfo">${ transaction.extraInfo }</span>`
                     htmlContent += `</div>`
                     htmlContent += `<div class="item-value-container">`
-                    htmlContent += `<span class="${ valueClassName }" id="transactionValue">${ Number(transaction.value).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) } ${ transaction.fromWallet.currencySymbol }</span>`
+                    htmlContent += `<span class="${ valueClassName }" id="transactionValue">${ transaction.fromWallet.currencySymbol } ${ Number(transaction.value).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</span>`
                     htmlContent += `</div>`
                     htmlContent += `<div class="item-toolbox">`
                     htmlContent += `<span name="editTransactionButton" class="material-icons tool-button" transactiondata='${ strToHex( JSON.stringify(transaction) ) }' onclick="openNewTransactionModal( JSON.parse( hexToStr( this.getAttribute('transactiondata') ) ) )">edit</span><span name="deleteTransactionButton" class="material-icons tool-button" onclick="(async () => {await deleteTransaction(${ transaction.id })})()">delete</span>`
