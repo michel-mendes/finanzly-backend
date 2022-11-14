@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script src="/javascripts/categories-listing.js" type="module" defer></script>
-    <script src="/javascripts/category-new-form.js" type="module" defer></script>
+    <script src="/javascripts/category-new-form.js" defer></script>
     <script src="/javascripts/extra-functions.js"></script>
     <title>My Wallet App - Categorias</title>
 </head>
@@ -52,12 +52,8 @@
                         <% if ( categoriesList ) {
                             categoriesList.forEach( (category, index) => {
                                 if ( category.transactionType == 'C' ) {%>
-                                <li class="list-item">
+                                <li class="list-item" categoryid="<%= category.id %>" categoryname="<%= category.name %>" categorytype="<%= category.transactionType %>">
                                     <span><%= category.name %></span>
-                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>" categoryType="<%= category.transactionType %>">
-                                        <span class="category-management-buttons material-icons" name="btnEditCategory">edit</span>
-                                        <span class="category-management-buttons material-icons" name="btnDeleteCategory">delete</span>
-                                    </div>
                                 </li>        
                             <% }} )
                         } %>
@@ -71,12 +67,8 @@
                         <% if ( categoriesList ) {
                             categoriesList.forEach( (category, index) => {
                                 if ( category.transactionType == 'D' ) {%>
-                                <li class="list-item">
+                                <li class="list-item" categoryid="<%= category.id %>" categoryname="<%= category.name %>" categorytype="<%= category.transactionType %>">
                                     <span><%= category.name %></span>
-                                    <div class="category-management-buttons-container" categoryId="<%= category.id %>" categoryType="<%= category.transactionType %>">
-                                        <span class="category-management-buttons material-icons" name="btnEditCategory">edit</span>
-                                        <span class="category-management-buttons material-icons" name="btnDeleteCategory">delete</span>
-                                    </div>
                                 </li>        
                             <% }} )
                         } %>
@@ -85,41 +77,6 @@
             </ul>
         </div>
 
-        <div class="category-edit-container" id="categoryEditorBox">
-            <div class="category-edit-content" >
-                <div class="new-category-box">
-                    <h1 id="categoryEditorTitle">
-                        <span>Editar categoria</span>
-                        <span class="btnCloseEditor" id="buttonCloseEditor">&times;</span>
-                    </h1>
-                    
-                    <form action="#">
-                        <input type="number" name="id" id="editorEditId" hidden>
-                        <input type="number" name="userId" id="editUserId" hidden>
-                    
-                        <label for="editorEditName" id="labelName" class="field-border">
-                            <span>Nome da categoria</span>
-                            <input type="text" name="name" id="editorEditName" class="borderless" onkeyup="setInputUppercase( this )">
-                        </label>
-                    
-                        <fieldset class="field-border flex-container-row">
-                            <legend>Tipo de transações desta categoria</legend>
-                            <div>
-                                <input type="radio" name="transactionType" id="editorRadioCred" value="c"><label for="editorRadioCred">Ganhos</label>
-                            </div>
-                            <div>
-                                <input type="radio" name="transactionType" id="editorRadioDeb" value="d" class="separator"><label for="editorRadioDeb">Gastos</label>
-                            </div>
-                        </fieldset>
-                    
-                        <div class="button-container">
-                            <a class="btn btn-cl-red" id="btnEditorCancel">Cancelar</a>
-                            <a class="btn btn-cl-green" id="btnEditorSave">Salvar</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </section>
 
     <%- include('../partials/category-new-form.html'); %>

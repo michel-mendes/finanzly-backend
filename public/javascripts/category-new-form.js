@@ -1,10 +1,13 @@
 let modalCategory = document.getElementById("modalAddCategory");
-var modalTitle = document.getElementById("modalTitle");
+var modalTitle = document.getElementById("titleText");
 
 var bntNewCategory = document.getElementById("bntNewCategory");
 var btnCloseModal = document.getElementById("buttonCloseModal");
 var btnCancel = document.getElementById("btnCancel");
 var btnSave = document.getElementById("btnSave");
+var btnDelete = document.getElementById("btnDeleteCategory")
+var editId = document.getElementById("editId")
+var editUserId = document.getElementById("editUserId")
 var editName = document.getElementById("editName");
 var radioButtonCredito = document.getElementById("radioCred");
 var radioButtonDebito = document.getElementById("radioDeb");
@@ -13,6 +16,7 @@ var successfullyInsertedOrEdited = false;
 
 bntNewCategory.onclick = function() { openModal() };
 btnCloseModal.onclick = function() { closeModal() };
+btnDelete.onclick = () => { deleteCategory() }
 btnCancel.onclick = function() { closeModal() };
 btnSave.onclick = function() { saveCategory() };
 
@@ -26,13 +30,26 @@ function closeModal() {
     }
 }
 
-function openModal() {
+function openModal( editingCategoryId = 0, userId = 0, categoryName = '', categoryTrasactionType = '' ) {
     // When the user clicks the button, open the modal 
     successfullyInsertedOrEdited = false;
-    modalTitle.innerHTML = 'Adicionar categoria';
-    editName.value = '';
-    radioButtonCredito.checked = false;
-    radioButtonDebito.checked = false;
+    modalTitle.innerHTML = editingCategoryId <= 0 ? 'ADICIONAR CARTEIRA' : 'ALTERANDO CARTEIRA';
+    btnDelete.style.visibility = editingCategoryId <= 0 ? 'hidden' : 'visible';
+    
+    editId.value = editingCategoryId
+    editUserId.value = userId
+    editName.value = categoryName
+
+    if ( categoryTrasactionType == 'C' ) {
+        radioButtonCredito.checked = true
+    }
+    else if ( categoryTrasactionType == 'D' ) {
+        radioButtonDebito.checked = true
+    }
+    else {
+        radioButtonCredito.checked = false
+        radioButtonDebito.checked = false
+    }
     
     modalCategory.style.display = "block";
 }
@@ -53,35 +70,50 @@ window.onclick = function(event) {
 }
 
 async function saveCategory() {
-    let categoryData = {
-        name: editName.value,
-        transactionType:    (function() {
-                                let result = ( radioButtonCredito.checked ) ? 'C' : 'D';
-                                return result;
-                            })() // IIFE
-    }
-    
-    if ( editName.value == "" ) {
-        return showNotification( "Informe o nome da categoria!" );
-    }
-    
-    if ( !radioButtonCredito.checked && !radioButtonDebito.checked ) {
-        // return alert('Selecione o tipo de transação (débito ou crédito)');
-        return showNotification( "Selecione o tipo de transação (Ganhos ou Gastos)" );
-    }
+    try {
+        let axiosResult
+        let notificationText
+        let categoryData = {
+            userId: editUserId.value,
+            name: editName.value,
+            transactionType:    (function() {
+                                    let result = ( radioButtonCredito.checked ) ? 'C' : 'D';
+                                    return result;
+                                })() // IIFE
+        }
+        
+        if ( editName.value == "" ) {
+            return showNotification( "Informe o nome da categoria!" );
+        }
+        
+        if ( !radioButtonCredito.checked && !radioButtonDebito.checked ) {
+            // return alert('Selecione o tipo de transação (débito ou crédito)');
+            return showNotification( "Selecione o tipo de transação (Ganhos ou Gastos)" );
+        }
+        
+        axiosResult = Number( editId.value ) <= 0 ? await axios.post('/categories', categoryData) : await axios.put('/categories/' + editId.value, categoryData)
+        notificationText = Number( editId.value ) <= 0 ? `Categoria ${categoryData.name} foi criada com sucesso` : `Categoria ${categoryData.name} foi alterada com sucesso`
+        
+        showNotification( notificationText )
 
-    // alert(JSON.stringify(categoryData, ' ', 4));
-    
-    axios.post('/categories', categoryData)
-    .then( response => {
-        showNotification( "Categoria cadastrada com sucesso!" );
+        successfullyInsertedOrEdited = true
+    }
+    catch( e ) {
+        console.log(e)
+        showNotification( `Erro >> ${ e }` );
+    }
+}
+async function deleteCategory() {
+    let deletionConfirmed = confirm( `Você tem certeza de que deseja excluir a categoria abaixo?\n\n[${editId.value}] - ${editName.value}` );
 
-        successfullyInsertedOrEdited = true;
-    })
-    .catch( errorResponse => {
-        showNotification( `Erro: ${ errorResponse }` );
-    })
-    .finally( () => {
-        // closeModal();
-    })
+    if ( deletionConfirmed ) {
+        let axiosResult = await axios.delete('/categories/' + editId.value)
+        
+        if (axiosResult.data.error) {
+            return showNotification( response.data.message );
+        }
+
+        showNotification( "Categoria excluída com sucesso!" );
+        location.reload()
+    }
 }

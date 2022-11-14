@@ -5,12 +5,44 @@
     box-sizing: border-box;
 }
 
+body[mwa-page="categories-listing"] .modal {
+    width: 80%;
+}   
+
 h1 {
     font-size: 23px;
     text-align: center;
     padding-bottom: 10px;
     /* margin-bottom: 30px; */
     border-bottom: solid 1px lightgray;
+}
+
+#modalTitle {
+    position: relative;
+    text-align: left;
+}
+
+#modalTitle #titleText {
+    padding-left: 30px;
+}
+
+#modalTitle #btnDeleteCategory {
+    color: red;
+    background-color: rgba(255, 0, 0, 0.1);
+    right: 0;
+    top: 0px;
+    cursor: pointer;
+    position: absolute;
+    font-weight: normal;
+    font-size: 16px;
+    border: rgba(255, 0, 0, 0.2) 1px solid;
+    border-radius: 7px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    transition: background-color 0.25s, color 0.25s;
 }
 
 .flex-container-row {
@@ -23,8 +55,6 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 10px;
-    max-width: 500px;
 }
 
 .field-border {
@@ -114,7 +144,9 @@ body[mwa-page="categories-listing"] .modal {
   /* The Close Button */
   body[mwa-page="categories-listing"] .btnCloseModal {
     color: #aaaaaa;
-    float: right;
+    position: absolute;
+    left: 0;
+    top: -5px;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
@@ -132,6 +164,6 @@ body[mwa-page="categories-listing"] .modal {
     body[mwa-page="categories-listing"] .modal-content {
         margin-left: auto;
         margin-right: auto;
-        max-width: 400px;
+        max-width: 450px;
     }   
 }

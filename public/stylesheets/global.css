@@ -1150,6 +1150,11 @@ body[mwa-page="wallets-listing"] .modal-form .symbol-balance-container #labelNam
         min-width: 380px;
         width: 80%;
     }
+
+    body[mwa-page="wallets-listing"] .modal-form .modal-content {
+        max-width: 450px;
+        /* background-color: black; */
+    }
 }
 /* End of modal section */
 /* -------------------------------------------------------------------------- */
