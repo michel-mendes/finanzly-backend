@@ -2,7 +2,8 @@
 var modalTransaction = document.getElementById("modalTransaction");
 
 // Get the constrols
-var modalTitle          = document.getElementById('modalTitle')
+var modalTitle          = document.getElementById('titleText')
+var btnDelete           = document.getElementById('btnDeleteTransaction')
 var cbNewTransaction    = document.getElementById('cbNewTransaction')  //Verifies if is a new transaction or an existing one
 var editWalletId        = document.getElementById('editWalletId')
 var categoryComboBox    = document.getElementById('inputCategoryAutoComplete')
@@ -15,6 +16,7 @@ var btnCancel           = document.getElementById('btnCancel')
 // Assign buttons events
 btnSave.onclick             = function() { saveTransaction() }
 btnCancel.onclick           = function() { closeNewTransactionModal() }
+btnDelete.onclick           = () => { deleteTransaction( document.getElementById('editId').value ) }
 
 btnCloseModal.onclick       = function() {
     // When the user clicks on <span> (x), close the modal
@@ -62,6 +64,7 @@ function openNewTransactionModal( transactionData ) {
     if ( !transactionData ) {
         //New transaction
         modalTitle.innerHTML = 'Adicionar transação'
+        btnDeleteTransaction.style.visibility = 'hidden'
         cbNewTransaction.checked = true
 
         editWalletId.value = walletId
@@ -71,8 +74,11 @@ function openNewTransactionModal( transactionData ) {
         categoryComboBox.focus()
     }
     else {
+        transactionData = JSON.parse( hexToStr( transactionData ) )
+        
         // Editing existing transaction
         modalTitle.innerHTML = 'Alteração de transação'
+        btnDeleteTransaction.style.visibility = 'visible'
         cbNewTransaction.checked = false
 
         document.getElementById('editId').value = transactionData.id

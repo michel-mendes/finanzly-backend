@@ -152,10 +152,9 @@ async function deleteTransaction( id ) {
         try {
             let result = await axios.delete( `/transactions/${ id }` )
 
-            console.log( result )
-
-            await doWalletSelect()
             showNotification( result.data )
+            closeNewTransactionModal()
+            await doWalletSelect()
         }
         catch( e ) {
             showNotification( e )
@@ -253,7 +252,7 @@ function buildTransactionsList( transactionsList ) {
 
                     let valueClassName = transaction.debitValue > 0 ? 'negative-transaction-value' : 'positive-transaction-value'
 
-                    htmlContent += `<li class="transaction-item">`
+                    htmlContent += `<li class="transaction-item" onclick="openNewTransactionModal( '${strToHex( JSON.stringify(transaction) )}' )">`
                     htmlContent += `<div class="item-category-icon-container">`
                     htmlContent += `<img src="https://picsum.photos/40" alt="Ícone da categoria">`
                     htmlContent += `</div>`
@@ -265,9 +264,9 @@ function buildTransactionsList( transactionsList ) {
                     htmlContent += `<div class="item-value-container">`
                     htmlContent += `<span class="${ valueClassName }" id="transactionValue">${ transaction.fromWallet.currencySymbol } ${ Number(transaction.value).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }</span>`
                     htmlContent += `</div>`
-                    htmlContent += `<div class="item-toolbox">`
-                    htmlContent += `<span name="editTransactionButton" class="material-icons tool-button" transactiondata='${ strToHex( JSON.stringify(transaction) ) }' onclick="openNewTransactionModal( JSON.parse( hexToStr( this.getAttribute('transactiondata') ) ) )">edit</span><span name="deleteTransactionButton" class="material-icons tool-button" onclick="(async () => {await deleteTransaction(${ transaction.id })})()">delete</span>`
-                    htmlContent += `</div>`
+                    // htmlContent += `<div class="item-toolbox">`
+                    // htmlContent += `<span name="editTransactionButton" class="material-icons tool-button" transactiondata='${ strToHex( JSON.stringify(transaction) ) }' onclick="openNewTransactionModal( JSON.parse( hexToStr( this.getAttribute('transactiondata') ) ) )">edit</span><span name="deleteTransactionButton" class="material-icons tool-button" onclick="(async () => {await deleteTransaction(${ transaction.id })})()">delete</span>`
+                    // htmlContent += `</div>`
                     htmlContent += `</li>`
 
                 })

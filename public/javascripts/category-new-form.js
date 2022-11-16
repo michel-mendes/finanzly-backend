@@ -99,7 +99,7 @@ async function saveCategory() {
         successfullyInsertedOrEdited = true
     }
     catch( e ) {
-        console.log(e)
+        // console.log(e)
         showNotification( `Erro >> ${ e }` );
     }
 }

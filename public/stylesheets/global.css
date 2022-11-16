@@ -666,6 +666,7 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     display: flex;
     position: relative;
     flex-direction: row;
+    cursor: pointer;
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item:hover .item-category-icon-container,

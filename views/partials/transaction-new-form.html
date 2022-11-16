@@ -2,10 +2,13 @@
 <div mwa-page="transaction-new-form" id="modalTransaction" class="modal">
 <!-- Modal content -->
     <div class="modal-content">
-        <span class="btnCloseModal">&times;</span>
-      
+        
         <div class="transaction-box">
-            <h1 id="modalTitle">Adicionar / Alterar Transação</h1>
+            <h1 id="modalTitle">
+                <span class="btnCloseModal">&times;</span>
+                <span id="titleText">Adicionar / Alterar Transação</span>
+                <span id="btnDeleteTransaction">APAGAR</span>
+            </h1>
             <input type="checkbox" id="cbNewTransaction" hidden>
             
             <form action="POST">
