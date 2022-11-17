@@ -34,6 +34,19 @@ router.get('/logout', function (req, res, next) {
 
 router.post( '/authenticate', bodyParser.urlencoded({extended: true}), authenticateUser );
 
+router.get( '/user', async (req, res, next) => {
+    if ( !req.session.loggedIn ) {
+        res.redirect( '/app/login' )
+        return
+    }
+
+    let user = await tabUsers.getUserById( req.session.userId )
+    let userWallets = await tabWallets.getWalletsFromUser( user.id )
+    let dashboardWallet = userWallets.find( (wallet) => { return Number(wallet.id) == Number(user.dashboardWalletId) })
+
+    res.render( './pages/user-profile', { userId: user.id, userName: user.userName, userFirstName: user.firstName, userEmail: user.email, walletName: dashboardWallet ? dashboardWallet.name : undefined, totalWallets: dashboardWallet ? dashboardWallet.length : 0 } )
+})
+
 router.get('/dashboard', async function(req, res, next) {
     if ( !req.session.loggedIn ) {
         res.redirect( '/app/login' )

@@ -36,9 +36,11 @@
 
 <script>
   var selectedWallet
+  var modalCheckTimerID
+  var walletsListModalWrapper = document.getElementById("walletsListModalWrapper")
   var btnCloseModal = document.getElementById('btnCloseWalletList')
   var btnCancel = document.getElementById('btnCancel_WalletSelectionModal')
-  let btnSelect = document.getElementById('btnSelect_WalletSelectionModal')
+  var btnSelect = document.getElementById('btnSelect_WalletSelectionModal')
 
   btnCloseModal.onclick = () => { cancelWalletSelection() }
   btnCancel.onclick = () => { cancelWalletSelection() }
@@ -90,9 +92,21 @@
     }
     catch (e) {
       // console.log(`Erro: ${e}`)
-      showNotification(`${ e }`)
+      showNotification(`Erro ao atualizar lista de carteiras do usuário >> "${ e }"`)
     }
   }
+
+  function openWalletsListModal() {
+    let appContent = document.getElementById("app-content")
+
+    getWalletsList()
+    appContent.classList.toggle('blur-element')
+    walletsListModalWrapper.style.display = 'flex'
+    walletsListModalWrapper.style.opacity = '1'
+
+    // Constantly check the wallet selection modal result
+    modalCheckTimerID = setInterval( checkModalResult, 100 )
+}
 
   function confirmWalletSelection() {
     let myModal = document.getElementById('walletsListModalWrapper')
@@ -108,4 +122,28 @@
     myModal.style.display = 'none'
     btnSelect.disabled = true
   }
+
+  function checkModalResult() {
+    // cancel the verification if the modal is still opened
+    if ( walletsListModalWrapper.style.display == 'flex' ) return
+
+    // if the modal is closed, kill the timer
+    if ( walletsListModalWrapper.style.display == 'none' ) {
+        clearInterval( modalCheckTimerID )
+    }
+
+    walletId = selectedWallet
+
+    closeWalletListModal()
+  }
+
+async function closeWalletListModal() {
+  let appContent = document.getElementById("app-content")
+
+  appContent.classList.toggle('blur-element')
+  walletsListModalWrapper.style.display = 'none'
+  walletsListModalWrapper.style.opacity = '0'
+
+  await doWalletSelect()
+}
 </script>

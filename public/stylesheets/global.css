@@ -416,6 +416,140 @@ body[mwa-page="dashboard"] .nav > .nav-btn {
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
+/* User Profile Page Styles ||                                                */
+/* -------------------------------------------------------------------------- */
+
+body[mwa-page="user-profile"] {
+    margin: 0px;
+    background-color: rgb(228, 228, 228);
+    /* background-color: ivory; */
+}
+
+body[mwa-page="user-profile"] .toolbar{
+    display: flex;
+    background-color: white;
+    justify-content: space-between;
+    height: 64px;
+    border-bottom: 1px solid silver;
+}
+
+body[mwa-page="user-profile"] .toolbar .img-back-button{
+    cursor: pointer;
+}
+
+body[mwa-page="user-profile"] .toolbar #leftSide{
+    display: flex;;
+    flex-basis: 380px;
+}
+
+body[mwa-page="user-profile"] .toolbar #leftSide .back-button-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+body[mwa-page="user-profile"] .toolbar #leftSide .img-back-button{
+    width: 32px;
+    height: 32px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+body[mwa-page="user-profile"] main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+body[mwa-page="user-profile"] main .user-info {
+    /* width: 550px; */
+    width: 80%;
+    min-width: 400px;
+    max-width: 600px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0.25rem 0.25rem 0.6rem rgba(0,0,0,0.05), 0 0.5rem 1.125rem rgba(75,0,0,0.05);
+    border-radius: 8px;
+    background-color: white;
+}
+
+body[mwa-page="user-profile"] .flex-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+body[mwa-page="user-profile"] .dashboard-wallet-cantainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: silver 1px solid;
+    border-radius: 5PX;
+    position: relative;
+    z-index: 99;
+}
+
+body[mwa-page="user-profile"] .dashboard-wallet-cantainer .header {
+    text-align: center;
+    background-color: none;
+    padding: 5px;
+    background-color: lightgrey;
+}
+
+body[mwa-page="user-profile"] .dashboard-wallet-cantainer #labelDashboardWallet {
+    margin-bottom: 10px;
+}
+
+body[mwa-page="user-profile"] .dashboard-wallet-cantainer #labelDashboardWallet {
+    padding-left: 15px;
+}
+
+body[mwa-page="user-profile"] label {
+    width: 100%;
+}
+
+body[mwa-page="user-profile"] input {
+    width: 100%;
+    height: 30px;
+    margin-top: 5px;
+}
+
+body[mwa-page="user-profile"] .button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+body[mwa-page="user-profile"] #btnSaveChanges,
+body[mwa-page="user-profile"] #btnChangeWallet,
+body[mwa-page="user-profile"] #btnCreateNewWallet {
+    height: 30px;
+    width: 50%;
+    cursor: pointer;
+}
+
+body[mwa-page="user-profile"] #userAvatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+
+@media (max-width:600px) {
+    body[mwa-page="user-profile"] main .user-info {
+        width: 85%;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
 /* Transactions Page Styles ||                                                */
 /* -------------------------------------------------------------------------- */
 
@@ -775,6 +909,7 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     text-align: right;
 }
 
+body[mwa-page="user-profile"] #walletsListModalWrapper,
 body[mwa-page="transactions-listing"] #walletsListModalWrapper {
     transition: all 250ms;
     display: none;

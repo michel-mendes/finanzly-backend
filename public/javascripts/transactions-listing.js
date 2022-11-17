@@ -1,9 +1,7 @@
 var rightSideToolbar = document.getElementById("rightSide")
-var walletsListModalWrapper = document.getElementById("walletsListModalWrapper")
 var walletListContainer = document.getElementById("walletListContainer")
 var commandsContainer
 var ctaSelectWallet = document.getElementById("ctaSelectWallet")
-var modalCheckTimerID
 
 var btnAddTransaction
 var btnImportTransactions
@@ -13,18 +11,6 @@ var btnSearchTransaction
 
 if ( ctaSelectWallet ) {
     ctaSelectWallet.onclick = () => { openWalletsListModal() }
-}
-
-function openWalletsListModal() {
-    let appContent = document.getElementById("app-content")
-
-    getWalletsList()
-    appContent.classList.toggle('blur-element')
-    walletsListModalWrapper.style.display = 'flex'
-    walletsListModalWrapper.style.opacity = '1'
-
-    // Constantly check the wallet selection modal result
-    modalCheckTimerID = setInterval( checkModalResult, 100 )
 }
 
 function turnCommandsPanelIntoVisible() {
@@ -59,30 +45,6 @@ function turnCommandsPanelIntoVisible() {
         btnSearchTransaction.onclick = () => { openSearchTransactionDialog() }
 
     }
-}
-
-async function closeWalletListModal() {
-    let appContent = document.getElementById("app-content")
-
-    appContent.classList.toggle('blur-element')
-    walletsListModalWrapper.style.display = 'none'
-    walletsListModalWrapper.style.opacity = '0'
-
-    await doWalletSelect()
-}
-
-function checkModalResult() {
-    // cancel the verification if the modal is still opened
-    if ( walletsListModalWrapper.style.display == 'flex' ) return
-
-    // if the modal is closed, kill the timer
-    if ( walletsListModalWrapper.style.display == 'none' ) {
-        clearInterval( modalCheckTimerID )
-    }
-
-    walletId = selectedWallet
-
-    closeWalletListModal()
 }
 
 function openSearchTransactionDialog() {

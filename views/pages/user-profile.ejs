@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/global.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Import AXIOS Library -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Links for Wallets List Modal -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/stylesheets/modal-wallet-list.css">
+    <!--  -->
+
+    <script>
+        var userId = '<%= userId %>'
+        var walletId = -1
+    </script>
+
+    <title>Perfil de usuário</title>
+</head>
+<body mwa-page="user-profile" class="page-transition-fade-in">
+    
+    <!-- Start of the visible app content -->
+    <div id="app-content">
+        
+        <header class="toolbar">
+            <div id="leftSide">
+                <div class="back-button-container">
+                    <!-- <a href="/app/dashboard"> -->
+                    <a onclick="fadeRedirect('/app/dashboard')">
+                        <img class="img-back-button" src="/images/left-arrow.jpg" alt="seta voltar">
+                    </a>
+                </div>
+
+            </div>
+
+            <div id="rightSide">
+                
+            </div>
+        </header>
+
+        <main>
+            <section class="user-info" id="userInfoContainer">
+                
+                <div class="avatar-and-username-container flex-container    ">
+                    <img src="https://picsum.photos/120" alt="User's avatar" id="userAvatar">
+                    <span id="userName">@</span>
+                </div>
+
+                <div class="flex-container">
+                    <label for="editFirstName">
+                        <span>Seu nome</span>
+                        <input type="text" id="editFirstName" value="">
+                    </label>
+
+                    <label for="editEmail">
+                        <span>Email</span>
+                        <input type="text" id="editEmail" value="">
+                    </label>
+
+                    <div class="dashboard-wallet-cantainer">
+                        <div class="header">
+                            <span>Carteira para exibição em sua página inicial</span>
+                        </div>
+                        
+                        <span id="labelDashboardWallet">></span>
+                        
+                        <div class="button-container" id="buttonContainer">
+                            <button class="btn btn-cl-yellow" id="btnCreateNewWallet" onclick="fadeRedirect('/app/wallets')">
+                                <span class="btn-caption">CRIAR NOVA CARTEIRA</span>
+                                <!-- <span class="btn-icon material-icons">add</span> -->
+                            </button>
+                            <button class="btn btn-cl-yellow" id="btnChangeWallet" onclick="openWalletsListModal()">
+                                <span class="btn-caption">SELECIONAR OUTRA CARTEIRA</span>
+                                <!-- <span class="btn-icon material-icons">add</span> -->
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button class="btn btn-cl-green" id="btnSaveChanges" onclick="saveUserProfile()">
+                        <span class="btn-caption">SALVAR ALTERAÇÕES</span>
+                        <!-- <span class="btn-icon material-icons">add</span> -->
+                    </button>
+                </div>
+
+            </section>
+        </main>
+
+    </div>
+    <!-- End of the visible app content -->
+
+    <script>
+        
+        loadUserDataToPage()
+
+        async function loadUserDataToPage() {
+            let user = await getUserProfile()
+            
+            if ( !user ) return
+
+            populateFieldsWithUserData( user )
+            showUserDashboardWallet( user )
+        }
+        
+        async function getUserProfile() {
+            try {
+                let user = await axios.get('/users/' + '<%= userId %>')
+                user.data['dashboardWalletData'] = user.data.userWallets.length > 0 ? user.data.userWallets.find( (wallet) => { return wallet.id == user.data.dashboardWalletId }) : undefined
+
+                return user.data
+            }
+            catch (e) {
+                showNotification(`Erro ao carregar dados do usuário >> "${e}"`)
+                return undefined
+            }
+        }
+
+        function populateFieldsWithUserData( userData ) {
+            document.getElementById('userName').innerHTML = '@' + userData.userName
+            document.getElementById('editFirstName').value = userData.firstName
+            document.getElementById('editEmail').value = userData.email
+        }
+
+        function showUserDashboardWallet( userData ) {
+
+            let labelWalletName = document.getElementById('labelDashboardWallet')
+
+            if ( !userData.dashboardWalletData ) {
+                
+                if ( userData.userWallets.length > 0 ) {
+                    // Tells user to select an existing wallet
+                    labelWalletName.innerText = '> Carteira não encontrada, por favor selecione outra carteira'
+                    showOnlyChangeWalletButton()
+                    return
+                }
+                else {
+                    // Tells user to create at least one wallet
+                    labelWalletName.innerText = '> Você não possui nenhuma carteira'
+                    showOnlyCreateWalletButton()
+                    return
+                }
+
+            }
+            else {
+                
+                labelWalletName.innerText = `> ${ userData.dashboardWalletData.name }`
+                
+                userData.userWallets.length > 1 ? showOnlyChangeWalletButton() : hideAllButtons()
+                return
+            }
+
+        }
+
+        function showCurrentUserDashboardWallet( userData ) {
+            document.getElementById('labelDashboardWallet').innerHTML = `> ${ userData.dashboardWalletData.name }`
+        }
+        
+        function showOnlyCreateWalletButton() {
+            document.getElementById('buttonContainer').style.display = 'flex'
+            document.getElementById('btnCreateNewWallet').style.display = 'block'
+            document.getElementById('btnChangeWallet').style.display = 'none'
+        }
+
+        function showOnlyChangeWalletButton() {
+            document.getElementById('buttonContainer').style.display = 'flex'
+            document.getElementById('btnCreateNewWallet').style.display = 'none'
+            document.getElementById('btnChangeWallet').style.display = 'block'
+        }
+
+        function hideAllButtons() {
+            document.getElementById('buttonContainer').style.display = 'none'
+            document.getElementById('btnCreateNewWallet').style.display = 'none'
+            document.getElementById('btnChangeWallet').style.display = 'none'
+        }
+
+        async function doWalletSelect() {
+			if ( walletId > -1 ) {
+		
+				try {
+					let response = await axios.get(`/wallets/${ walletId }`)
+		
+					if ( !response.data ) return
+		
+					document.getElementById('labelDashboardWallet').innerHTML = `> ${ response.data.name }`
+		
+					// let setupResponse = await axios.post('transactions/setSelectedWallet', { selectedWalletId: walletId })
+					// alert( setupResponse.data )
+				}
+				catch (e) {
+					// console.log(e)
+					showNotification(`Erro >> ${ e }`)
+				}
+		
+			}
+        }
+
+        async function saveUserProfile() {
+            try {
+                let user = {
+                    firstName: document.getElementById('editFirstName').value,
+                    email: document.getElementById('editEmail').value,
+                    dashboardWalletId: walletId
+                }
+
+                let axiosResponse = await axios.put( `/users/${ userId }`, user )
+
+                showNotification(`Alterações realizadas com sucesso!`)
+            }
+            catch (e) {
+                showNotification(`Erro >> ${e}`)
+            }
+        }
+    </script>
+
+    <!-- 'Wallet selection' modal start-->
+    <%- include('../partials/modal-wallet-list.ejs'); %>
+    <!-- 'Wallet selection' modal end-->
+
+    <!-- Top notification bar start-->
+    <%- include('../partials/top-notification-bar.html'); %>
+    <!-- Top notification bar end-->
+
+    <script src="/javascripts/extra-functions.js"></script>
+</body>
+</html>

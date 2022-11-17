@@ -36,7 +36,7 @@
             <a id="btnTransactionsLink" onclick="fadeRedirect('/app/transactions')">Transações</a>
             <a id="btnCategoriesLink" onclick="fadeRedirect('/app/categories')">Categorias</a>
             <a id="btnWalletsLink" onclick="fadeRedirect('/app/wallets')">Carteiras</a>
-            <a href="#" class="menu-separator">Olá, <%= userFirstName %> <i class="user-icon material-icons">person</i></a>
+            <a id="btnUserProfileLink" onclick="fadeRedirect('/app/user')" class="menu-separator">Olá, <%= userFirstName %> <i class="user-icon material-icons">person</i></a>
             <a href="/app/logout" title="Log out"> <i class="user-icon material-icons">logout</i> </a>
         </div>
 
@@ -131,7 +131,7 @@
             <div>
                 <span>Não há nenhuma carteira configurada para ser exibida na sua tela inicial</span>
                 <span>Por favor, escolha uma carteira</span>
-                <button class="btn btn-cl-blue">SELECIONAR CARTEIRA</button>
+                <button class="btn btn-cl-blue" onclick="location.href = '/app/user'">SELECIONAR CARTEIRA</button>
             </div>
         </section>
     </main>

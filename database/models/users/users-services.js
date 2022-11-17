@@ -40,7 +40,7 @@ async function getAllUsers( associate ) {
 }
 
 async function getUserById( id, fullScope = false ) {
-    const user = await tabUserWallet.tabUsers.findByPk(id);
+    const user = await tabUserWallet.tabUsers.findByPk(id, {include: ['userWallets']});
 
     return user;
 }

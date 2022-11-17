@@ -10,7 +10,7 @@ var router = express.Router();
 router.get('/', listAllUsers); // List all users
 router.get('/:id', listById); // Search user by ID
 router.post('/', validateUserRequest, saveUser); // Create new user
-router.put('/:id', validateUserRequest, editUser); // Update user
+router.put('/:id', editUser); // Update user
 router.delete('/:id', deleteUser); // Delete user
 
 router.post('/authenticate', authUser); // User authentication
@@ -58,6 +58,8 @@ function saveUser( req, res, next ) {
 
 function editUser( req, res, next ) {
     
+    console.log('Chegooou')
+    console.log(req.body)
     req.body.id = req.params.id;
 
     userServices.editUser( req.body )
