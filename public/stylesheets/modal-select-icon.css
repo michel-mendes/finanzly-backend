@@ -1,0 +1,139 @@
+div[type="modal-wrapper"] {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, .5);
+}
+
+div[type="modal-wrapper"] .select-icon-modal {
+  border-radius: 6px;
+  max-width: 520px;
+  padding-top: 20px;
+  background-color: white;
+  box-shadow: 0.25rem 0.25rem 0.6rem rgba(0,0,0,0.05), 0 0.5rem 1.125rem rgba(75,0,0,0.05);
+}
+
+div[type="modal-wrapper"] .select-icon-modal .header {
+  padding-left: 30px;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .header-separator {
+  width: 95%;
+  border-top: 1px silver solid;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .close-modal-button {
+  font-size: 30px;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .close-modal-button {
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .header-title {
+  display: inline-block;
+  margin-left: 15px;
+  font-size: 30px;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .icons-list {
+  padding: 16px;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: left;
+  overflow: hidden;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .list-item {
+  height: 64px;
+  width: 64px;
+  padding: 0px;
+  /* border: 1px solid #b9bfc6; */
+  cursor: pointer;
+  border-radius: 35px;
+  transition: .3s;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .list-item:hover {
+  box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.3);
+  transition: .3s;
+}
+
+div[type="modal-wrapper"] .select-icon-modal .list-item .icon {
+  height: 100%;
+  width: 100%;
+}
+
+@media (max-width:600px) {
+  div[type="modal-wrapper"] .select-icon-modal {
+    width: 75%;
+  }
+
+  div[type="modal-wrapper"] .select-icon-modal .header-title {
+    font-size: 20px;
+  }
+}
+
+@keyframes anim_OpenModal {
+  0% {
+    visibility: visible;
+    opacity: 0;
+  }
+
+  50% {
+    opacity: .5;
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes anim_CloseModal {
+  0% {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.open-modal {
+  -webkit-animation: anim_OpenModal .1s linear forwards;
+  -moz-animation: anim_OpenModal .1s linear forwards;
+  -o-animation: anim_OpenModal .1s linear forwards;
+  animation: anim_OpenModal .1s linear forwards;
+}
+
+.close-modal {
+  -webkit-animation: anim_CloseModal .1s linear forwards;  
+  -moz-animation: anim_CloseModal .1s linear forwards;  
+  -o-animation: anim_CloseModal .1s linear forwards;  
+  animation: anim_CloseModal .1s linear forwards;  
+}

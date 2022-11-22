@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser')
+var fs = require('fs')
 var Papa = require('papaparse')
 var tabWallets = require('../database/models/wallets/wallets-services')
 var tabCategories = require('../database/models/categories/categories-services')
@@ -230,6 +231,13 @@ router.get('/wallets', (req, res, next) => {
     }
 });
 
+router.get('/icons', async (req, res, next) => {
+    let icons = fs.readdirSync('./public/icons')
+
+    icons = icons.filter( iconName => { return iconName.indexOf( '.png' ) > 0 })
+
+    res.send( icons )
+});
 
 
 
