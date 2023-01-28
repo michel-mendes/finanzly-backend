@@ -85,7 +85,8 @@ async function editCategory( parameters ) {
     
     const editedCategory = {
         name: parameters.name,
-        transactionType: parameters.transactionType
+        transactionType: parameters.transactionType,
+        iconPath: parameters.iconPath
     }
     
     Object.assign(category, editedCategory);

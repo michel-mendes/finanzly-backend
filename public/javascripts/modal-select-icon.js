@@ -15,12 +15,11 @@ class ModalSelectIcon {
 
     window.addEventListener('keyup', ( ev ) => {
       if ( ev.code == 'Escape' && this.isShowing() ) {
-        this.cancelledByUser = true
-        this.closeModal()
+        this.cancelModal()
       }
     })
 
-    document.getElementById( 'btnCloseIconModal' ).onclick = () => { this.closeModal() }
+    document.getElementById( 'btnCloseIconModal' ).onclick = () => { this.cancelModal() }
   }
 
   isShowing() {
@@ -49,6 +48,11 @@ class ModalSelectIcon {
     this.modal.classList.add('close-modal')
 
     typeof this.onCloseModal_event === 'function' ? this.onCloseModal_event( this.getIconName() ) : undefined
+  }
+
+  cancelModal() {
+    this.cancelledByUser = true
+    this.closeModal()
   }
 
   buildIconsList( iconsNames = [] ) {

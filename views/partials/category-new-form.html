@@ -2,39 +2,58 @@
 <div id="modalAddCategory" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
+      
+      <div class="header">
         
-        <div class="new-category-box">
-            <h1 id="modalTitle">
-                <span id="btnDeleteCategory">APAGAR</span>
-                <span class="btnCloseModal" id="buttonCloseModal">&times;</span>
-                <span id="titleText">Nova / Edição de Categoria</span>
-            </h1>
+        <span id="btnEditCategory" class="material-icons" onclick="alert(screen.width)">edit</span>
+        <span id="btnDeleteCategory" class="material-icons">delete</span>
+        <span id="btnCloseModal">&times;</span>
+        <span id="titleText">Nova / Edição de Categoria</span>
+
+      </div>
+
+      <hr class="header-separator">
             
-            <form action="#">
-                <input type="number" name="id" id="editId" hidden>
-                <input type="number" name="userId" id="editUserId" hidden>
-            
-                <label for="editName" id="labelName" class="field-border">
-                    <span>Nome da categoria</span>
-                    <input type="text" name="name" id="editName" class="borderless" onkeyup="setInputUppercase( this )">
-                </label>
-            
-                <fieldset class="field-border flex-container-row">
-                    <legend>Tipo de transações desta categoria</legend>
-                    <div>
-                        <input type="radio" name="transactionType" id="radioCred" value="c"><label for="radioCred">Ganhos</label>
-                    </div>
-                    <div>
-                        <input type="radio" name="transactionType" id="radioDeb" value="d" class="separator"><label for="radioDeb">Gastos</label>
-                    </div>
-                </fieldset>
-            
-                <div class="button-container">
-                    <a class="btn btn-cl-red" id="btnCancel">Cancelar</a>
-                    <a class="btn btn-cl-green" id="btnSave">Salvar</a>
-                </div>
-            </form>
+      <div class="icon-and-type-container">
+        
+        <label for="imgIcon" class="icon-container label-border">
+          <span>Ícone</span>
+          <img src="" alt="" id="imgIcon">
+        </label>
+
+        <label class="type-container label-border">
+          <span>Tipo das transações</span>          
+          
+          <div>
+            <input type="radio" name="transactionType" id="radioCred" value="c"><label for="radioCred">Ganhos / Entrada</label>
+          </div>
+          <div>
+            <input type="radio" name="transactionType" id="radioDeb" value="d" class="separator"><label for="radioDeb">Gastos / Saída</label>
+          </div>
+
+        </label>
+
+      </div>
+
+      <label for="editName" id="labelName">
+        <div class="name-container label-border">
+          <span>Nome da categoria</span>
+          <input type="text" name="name" id="editName" class="borderless" onkeyup="setInputUppercase( this )">
         </div>
+      </label>
+
+      <div class="button-container">
+        <button class="btn btn-cl-red" id="btnCancel">CANCELAR</button>
+        <button class="btn btn-cl-green" id="btnSave">SALVAR</button>
+      </div>
+
+      <input type="number" name="id" id="editId" hidden>
+      <input type="number" name="userId" id="editUserId" hidden>
 
     </div>
+
 </div>
+
+<!-- 'Select icon' modal start-->
+<%- include('./modal-select-icon.html', {}); %>
+<!-- 'Select icon' modal end-->

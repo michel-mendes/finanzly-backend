@@ -9,7 +9,8 @@ const Category = database.define('categories', {
     // walletId:           Sequelize.INTEGER,
     userId:             Sequelize.INTEGER,
     name:               Sequelize.STRING,
-    transactionType:    Sequelize.STRING
+    transactionType:    Sequelize.STRING,
+    iconPath:           Sequelize.STRING
 });
 
 module.exports = Category;

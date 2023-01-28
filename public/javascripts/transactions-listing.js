@@ -214,9 +214,10 @@ function buildTransactionsList( transactionsList ) {
 
                     let valueClassName = transaction.debitValue > 0 ? 'negative-transaction-value' : 'positive-transaction-value'
 
+                    console.log(transaction)
                     htmlContent += `<li class="transaction-item" onclick="openNewTransactionModal( '${strToHex( JSON.stringify(transaction) )}' )">`
                     htmlContent += `<div class="item-category-icon-container">`
-                    htmlContent += `<img src="https://picsum.photos/40" alt="Ícone da categoria">`
+                    htmlContent += `<img src="${ transaction.fromCategory.iconPath }" alt="Ícone da categoria">`
                     htmlContent += `</div>`
                     htmlContent += `<div class="item-body-container">`
                     htmlContent += `<span id="transactionCategoryName">${ transaction.fromCategory.name }</span>`

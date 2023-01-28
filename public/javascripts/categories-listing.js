@@ -9,8 +9,9 @@ categoriesList.forEach( (item) => {
     let categoryId = item.getAttribute('categoryid')
     let categoryName = item.getAttribute('categoryname')
     let categoryType = item.getAttribute('categorytype')
+    let categoryIconPath = item.getAttribute('categoryiconpath')
 
-    item.onclick = () => { openModal( categoryId, myUserId, categoryName, categoryType ) }
+    item.onclick = () => { openModal( categoryId, myUserId, categoryName, categoryType, categoryIconPath ) }
 })
 
 function categoriesPageRefresh() {

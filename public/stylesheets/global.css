@@ -560,11 +560,16 @@ body[mwa-page="transactions-listing"] {
 }
 
 body[mwa-page="transactions-listing"] .toolbar{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
     display: flex;
     background-color: white;
     justify-content: space-between;
     height: 64px;
     border-bottom: 1px solid silver;
+    z-index: 9999;
 }
 
 body[mwa-page="transactions-listing"] .toolbar .img-back-button{
@@ -686,7 +691,7 @@ body[mwa-page="transactions-listing"] main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 30px;
+    padding-top: 84px;
     padding-bottom: 30px;
 }
 
@@ -801,6 +806,7 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     position: relative;
     flex-direction: row;
     cursor: pointer;
+    background-color: white;
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .transaction-item:hover .item-category-icon-container,
@@ -825,8 +831,13 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     flex-basis: 45px;
     padding: 10px;
     z-index: 10;
-    background-color: rgb(240, 240, 240);
+    /* background-color: rgb(240, 240, 240); */
     transition: background-color 300ms;
+}
+
+body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .item-category-icon-container img {
+    width: 40px;
+    height: 40px;
 }
 
 body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group-items-container .item-body-container {
@@ -837,7 +848,7 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     padding-top: 10px;
     padding-bottom: 10px;
     z-index: 10;
-    background-color: rgb(240, 240, 240);
+    /* background-color: rgb(240, 240, 240); */
     transition: background-color 300ms;
 }
 
@@ -851,7 +862,7 @@ body[mwa-page="transactions-listing"] .transactions-day-group .group-body .group
     padding-right: 10px;
     padding-bottom: 10px;
     z-index: 10;
-    background-color: rgb(240, 240, 240);
+    /* background-color: rgb(240, 240, 240); */
     transition: background-color 300ms;
 }
 

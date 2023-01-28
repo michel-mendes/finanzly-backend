@@ -52,7 +52,8 @@
                         <% if ( categoriesList ) {
                             categoriesList.forEach( (category, index) => {
                                 if ( category.transactionType == 'C' ) {%>
-                                <li class="list-item" categoryid="<%= category.id %>" categoryname="<%= category.name %>" categorytype="<%= category.transactionType %>">
+                                <li class="list-item" categoryid="<%= category.id %>" categoryname="<%= category.name %>" categorytype="<%= category.transactionType %>" categoryiconpath="<%= category.iconPath %>">
+                                    <img src="<%= category.iconPath %>">
                                     <span><%= category.name %></span>
                                 </li>        
                             <% }} )
@@ -67,7 +68,8 @@
                         <% if ( categoriesList ) {
                             categoriesList.forEach( (category, index) => {
                                 if ( category.transactionType == 'D' ) {%>
-                                <li class="list-item" categoryid="<%= category.id %>" categoryname="<%= category.name %>" categorytype="<%= category.transactionType %>">
+                                <li class="list-item" categoryid="<%= category.id %>" categoryname="<%= category.name %>" categorytype="<%= category.transactionType %>" categoryiconpath="<%= category.iconPath %>">
+                                    <img src="<%= category.iconPath %>">
                                     <span><%= category.name %></span>
                                 </li>        
                             <% }} )

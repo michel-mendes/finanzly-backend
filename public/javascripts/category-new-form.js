@@ -1,11 +1,14 @@
+let modalSelectIcon
+
 let modalCategory = document.getElementById("modalAddCategory");
 var modalTitle = document.getElementById("titleText");
 
 var bntNewCategory = document.getElementById("bntNewCategory");
-var btnCloseModal = document.getElementById("buttonCloseModal");
+var btnCloseModal = document.getElementById("btnCloseModal");
 var btnCancel = document.getElementById("btnCancel");
 var btnSave = document.getElementById("btnSave");
 var btnDelete = document.getElementById("btnDeleteCategory")
+var imgIcon = document.getElementById("imgIcon")
 var editId = document.getElementById("editId")
 var editUserId = document.getElementById("editUserId")
 var editName = document.getElementById("editName");
@@ -19,7 +22,9 @@ btnCloseModal.onclick = function() { closeModal() };
 btnDelete.onclick = () => { deleteCategory() }
 btnCancel.onclick = function() { closeModal() };
 btnSave.onclick = function() { saveCategory() };
+imgIcon.onclick = () => { modalSelectIcon.showModal() }
 
+createIconModal()
 
 function closeModal() {
     modalCategory.style.display = "none";
@@ -30,11 +35,12 @@ function closeModal() {
     }
 }
 
-function openModal( editingCategoryId = 0, userId = 0, categoryName = '', categoryTrasactionType = '' ) {
+async function openModal( editingCategoryId = 0, userId = 0, categoryName = '', categoryTrasactionType = '', categoryIconPath = '' ) {
     // When the user clicks the button, open the modal 
     successfullyInsertedOrEdited = false;
     modalTitle.innerHTML = editingCategoryId <= 0 ? 'ADICIONAR CARTEIRA' : 'ALTERANDO CARTEIRA';
     btnDelete.style.visibility = editingCategoryId <= 0 ? 'hidden' : 'visible';
+    imgIcon.setAttribute('src', editingCategoryId <= 0 ? await getRandomIcon() : categoryIconPath )
     
     editId.value = editingCategoryId
     editUserId.value = userId
@@ -51,7 +57,7 @@ function openModal( editingCategoryId = 0, userId = 0, categoryName = '', catego
         radioButtonDebito.checked = false
     }
     
-    modalCategory.style.display = "block";
+    modalCategory.style.display = "flex";
 }
 
 window.onkeyup = function( key ) {
@@ -79,7 +85,8 @@ async function saveCategory() {
             transactionType:    (function() {
                                     let result = ( radioButtonCredito.checked ) ? 'C' : 'D';
                                     return result;
-                                })() // IIFE
+                                })(), // IIFE
+            iconPath: imgIcon.getAttribute('src')
         }
         
         if ( editName.value == "" ) {
@@ -116,4 +123,25 @@ async function deleteCategory() {
         showNotification( "Categoria excluída com sucesso!" );
         location.reload()
     }
+}
+
+async function createIconModal() {
+    let iconsList = await axios.get('/app/icons')
+
+    modalSelectIcon = new ModalSelectIcon( iconsList.data )
+    modalSelectIcon.onCloseModal_event = ( iconName ) => {
+
+        if ( iconName ) {
+            imgIcon.setAttribute('src', `/icons/${ iconName }`)
+        }
+
+    }
+}
+
+async function getRandomIcon() {
+    let axiosResp = await axios.get('/app/icons')
+    let iconsList = axiosResp.data
+    let randomIconIndex = Math.floor( Math.random() * iconsList.length )
+
+    return `/icons/${ iconsList[ randomIconIndex ] }`
 }
