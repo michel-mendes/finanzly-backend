@@ -1,0 +1,3 @@
+- add restrictions to wallets routes
+    - users can't get other users wallets
+    - admin can get any wallets, but can't see its balance

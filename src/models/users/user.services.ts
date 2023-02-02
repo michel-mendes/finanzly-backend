@@ -1,6 +1,5 @@
 import { AppError } from "../../middleware/error-handler"
 import { IUser, User } from "./user"
-import { compare } from "bcryptjs"
 import { sendEmail } from "../../helpers/mailer"
 import config from "config"
 import jwt from "jsonwebtoken"

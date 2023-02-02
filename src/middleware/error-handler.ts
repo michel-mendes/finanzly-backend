@@ -42,7 +42,7 @@ function handleCustomErrors(err: any, req: Request, res: Response, next: NextFun
 
 function sendInvalidObjectIdFormat(err: any, req: Request, res: Response, next: NextFunction) {
     // Mongoose invalid format of ObjectId
-    return res.status(400).json({message: "Invalid format for ID"})
+    return res.status(400).json({message: "Invalid ID format"})
 }
 
 function sendMongooseValidationError(err: any, req: Request, res: Response, next: NextFunction) {

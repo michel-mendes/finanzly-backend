@@ -1,8 +1,8 @@
-import { model, Schema, Model } from "mongoose"
+import { model, Schema, Model, ObjectId } from "mongoose"
 import { genSalt, hash, compare } from "bcryptjs"
 
 interface IUser {
-    id?: string;
+    id?: ObjectId;
     firstName: string;
     lastName?: string;
     role?: string | undefined;
