@@ -2,20 +2,20 @@ import { model, Schema, Model, ObjectId } from "mongoose"
 import { genSalt, hash, compare } from "bcryptjs"
 
 interface IUser {
-    id?: ObjectId;
-    firstName: string;
-    lastName?: string;
-    role?: string | undefined;
-    email: string;
-    password: string;
-    verificationToken?: string;
-    verifiedAt: Date;
-    authorizationToken?: string;
+    id?:                    ObjectId;
+    firstName:              string;
+    lastName?:              string;
+    role?:                  string | undefined;
+    email:                  string;
+    password:               string;
+    verificationToken?:     string;
+    verifiedAt:             Date;
+    authorizationToken?:    string;
     resetPasswordToken?: {
-        token: string;
-        expireAt: Date;
+                            token: string;
+                            expireAt: Date;
     };
-    isVerified?: boolean;
+    isVerified?:            boolean;
 }
 
 interface IUserMethods {
