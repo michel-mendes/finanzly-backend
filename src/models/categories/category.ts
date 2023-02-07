@@ -1,6 +1,7 @@
-import { model, Schema, Model } from "mongoose"
+import { model, Schema } from "mongoose"
+import mongoose from "mongoose"
 
-interface ICategory {
+interface ICategory extends mongoose.Document {
     id?:                Schema.Types.ObjectId,
     fromUser:           Schema.Types.ObjectId,
     categoryName:       string,
@@ -8,9 +9,7 @@ interface ICategory {
     iconPath?:          string
 }
 
-type CategoryModel = Model<ICategory, {}>
-
-const categorySchema = new Schema<ICategory, CategoryModel>(
+const categorySchema = new Schema(
     {
         fromUser:           { type: Schema.Types.ObjectId, ref: 'User', required: true },
         categoryName:       { type: String, required: true },
@@ -30,6 +29,6 @@ const categorySchema = new Schema<ICategory, CategoryModel>(
     }
 )
 
-const Category =  model<ICategory, CategoryModel>("Category", categorySchema)
+const Category =  model< ICategory >("Category", categorySchema)
 
 export { ICategory, Category }

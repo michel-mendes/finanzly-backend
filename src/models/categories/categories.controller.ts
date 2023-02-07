@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction, Router } from "express"
-import { ICategory } from "./category"
-import { AppError } from "../../middleware/error-handler"
 import Logger from "../../../config/logger"
 
 // Validations
