@@ -26,6 +26,18 @@ class GenericModelCRUD< Type extends mongoose.Document > {
         return await this.model.find( searchQuery ).populate( populateFieldsArray ).exec()
     }
 
+    async findOneDocument( searchQuery: mongoose.FilterQuery<Type> = {}, populateFields: string | string[] = "" ): Promise< Type | null > {
+        const populateFieldsArray = this.checkExistenceOfRefInModelAndConvertsToArray( populateFields )
+        const foundDocument = await this.model.findOne( searchQuery ).populate( populateFieldsArray ).exec() as Type
+
+        if ( foundDocument ) {
+            return foundDocument
+        }
+        else {
+            return null
+        }
+    }
+
     async findDocumentById( docId : string, populateFields: string | string[] = "" ): Promise< Type > {
         const populateFieldsArray = this.checkExistenceOfRefInModelAndConvertsToArray( populateFields )
 

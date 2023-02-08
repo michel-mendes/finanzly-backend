@@ -1,10 +1,11 @@
+import { GenericModelCRUD } from "../../classes/MongooseModelCRUD"
 import { AppError } from "../../middleware/error-handler"
-import { IUser, User } from "./user"
+import { IUser, IUserMethods, User } from "./user"
 import { sendEmail } from "../../helpers/mailer"
+import Roles from "../../types/user-roles"
 import config from "config"
 import jwt from "jsonwebtoken"
 import crypto from "crypto"
-import Roles from "../../types/user-roles"
 
 export const userService = {
     authenticateUser,
@@ -19,11 +20,13 @@ export const userService = {
     _delete
 }
 
-async function authenticateUser(requestEmail: string, requestPassword: string, ipAddress: string): Promise<any> {
-    const user = await User.findOne( {email: requestEmail} )
+const crud = new GenericModelCRUD( User )
 
-    const userNotFound = (user == null)
-    const incorrectPassword = user ? !(await user.checkIfPasswordIsCorrect( requestPassword )) : true
+async function authenticateUser(requestEmail: string, requestPassword: string, ipAddress: string): Promise<any> {
+    const user = await crud.findOneDocument( {email: requestEmail} )
+
+    const userNotFound = ( !user )
+    const incorrectPassword = ( user ) ? !(await user.checkIfPasswordIsCorrect( requestPassword )) : true
 
     if ( userNotFound || incorrectPassword ) {
         throw new AppError("Invalid email / password", 400)
@@ -48,7 +51,7 @@ async function authenticateUser(requestEmail: string, requestPassword: string, i
 }
 
 async function verifyEmail( token: string ) {
-    const user = await User.findOne( {verificationToken: token} )
+    const user = await crud.findOneDocument( {verificationToken: token} )
 
     if ( !token || !user ) throw new AppError( "Invalid token!", 404 )
 
@@ -59,76 +62,49 @@ async function verifyEmail( token: string ) {
 }
 
 async function create( userData: IUser, host: string | undefined = undefined): Promise<IUser> {
-    const isFirstUser: boolean = ( await User.countDocuments({}) ) === 0
-    const userAlreadyExisits: boolean = await emailAlreadyRegistered( userData.email )
+    const isFirstUser = ( await User.countDocuments({}) ) === 0
+    const userAlreadyExisits = await emailAlreadyRegistered( userData.email )
 
     if ( userAlreadyExisits ) {
         throw new AppError( "Email address already registered", 409 )
     }
 
     userData.role = isFirstUser ? Roles.admin : Roles.user
-    userData.password = userData.password
     userData.verificationToken = generateRandomTokenString()
 
     await sendUserVerificationEmail( userData, host )
     
-    const newUser: IUser = await User.create( userData )
-
-    return newUser
+    return await crud.insertDocument( userData as (IUser & IUserMethods) )
 }
 
 async function getAll(): Promise< IUser[] > {
-    const usersList: IUser[] = await User.find()
-
-    return usersList
+    return await crud.findDocuments()
 }
 
 async function getById( id : string ): Promise< IUser > {
-    const user: IUser | null = await User.findById( id )
-
-    if ( !user ) {
-        throw new AppError( "User not found", 404 )
-    }
-
-    return user
+    return await crud.findDocumentById( id )
 }
 
-async function getByEmail( email: string ): Promise< Array<IUser> > {
-    const user = await User.find(
-        {
-            email: email
-        }
-    )
+async function getByEmail( email: string ): Promise< IUser > {
+    const foundUser = await crud.findOneDocument( { email: email } )
 
-    return user
+    if ( !foundUser ) throw new AppError("User not found", 404)
+
+    return foundUser
 }
 
 async function update( userId: string, newUserData: IUser ): Promise<IUser> {
-    const userToEdit = await User.findById( userId )
-
-    if ( !userToEdit ) throw new AppError("User not found", 404)
-
-    delete newUserData.role
-
     if ( await emailAlreadyRegistered( newUserData.email ) ) throw new AppError("Email already registered", 409)
 
-    Object.assign<IUser, IUser>( <IUser>userToEdit, newUserData )
-    await userToEdit.save({timestamps: true})
-
-    return <IUser>userToEdit
+    return await crud.editDocument( userId, newUserData as (IUser & IUserMethods) )
 }
 
-async function _delete( userId: string ): Promise<void> {
-    const user = await User.findById( userId )
-
-    if ( !user ) throw new AppError("User not found", 404)
-
-    await user?.remove()
-    return
+async function _delete( userId: string ): Promise<IUser> {
+    return await crud.deleteDocument( userId )
 }
 
-async function forgotPassword( userEmail: string, originHost: string | undefined = undefined ) {
-    const user = await User.findOne( { email: userEmail } ) as any
+async function forgotPassword( email: string, originHost: string | undefined = undefined ) {
+    const user = await crud.findOneDocument( { email } )
 
     if ( !user ) {
         throw new AppError('Email not found', 404)
@@ -136,18 +112,19 @@ async function forgotPassword( userEmail: string, originHost: string | undefined
 
     user.resetPasswordToken = {
         token: generateRandomTokenString(),
-        expireAt: new Date(Date.now() + 24*60*60*1000) // 1 days espiration
+        expireAt: new Date(Date.now() + 24*60*60*1000) // 1 day expiration
     }
 
     await user.save()
 
     await sendForgotPasswordEmail( user, originHost )
-
 }
 
 async function resetPassword( resetToken: string, password: string ) {
-    const user = await User.findOne({ 'resetPasswordToken.token': resetToken })
-                                         .where('resetPasswordToken.expiresAt').gt( Date.now() )
+    const user = await crud.findOneDocument({
+        'resetPasswordToken.token': resetToken,
+        'resetPasswordToken.expireAt': { $gt: Date.now() }
+    })
 
     if ( !user ) throw new AppError('Invalid reset token', 400)
 
@@ -158,11 +135,13 @@ async function resetPassword( resetToken: string, password: string ) {
 
 // Helper functions
 async function emailAlreadyRegistered( email: string ): Promise<boolean> {
-    if ( !email ) return false
+    const existingUser = await crud.findOneDocument( {email} )
 
-    const user: IUser[] = await getByEmail( email )
-
-    return user.length > 0
+    if ( existingUser ) {
+        return true
+    } else {
+        return false
+    }
 }
 
 function generateAuthorizationJwtToken( payload: string | object | Buffer ): string {

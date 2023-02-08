@@ -1,7 +1,8 @@
 import { model, Schema, Model, ObjectId } from "mongoose"
 import { genSalt, hash, compare } from "bcryptjs"
+import mongoose from "mongoose"
 
-interface IUser {
+interface IUser extends mongoose.Document {
     id?:                    ObjectId;
     firstName:              string;
     lastName?:              string;
@@ -22,9 +23,7 @@ interface IUserMethods {
     checkIfPasswordIsCorrect(password: string): Promise<boolean>
 }
 
-type UserModel = Model<IUser, {}, IUserMethods>
-
-const userSchema = new Schema<IUser, UserModel, IUserMethods>(
+const userSchema = new Schema(
     {
         firstName:          { type: String, required: true },
         lastName:           { type: String },
@@ -84,6 +83,6 @@ userSchema.pre("save", function( next ) {
     } )    
 } )
 
-const User = model<IUser, UserModel>('User', userSchema)
+const User = model<IUser & IUserMethods>('User', userSchema)
 
-export { IUser, User }
+export { IUser, IUserMethods, User }
