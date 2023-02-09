@@ -49,7 +49,7 @@ async function listCategories(req: Request, res: Response, next: NextFunction) {
 async function listCategoryById(req: Request, res: Response, next: NextFunction) {
     try {
         const categoryId = req.params.id
-        const category = await categoryService.getCategoriesById( categoryId )
+        const category = await categoryService.getCategoryById( categoryId )
 
         res.status(200).json( category )
     } catch (error: any) {

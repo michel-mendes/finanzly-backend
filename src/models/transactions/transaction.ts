@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose"
 import mongoose from "mongoose"
 
 interface ITransaction extends mongoose.Document {
-    id?:            Schema.Types.ObjectId,
+    id?:            string,
     fromCategory:   string,
     fromWallet:     string,
     fromUser:       string,

@@ -6,7 +6,7 @@ interface IWallet extends mongoose.Document {
     walletName:     string,
     currencySymbol: string,
     initialBalance: number,
-    actualBalance?: number
+    actualBalance:  number
 }
 
 const walletSchema = new Schema(
@@ -33,6 +33,8 @@ walletSchema.pre("save", function( next ) {
     if ( this.isNew ) {
         this.actualBalance = this.initialBalance
     }
+
+    next()
 })
 
 const Wallet =  model<IWallet>("Wallet", walletSchema)
