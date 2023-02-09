@@ -1,6 +1,6 @@
 import mongoose, { model, Schema, Model } from "mongoose"
 
-interface IWallet {
+interface IWallet extends mongoose.Document {
     id?:            Schema.Types.ObjectId,
     fromUser:       Schema.Types.ObjectId,
     walletName:     string,
@@ -9,9 +9,7 @@ interface IWallet {
     actualBalance?: number
 }
 
-type WalletModel = Model<IWallet, {}>
-
-const walletSchema = new Schema<IWallet, WalletModel>(
+const walletSchema = new Schema(
     {
         fromUser:       { type: Schema.Types.ObjectId, ref: "User", required: true },
         walletName:     { type: String, required: true },
@@ -31,6 +29,12 @@ const walletSchema = new Schema<IWallet, WalletModel>(
     }
 )
 
-const Wallet =  model<IWallet, WalletModel>("Wallet", walletSchema)
+walletSchema.pre("save", function( next ) {
+    if ( this.isNew ) {
+        this.actualBalance = this.initialBalance
+    }
+})
+
+const Wallet =  model<IWallet>("Wallet", walletSchema)
 
 export { IWallet, Wallet }
