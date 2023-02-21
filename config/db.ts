@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 import config from "config"
 import Logger from "./logger"
 
-async function connect() {
+async function connectDatabase() {
 
     const databaseName = process.env.DB_NAME
     const connectionString = config.get<string>( "connectionString" )
@@ -20,4 +20,4 @@ async function connect() {
 
 }
 
-export default connect
+export { connectDatabase }

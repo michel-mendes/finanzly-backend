@@ -1,14 +1,13 @@
 // Load ENV variables
-process.env.NODE_ENV = process.argv[2] || 'development'
 require("dotenv").config()
 
 // Module imports
 import { handle404Error, handleCustomErrors } from "./middleware/error-handler"
+import { connectDatabase } from "../config/db"
 import express from "express"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import config from "config"
-import db from "../config/db"
 import Logger from "../config/logger"
 import morganMiddleware from "./middleware/morgan-handler"
 import apiRouter from './api.router'
@@ -27,10 +26,10 @@ app.set('view engine', 'ejs')
 app.use( express.json() )
 app.use( cookieParser() )
 
-// cors will allow requests from any origin, needed anywhere other than 'localhost'
 app.use( cors(
     {
-        origin: ( origin: any, callback: any ) => { callback(null, true) },
+        // origin: ( origin: any, callback: any ) => { callback(null, true) }, // Bad idea :(
+        origin: "http://localhost:3001",
         credentials: true
     }
 ) )
@@ -49,7 +48,7 @@ app.use( handle404Error )
 app.listen( port, async () => {
 
     // Connect to MongoDB Atlas
-    await db()
+    await connectDatabase()
 
     Logger.info(`Server successfully started and listening to port: ${port}`)
 

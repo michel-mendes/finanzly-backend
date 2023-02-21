@@ -45,6 +45,17 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
 
         const authResult = await userService.authenticateUser( email, password, ipAddress )
 
+        // Set cookie
+        // ------------
+        const secureCookie = process.env.NODE_ENV == "production"
+        res.cookie("token", authResult.authorizationToken, {
+            httpOnly: true,
+            secure: secureCookie,           // true if in PRODUCTION environment
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days expiration
+        })
+        // ------------
+
         res.status(200).json( authResult )
     }
     catch (error: any) {

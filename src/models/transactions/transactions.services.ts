@@ -19,24 +19,10 @@ async function createTransaction( data: ITransaction ): Promise< ITransaction > 
     const category = await categoryService.getCategoryById( data.fromCategory )
     const wallet = await walletService.getWalletById( data.fromWallet )
 
-    switch ( category.transactionType ) {
-        case "C": {
-            data.creditValue = data.value
-            data.debitValue = 0
+    data.creditValue = category.transactionType == "C" ? data.value : 0
+    data.debitValue = category.transactionType == "D" ? data.value : 0
 
-            wallet.actualBalance += data.value
-
-            break
-        }
-        case "D": {
-            data.creditValue = 0
-            data.debitValue = data.value
-
-            wallet.actualBalance -= data.value
-
-            break
-        }
-    }
+    category.transactionType == "C" ? (wallet.actualBalance += data.value) : (wallet.actualBalance -= data.value)
 
     const newTransaction = await crud.insertDocument( data )
     await wallet.save()

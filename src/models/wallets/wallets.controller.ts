@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction, Router } from "express"
-import { IWallet } from "./wallet"
-import { AppError } from "../../middleware/error-handler"
 import Logger from "../../../config/logger"
 
 // Validations
