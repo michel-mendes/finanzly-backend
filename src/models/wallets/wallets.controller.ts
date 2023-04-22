@@ -8,11 +8,15 @@ import { walletCreateValidation, walletEditValidation } from "../../middleware/w
 // Wallet service
 import { walletService } from "./wallets.services"
 
-import { userAuthorize } from "../../middleware/user-authorize"
+// Authentication midware
+import { IAuthRequest } from "../../types/auth-request"
+import { authGuard } from "../../middleware/auth-guard"
 
 // Wallets related routes
 const walletRouter = Router()
 
+walletRouter.post("/calculate-balance", calcBalance)
+walletRouter.get("/from-user", authGuard, getWalletsFromUser)
 walletRouter.post("/", walletCreateValidation(), validateData, newWallet)
 walletRouter.get("/", listWallets)
 walletRouter.get("/:id", listWalletById)
@@ -37,11 +41,23 @@ async function newWallet(req: Request, res: Response, next: NextFunction) {
 
 async function listWallets(req: Request, res: Response, next: NextFunction) {
     try {
-        const walletsList = await walletService.getWallets()
+        const fromUser = (!req.query.fromUser) ? {} : {fromUser: req.query.fromUser}
+        const walletsList = await walletService.getWallets(fromUser)
 
         res.status(200).json( walletsList )
     } catch (error: any) {
         Logger.error(`Error while getting all Wallets list: ${ error.message }`)
+        return next( error )
+    }
+}
+
+async function getWalletsFromUser(req: IAuthRequest, res: Response, next: NextFunction) {
+    try {
+        const wallets = await walletService.getWallets({fromUser: req.user?.id})
+
+        res.status(200).json( wallets )
+    } catch (error: any) {
+        Logger.error(`Error while getting user's wallets: ${ error.message }`)
         return next( error )
     }
 }
@@ -79,6 +95,18 @@ async function deleteWallet(req: Request, res: Response, next: NextFunction) {
         res.status(200).json( removedWallet )
     } catch (error: any) {
         Logger.error(`Error while removing Wallet: ${ error.message }`)
+        return next( error )
+    }
+}
+
+async function calcBalance(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { walletId } = req.body
+        const newBalance = await walletService.calculateWalletBalance(walletId)
+
+        res.status(200).json( newBalance )
+    } catch (error: any) {
+        Logger.error(`Error while calculating wallet balance: ${ error.message }`)
         return next( error )
     }
 }

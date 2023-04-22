@@ -8,11 +8,14 @@ import { categoryCreateValidation, categoryEditValidation } from "../../middlewa
 // Category service
 import { categoryService } from "./categories.services"
 
-import { userAuthorize } from "../../middleware/user-authorize"
+// Authentication service
+import { IAuthRequest } from "../../types/auth-request"
+import { authGuard } from "../../middleware/auth-guard"
 
 // Categories related routes
 const categoryRouter = Router()
 
+categoryRouter.get("/from-user/", authGuard, listUserCategories)
 categoryRouter.post("/", categoryCreateValidation(), validateData, newCategory)
 categoryRouter.get("/", listCategories)
 categoryRouter.get("/:id", listCategoryById)
@@ -42,6 +45,17 @@ async function listCategories(req: Request, res: Response, next: NextFunction) {
         res.status(200).json( categoriesList )
     } catch (error: any) {
         Logger.error(`Error while getting all Categories list: ${ error.message }`)
+        return next( error )
+    }
+}
+
+async function listUserCategories(req: IAuthRequest, res: Response, next: NextFunction) {
+    try {
+        const userCategories = await categoryService.getCategoriesFromUser(req.user!.id.toString())
+
+        res.status(200).json( userCategories )
+    } catch (error: any) {
+        Logger.error(`Error while getting user's categories list: ${ error.message }`)
         return next( error )
     }
 }

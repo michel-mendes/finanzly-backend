@@ -9,16 +9,16 @@ export const validateData = (req: Request, res: Response, next: NextFunction) =>
         return next()
     }
 
-    const extractErrors: object[] = []
+    const extractedErrors: string[] = []
 
     errors.array().map(
         ( error ) => {
-            extractErrors.push( {[error.param]: error.msg} )
+            extractedErrors.push( error.msg )
         }
     )
 
     return res.status(422).json({
-        errors: extractErrors
+        errors: extractedErrors
     })
 
 }

@@ -8,11 +8,13 @@ import { newTransactionValidation, editTransactionValidation } from "../../middl
 // Category service
 import { transactionService } from "./transactions.services"
 
-import { userAuthorize } from "../../middleware/user-authorize"
+import { IAuthRequest } from "../../types/auth-request"
+import { authGuard } from "../../middleware/auth-guard"
 
 // Transactions related routes
 const transactionRouter = Router()
 
+transactionRouter.get("/from-wallet/:id", authGuard, getWalletTransacions)
 transactionRouter.post("/", newTransactionValidation(), validateData, newTransaction )
 transactionRouter.get("/", getAll)
 transactionRouter.get("/:id", getById)
@@ -42,6 +44,18 @@ async function getAll(req: Request, res: Response, next: NextFunction) {
         return res.status(200).json( transactions )
     } catch (error: any) {
         Logger.error(`Error while listing Transactions: ${ error.message }`)
+        return next( error )
+    }
+}
+
+async function getWalletTransacions(req: IAuthRequest, res: Response, next: NextFunction) {
+    try {
+        const walletId = req.params.id
+        const transactions = await transactionService.getTransactionsFromWallet(walletId)
+
+        return res.status(200).json( transactions )
+    } catch (error: any) {
+        Logger.error(`Error while getting user's transactions: ${ error.message }`)
         return next( error )
     }
 }

@@ -6,6 +6,7 @@ import { GenericModelCRUD } from "../../classes/MongooseModelCRUD";
 export const categoryService = {
     createCategory,
     getCategories,
+    getCategoriesFromUser,
     getCategoryById,
     editCategory,
     deleteCategory
@@ -23,6 +24,10 @@ async function createCategory( categoryData: ICategory ): Promise< ICategory > {
 
 async function getCategories(): Promise< ICategory[] > {
     return await crud.findDocuments({}, 'fromUser')
+}
+
+async function getCategoriesFromUser(userId: string): Promise< ICategory[] > {
+    return await crud.findDocuments({fromUser: userId})
 }
 
 async function getCategoryById( categoryId: string ): Promise< ICategory > {

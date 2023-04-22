@@ -15,6 +15,7 @@ import path from "path"
 
 const app = express()
 const port = config.get<number>( 'port' )
+const allowedUrls = config.get<string>( 'frontEndUrl' )
 
 // Set EJS to the default HTML rendering engine
 app.use( express.static( path.join( __dirname, '..', 'public' ) ) )
@@ -29,7 +30,18 @@ app.use( cookieParser() )
 app.use( cors(
     {
         // origin: ( origin: any, callback: any ) => { callback(null, true) }, // Bad idea :(
-        origin: "http://localhost:3001",
+        origin: (requestOrigin: string | undefined, callback: Function) => {
+            switch (true) {
+                case allowedUrls.includes(requestOrigin!):
+                    Logger.info(`CORS information: allowed access to origin: "${requestOrigin}"`);
+                    callback(null, true)
+                    break;
+                default:
+                    Logger.warn(`CORS information: denied access to origin: "${requestOrigin}"`);
+                    callback(new Error(`Origin "${requestOrigin}" not allowed`), false)
+            }
+        },
+        // origin: ["http://localhost:3001", "http://192.168.100.145:3001"],
         credentials: true
     }
 ) )

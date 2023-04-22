@@ -1,4 +1,5 @@
 const appSecret = process.env.SECRET_TOKEN
+const frontEndDomain = process.env.FRONTEND_URL
 const databaseName = process.env.DB_NAME
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
@@ -10,6 +11,7 @@ const emailPass = process.env.EMAIL_SMTP_AUTH_PASSWORD
 
 export default {
     secret: appSecret,
+    frontEndUrl: frontEndDomain?.replaceAll(" ", "").split(","),
     port: 3000,
     connectionString: `mongodb+srv://${ dbUser }:${ dbPassword }@cluster0.a4rqihe.mongodb.net/${ databaseName }?retryWrites=true&w=majority`,
     emailConfig: {

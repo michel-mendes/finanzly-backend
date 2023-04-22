@@ -8,6 +8,7 @@ import { walletService } from "../wallets/wallets.services";
 export const transactionService = {
     createTransaction,
     getTransactions,
+    getTransactionsFromWallet,
     getTransactionById,
     editTransaction,
     deleteTransaction
@@ -32,6 +33,10 @@ async function createTransaction( data: ITransaction ): Promise< ITransaction > 
 
 async function getTransactions(): Promise< ITransaction[] > {
     return await crud.findDocuments()
+}
+
+async function getTransactionsFromWallet(walletId: string): Promise<ITransaction[]> {
+    return await crud.findDocuments({fromWallet: walletId})
 }
 
 async function getTransactionById( id: string ): Promise< ITransaction > {

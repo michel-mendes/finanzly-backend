@@ -38,11 +38,7 @@ async function authenticateUser(requestEmail: string, requestPassword: string, i
     }
     
     // Successful user authentication
-    const signedObjectData = {
-        userId: user.id,
-        userName: user.firstName,
-        userRole: user.role
-    }
+    const signedObjectData = { userId: user.id }
 
     user.authorizationToken = generateAuthorizationJwtToken( signedObjectData )
     await user.save()

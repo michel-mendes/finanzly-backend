@@ -42,29 +42,29 @@ function handleCustomErrors(err: any, req: Request, res: Response, next: NextFun
 
 function sendInvalidObjectIdFormat(err: any, req: Request, res: Response, next: NextFunction) {
     // Mongoose invalid format of ObjectId
-    return res.status(400).json({message: "Invalid ID format"})
+    return res.status(400).json({errors: ["Invalid ID format"]})
 }
 
 function sendMongooseValidationError(err: any, req: Request, res: Response, next: NextFunction) {
     // Mongoose validation error
-    return res.status(401).json({message: String(err.message).replaceAll('"', '\'')})
+    return res.status(401).json({errors: [String(err.message).replaceAll('"', '\'')]})
 }
 
 function sendEmptyJWTError(err: any, req: Request, res: Response, next: NextFunction) {
     // JWT empty error
-    return res.status(401).json({message: 'Only accessible through authorization token'})
+    return res.status(401).json({errors: ['Only accessible through authorization token']})
 }
 
 function sendExpiredTokenError(err: any, req: Request, res: Response, next: NextFunction) {
     // JWT expired error
-    return res.status(401).json({message: 'Expired token'})
+    return res.status(401).json({errors: ['Expired token']})
 }
 
 function sendUnauthorizedError(err: any, req: Request, res: Response, next: NextFunction) {
     // JWT authentication error
-    return res.status(401).json({message: 'Unauthorized token access'})
+    return res.status(401).json({errors: ['Unauthorized token access']})
 }
 
 function sendServerSideError(err: any, req: Request, res: Response, next: NextFunction) {
-    return res.status(500).json({message: String(err.message).replaceAll('"', '\'')})
+    return res.status(500).json({errors: [String(err.message).replaceAll('"', '\'')]})
 }

@@ -10,8 +10,8 @@ interface ITransaction extends mongoose.Document {
     description:    string,
     extraInfo?:     string,
     value:          number,
-    creditValue?:   number,
-    debitValue?:    number,
+    creditValue:   number,
+    debitValue:    number,
     csvImportId?:   string
 }
 

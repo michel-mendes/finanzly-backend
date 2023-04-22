@@ -1,10 +1,11 @@
-import { Router, NextFunction, Request, Response } from "express"
+import { Router, NextFunction, Request, Response, CookieOptions } from "express"
 import { Request as JwtRequest } from "express-jwt"
 import { IUser } from "./user"
 import { userService } from "./user.services"
 import { AppError } from "../../middleware/error-handler"
 import Roles from "../../types/user-roles"
 import Logger from "../../../config/logger"
+import config from "config"
 
 // Validations
 import { validateData } from "../../middleware/validation-handler"
@@ -16,7 +17,9 @@ import {
     userResetPasswordValidator
 } from "../../middleware/user-validator"
 
-import { userAuthorize } from "../../middleware/user-authorize"
+import { authGuard } from "../../middleware/auth-guard"
+import { IAuthRequest } from "../../types/auth-request"
+// import { userAuthorize } from "../../middleware/user-authorize"
 
 // Routes related to Users
 const userRouter = Router()
@@ -24,13 +27,15 @@ const userRouter = Router()
 userRouter.post('/register', userCreateValidation(), validateData, insertNewUser)
 userRouter.get('/verify-user', verifyUserAccount)
 userRouter.post('/authenticate', userAuthenticationValidation(), validateData, authenticate)
+userRouter.post('/logout', authGuard, logoffUser)
 userRouter.post('/forgot-password', userForgotPasswordValidator(), validateData, forgotPassword)
 userRouter.get('/reset-password', renderChangePasswordPage)
 userRouter.post('/reset-password', userResetPasswordValidator(), validateData, resetPassword)
-userRouter.get('/', userAuthorize( Roles.admin ), listAllUsers)
-userRouter.get('/:id', userAuthorize(), getById)
-userRouter.put('/:id', userAuthorize(), updateUser)
-userRouter.delete('/:id', userAuthorize(), deleteUser)
+userRouter.get('/current', authGuard, getLoggedInUser)
+userRouter.get('/', authGuard, listAllUsers)
+userRouter.get('/:id', authGuard, getById)
+userRouter.put('/:id', authGuard, updateUser)
+userRouter.delete('/:id', authGuard, deleteUser)
 
 export default userRouter
 
@@ -43,17 +48,20 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
         const { password, email } = req.body
         const ipAddress = req.ip
 
+        const originHost = req.headers.origin
         const authResult = await userService.authenticateUser( email, password, ipAddress )
 
         // Set cookie
         // ------------
-        const secureCookie = process.env.NODE_ENV == "production"
-        res.cookie("token", authResult.authorizationToken, {
+        const cookiesOptions: CookieOptions = {
             httpOnly: true,
-            secure: secureCookie,           // true if in PRODUCTION environment
-            sameSite: 'strict',
-            maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days expiration
-        })
+            secure: true,
+            sameSite: "strict",
+            maxAge: 1000 * 60 * 60 * 24 * 7 //7 days expiration
+        }
+        res.set('Access-Control-Allow-Origin', originHost);
+        res.set('Access-Control-Allow-Credentials', 'true');
+        res.cookie("token", authResult.authorizationToken, cookiesOptions)
         // ------------
 
         res.status(200).json( authResult )
@@ -110,6 +118,27 @@ async function resetPassword(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+function logoffUser(req: IAuthRequest, res: Response, next: NextFunction) {
+    try {
+        res.cookie("token", "", {httpOnly: true, secure: true, sameSite: "strict"})
+
+        res.status(200).json({message: "Logout successful"})
+    } catch (error: any) {
+        Logger.error(`Error while logging out current user: ${ error.message }`)
+        return next(error)
+    }
+}
+
+function getLoggedInUser(req: IAuthRequest, res: Response, next: NextFunction) {
+    try {
+        const user = req.user
+    
+        res.status(200).json( user )
+    } catch (error:any) {
+        Logger.error(`Error while getting the logged user: ${ error.message }`)
+    }
+}
+
 async function insertNewUser(req: Request, res: Response, next: NextFunction) {
     try {
         // console.log(`Origem da requisição: ${ req.get('origin') }`)
@@ -140,11 +169,11 @@ async function listAllUsers(req: Request, res: Response, next: NextFunction) {
 
 }
 
-async function getById(req: JwtRequest, res: Response, next: NextFunction) {
+async function getById(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
 
         // Allow Admin to get any user and normal users to get only themselves
-        blockRegularUserToGetOtherUsers( req.auth?.userId, req.auth?.userRole, req.params.id )
+        blockRegularUserToGetOtherUsers( req.user!.id.toString(), req.user!.role, req.params.id )
         
         let user: IUser = await userService.getById( req.params.id )
 

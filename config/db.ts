@@ -9,6 +9,7 @@ async function connectDatabase() {
 
     try {
 
+        mongoose.set('strictQuery', true)
         await mongoose.connect( connectionString )
         Logger.info(`Successfully connected to database "${ databaseName }"`)
         

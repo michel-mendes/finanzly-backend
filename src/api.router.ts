@@ -7,9 +7,9 @@ import transactionRouter from "./models/transactions/transactions.controller"
 const router = Router()
 
 // Routes inside /api route
-router.use("/user", userController)
-router.use("/wallet", walletController)
-router.use("/category", categoryRouter)
-router.use("/transaction", transactionRouter)
+router.use("/users", userController)
+router.use("/wallets", walletController)
+router.use("/categories", categoryRouter)
+router.use("/transactions", transactionRouter)
 
 export default router
