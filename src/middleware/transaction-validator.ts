@@ -8,18 +8,18 @@ export {
 const newTransactionValidation = () => {
    
     return [
-        body('id').isEmpty().withMessage("Must not be sent"),
-        body('_id').isEmpty().withMessage("Must not be sent"),
-        body('fromCategory').notEmpty().withMessage("Can't be empty"),
-        body('fromWallet').notEmpty().withMessage("Can't be empty"),
-        body('fromUser').notEmpty().withMessage("Can't be empty"),
-        body('date').notEmpty().withMessage("Can't be empty").isISO8601().withMessage("Must be a valid ISO 8601 date string"),
-        body('description').notEmpty().withMessage("Can't be empty"),
+        body('id').isEmpty().withMessage("ID must not be sent"),
+        body('_id').isEmpty().withMessage("ID must not be sent"),
+        body('fromCategory').notEmpty().withMessage("Missing transaction category"),
+        body('fromWallet').notEmpty().withMessage("Missing transaction wallet"),
+        body('fromUser').notEmpty().withMessage("Missing transaction user"),
+        body('date').notEmpty().withMessage("Missing date").isISO8601().withMessage("Transaction date must be a valid ISO 8601 date string"),
+        body('description').notEmpty().withMessage("Missing transaction description"),
         body('extraInfo').optional(),
-        body('value').notEmpty().withMessage("Can't be empty").isNumeric().withMessage("Must be a valid number"),
-        body('creditValue').isEmpty().withMessage("Must not be sent"),
-        body('debitValue').isEmpty().withMessage("Must not be sent"),
-        body('csvImportId').isEmpty().withMessage("Must not be sent")
+        body('value').notEmpty().withMessage("Missing transaction value").isNumeric().withMessage("Transaction value must be a valid number"),
+        body('creditValue').isEmpty().withMessage("Credit value must not be sent"),
+        body('debitValue').isEmpty().withMessage("Debit value must not be sent"),
+        body('csvImportId').isEmpty().withMessage("CSV import ID must not be sent")
     ]
 
 }
