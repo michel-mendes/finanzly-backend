@@ -19,7 +19,7 @@ transactionRouter.post("/", newTransactionValidation(), validateData, newTransac
 transactionRouter.get("/", getAll)
 transactionRouter.get("/:id", getById)
 transactionRouter.put("/:id", editTransactionValidation(), validateData, editTransaction )
-transactionRouter.delete("/:id", )
+transactionRouter.delete("/:id", deleteTransaction)
 
 export default transactionRouter
 
@@ -80,6 +80,19 @@ async function editTransaction(req: Request, res: Response, next: NextFunction) 
         const updatedTransaction = await transactionService.editTransaction( transactionId, data )
 
         return res.status(200).json( updatedTransaction )
+    } catch (error: any) {
+        Logger.error(`Error while editing Transaction: ${ error.message }`)
+        return next( error )
+    }
+}
+
+async function deleteTransaction(req: Request, res: Response, next: NextFunction) {
+    try {
+        const transactionId = req.params.id
+
+        const deletedTransaction = await transactionService.deleteTransaction( transactionId )
+
+        return res.status(200).json( deletedTransaction )
     } catch (error: any) {
         Logger.error(`Error while editing Transaction: ${ error.message }`)
         return next( error )
