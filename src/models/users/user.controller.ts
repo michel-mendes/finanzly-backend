@@ -5,7 +5,6 @@ import { userService } from "./user.services"
 import { AppError } from "../../middleware/error-handler"
 import Roles from "../../types/user-roles"
 import Logger from "../../../config/logger"
-import config from "config"
 
 // Validations
 import { validateData } from "../../middleware/validation-handler"
@@ -19,7 +18,6 @@ import {
 
 import { authGuard } from "../../middleware/auth-guard"
 import { IAuthRequest } from "../../types/auth-request"
-// import { userAuthorize } from "../../middleware/user-authorize"
 
 // Routes related to Users
 const userRouter = Router()
@@ -47,9 +45,9 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
     try {
         const { password, email } = req.body
         const ipAddress = req.ip
-
         const originHost = req.headers.origin
-        const authResult = await userService.authenticateUser( email, password, ipAddress )
+
+        const loggedUser = await userService.authenticateUser( email, password, ipAddress )
 
         // Set cookie
         // ------------
@@ -61,10 +59,10 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
         }
         res.set('Access-Control-Allow-Origin', originHost);
         res.set('Access-Control-Allow-Credentials', 'true');
-        res.cookie("token", authResult.authorizationToken, cookiesOptions)
+        res.cookie("token", loggedUser.authorizationToken, cookiesOptions)
         // ------------
 
-        res.status(200).json( authResult )
+        res.status(200).json( loggedUser )
     }
     catch (error: any) {
         Logger.error(`Error while user authentication: ${ error.message }`)
