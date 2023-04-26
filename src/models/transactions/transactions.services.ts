@@ -22,6 +22,7 @@ async function createTransaction( data: ITransaction ): Promise< ITransaction > 
 
     data.creditValue = category.transactionType == "C" ? data.value : 0
     data.debitValue = category.transactionType == "D" ? data.value : 0
+    data.description_Upper = data.description.toUpperCase()
 
     category.transactionType == "C" ? (wallet.actualBalance += data.value) : (wallet.actualBalance -= data.value)
 
@@ -48,23 +49,25 @@ async function editTransaction( id: string, data: ITransaction ): Promise< ITran
     const actualTransactionCategory = <ICategory>( actualTransaction.fromCategory as any )
     const actualTransactionWallet = await walletService.getWalletById( actualTransaction.fromWallet )
     
-    const newTransactionCategory = data.fromCategory == undefined ? actualTransactionCategory : await categoryService.getCategoryById( data.fromCategory )
+    const newTransactionCategory = (!data.fromCategory) ? actualTransactionCategory : await categoryService.getCategoryById( data.fromCategory )
 
     data.debitValue = newTransactionCategory.transactionType == "D" ? data.value : 0
-    data.creditValue = newTransactionCategory.transactionType == "C" ? data.value : 0
+    data.creditValue = newTransactionCategory.transactionType == "C" ? data.value : 0;
+    (!data.description) ? null : data.description_Upper = data.description.toUpperCase();
+    (!data.extraInfo) ? null : data.extraInfo_Upper = data.extraInfo.toUpperCase()
 
     // Updates the 'actualBalance' of the wallet in which this transaction is registered
     if ( newTransactionCategory.transactionType == actualTransactionCategory.transactionType ) {
         
         actualTransactionWallet.actualBalance = newTransactionCategory.transactionType == "D" ?
-                               (actualTransactionWallet.actualBalance + actualTransaction.value) - data.value :
-                               (actualTransactionWallet.actualBalance - actualTransaction.value) + data.value
+                               (Number(actualTransactionWallet.actualBalance) + Number(actualTransaction.value)) - Number(data.value) :
+                               (Number(actualTransactionWallet.actualBalance) - Number(actualTransaction.value)) + Number(data.value)
 
     } else {
 
         actualTransactionWallet.actualBalance = newTransactionCategory.transactionType == "D" ?
-                               (actualTransactionWallet.actualBalance - actualTransaction.value) - data.value :
-                               (actualTransactionWallet.actualBalance + actualTransaction.value) + data.value
+                               (Number(actualTransactionWallet.actualBalance) - Number(actualTransaction.value)) - Number(data.value) :
+                               (Number(actualTransactionWallet.actualBalance) + Number(actualTransaction.value)) + Number(data.value)
 
     }
 
