@@ -2,31 +2,35 @@ import { model, Schema } from "mongoose"
 import mongoose from "mongoose"
 
 interface ITransaction extends mongoose.Document {
-    id?:            string,
-    fromCategory:   string,
-    fromWallet:     string,
-    fromUser:       string,
-    date:           Date,
-    description:    string,
-    extraInfo?:     string,
-    value:          number,
-    creditValue:   number,
-    debitValue:    number,
-    csvImportId?:   string
+    id?:                string,
+    fromCategory:       string,
+    fromWallet:         string,
+    fromUser:           string,
+    date:               Date,
+    description:        string,
+    description_Upper:  string,
+    extraInfo?:         string,
+    extraInfo_Upper?:   string,
+    value:              number,
+    creditValue:        number,
+    debitValue:         number,
+    csvImportId?:       string
 }
 
 const transactionSchema = new Schema(
     {
-        fromCategory:   { type: Schema.Types.ObjectId, ref: 'Category', required: true },
-        fromWallet:     { type: Schema.Types.ObjectId, ref: 'Wallet', required: true },
-        fromUser:       { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        date:           { type: String, required: true },
-        description:    { type: String, required: true },
-        extraInfo:      { type: String },
-        value:          { type: String, required: true },
-        creditValue:    { type: String },
-        debitValue:     { type: String },
-        csvImportId:    { type: String }
+        fromCategory:       { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+        fromWallet:         { type: Schema.Types.ObjectId, ref: 'Wallet', required: true },
+        fromUser:           { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        date:               { type: String, required: true },
+        description:        { type: String, required: true },
+        description_Upper:  { type: String },
+        extraInfo:          { type: String },
+        extraInfo_Upper:    { type: String },
+        value:              { type: String, required: true },
+        creditValue:        { type: String },
+        debitValue:         { type: String },
+        csvImportId:        { type: String }
     },
     {
         toJSON: {
