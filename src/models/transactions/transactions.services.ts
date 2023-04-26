@@ -24,7 +24,7 @@ async function createTransaction( data: ITransaction ): Promise< ITransaction > 
     data.debitValue = category.transactionType == "D" ? data.value : 0
     data.description_Upper = data.description.toUpperCase()
 
-    category.transactionType == "C" ? (wallet.actualBalance += data.value) : (wallet.actualBalance -= data.value)
+    wallet.actualBalance = Number(wallet.actualBalance) + Number(data.creditValue) - Number(data.debitValue)
 
     const newTransaction = await crud.insertDocument( data )
     await wallet.save()
@@ -81,5 +81,11 @@ async function editTransaction( id: string, data: ITransaction ): Promise< ITran
 }
 
 async function deleteTransaction( id: string ): Promise< ITransaction > {
-    return await crud.deleteDocument( id )
+    const deletedTransaction = await crud.deleteDocument(id)
+    const transactionWallet = await walletService.getWalletById(deletedTransaction.fromWallet);
+
+    transactionWallet.actualBalance = Number(transactionWallet.actualBalance) - Number(deletedTransaction.creditValue) + Number(deletedTransaction.debitValue)
+    await transactionWallet.save()
+
+    return deletedTransaction
 }

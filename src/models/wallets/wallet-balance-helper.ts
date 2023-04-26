@@ -12,7 +12,7 @@ async function recalculateWalletBalance(walletId: string, initialBalance: number
     let walletBalance = initialBalance
     
     transactions.forEach(transaction => {
-        (transaction.creditValue > 0) ? walletBalance += transaction.creditValue : walletBalance -= transaction.debitValue
+        walletBalance = Number(walletBalance) + Number(transaction.creditValue) - Number(transaction.debitValue)
     })
 
     return walletBalance
