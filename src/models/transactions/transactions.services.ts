@@ -16,7 +16,7 @@ export const transactionService = {
 
 const crud = new GenericModelCRUD( Transaction )
 
-async function createTransaction( data: ITransaction ): Promise< ITransaction > {
+async function createTransaction( data: ITransaction ) {
     const category = await categoryService.getCategoryById( data.fromCategory )
     const wallet = await walletService.getWalletById( data.fromWallet )
 
@@ -24,12 +24,12 @@ async function createTransaction( data: ITransaction ): Promise< ITransaction > 
     data.debitValue = category.transactionType == "D" ? data.value : 0
     data.description_Upper = data.description.toUpperCase()
 
-    wallet.actualBalance = Number(wallet.actualBalance) + Number(data.creditValue) - Number(data.debitValue)
+    wallet.actualBalance = wallet.actualBalance + data.creditValue - data.debitValue
 
     const newTransaction = await crud.insertDocument( data )
     await wallet.save()
 
-    return newTransaction
+    return {...newTransaction.toJSON(), currentWalletBalance: wallet.actualBalance}
 }
 
 async function getTransactions(): Promise< ITransaction[] > {
@@ -44,7 +44,7 @@ async function getTransactionById( id: string ): Promise< ITransaction > {
     return await crud.findDocumentById( id )
 }
 
-async function editTransaction( id: string, data: ITransaction ): Promise< ITransaction > {
+async function editTransaction( id: string, data: ITransaction ) {
     const actualTransaction = await crud.findDocumentById( id, "fromCategory" )
     const actualTransactionCategory = <ICategory>( actualTransaction.fromCategory as any )
     const actualTransactionWallet = await walletService.getWalletById( actualTransaction.fromWallet )
@@ -60,14 +60,14 @@ async function editTransaction( id: string, data: ITransaction ): Promise< ITran
     if ( newTransactionCategory.transactionType == actualTransactionCategory.transactionType ) {
         
         actualTransactionWallet.actualBalance = newTransactionCategory.transactionType == "D" ?
-                               (Number(actualTransactionWallet.actualBalance) + Number(actualTransaction.value)) - Number(data.value) :
-                               (Number(actualTransactionWallet.actualBalance) - Number(actualTransaction.value)) + Number(data.value)
+                               (actualTransactionWallet.actualBalance + actualTransaction.value) - data.value :
+                               (actualTransactionWallet.actualBalance - actualTransaction.value) + data.value
 
     } else {
 
         actualTransactionWallet.actualBalance = newTransactionCategory.transactionType == "D" ?
-                               (Number(actualTransactionWallet.actualBalance) - Number(actualTransaction.value)) - Number(data.value) :
-                               (Number(actualTransactionWallet.actualBalance) + Number(actualTransaction.value)) + Number(data.value)
+                               (actualTransactionWallet.actualBalance - actualTransaction.value) - data.value :
+                               (actualTransactionWallet.actualBalance + actualTransaction.value) + data.value
 
     }
 
@@ -77,15 +77,15 @@ async function editTransaction( id: string, data: ITransaction ): Promise< ITran
         await actualTransactionWallet.save()
     }
 
-    return updatedTransaction
+    return {...updatedTransaction.toJSON(), currentWalletBalance: actualTransactionWallet.actualBalance}
 }
 
-async function deleteTransaction( id: string ): Promise< ITransaction > {
+async function deleteTransaction( id: string ) {
     const deletedTransaction = await crud.deleteDocument(id)
     const transactionWallet = await walletService.getWalletById(deletedTransaction.fromWallet);
 
-    transactionWallet.actualBalance = Number(transactionWallet.actualBalance) - Number(deletedTransaction.creditValue) + Number(deletedTransaction.debitValue)
+    transactionWallet.actualBalance = transactionWallet.actualBalance - deletedTransaction.creditValue + deletedTransaction.debitValue
     await transactionWallet.save()
 
-    return deletedTransaction
+    return {...deletedTransaction.toJSON(), currentWalletBalance: transactionWallet.actualBalance}
 }
