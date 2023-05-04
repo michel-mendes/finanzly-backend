@@ -12,7 +12,7 @@ const walletCreateValidation = () => {
         body('walletName').notEmpty().withMessage("Wallet name must be sent."),
         body('currencySymbol').notEmpty().withMessage('Missing currency symbol'),
         body('initialBalance').notEmpty().withMessage("Missing initial balance")
-                              .isNumeric().withMessage('Value is not a number'),
+                              .isNumeric().withMessage('Value is not a number').toFloat(),
         body('actualBalance').isEmpty().withMessage("Wallet's balance must not be sent"),
     ]
 
@@ -25,7 +25,7 @@ const walletEditValidation = () => {
         body('actualBalance').isEmpty().withMessage("Wallet's cannot be manually changed"),
         body('walletName').notEmpty().withMessage("Wallet name must be sent."),
         body('currencySymbol').notEmpty().withMessage('Missing currency symbol'),
-        body('initialBalance').optional().isNumeric().withMessage("Value not a number")
+        body('initialBalance').optional().isNumeric().withMessage("Value not a number").toFloat()
     ]
 
 }
