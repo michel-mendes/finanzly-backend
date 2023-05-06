@@ -22,7 +22,6 @@ const categorySchema = new Schema(
             versionKey: false,
             transform: ( doc, ret ) => {
                 delete ret._id
-                delete ret.iconPath
             }
         },
         timestamps: true
