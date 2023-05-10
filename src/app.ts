@@ -5,6 +5,7 @@ require("dotenv").config()
 import { handle404Error, handleCustomErrors } from "./middleware/error-handler"
 import { connectDatabase } from "../config/db"
 import express from "express"
+import fileUpload from "express-fileupload"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import config from "config"
@@ -24,6 +25,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs')
 
 // Middlewares
+app.use( fileUpload() )
 app.use( express.json() )
 app.use( cookieParser() )
 
