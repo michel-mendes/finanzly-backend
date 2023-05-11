@@ -4,12 +4,16 @@ import { Readable } from "stream";
 import { UploadedFile } from "express-fileupload";
 import csvParser from "papaparse";
 import Logger from "../../config/logger";
+import { GenericModelCRUD } from "../classes/MongooseModelCRUD";
+import {Transaction} from "../models/transactions/transaction"
 
 export const uploadController = {
     uploadCsv
 }
 
 type bankNames = "bb" | "cef" | "inter-mobile";
+
+const transactionsCrud = new GenericModelCRUD(Transaction)
 
 async function uploadCsv(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
@@ -24,6 +28,8 @@ async function uploadCsv(req: IAuthRequest, res: Response, next: NextFunction) {
             encoding: (bank == "bb") ? "latin1" : "utf8",
             complete: async (result: any) => {
                 
+                const csvData: any[] = result.data
+
                 switch (bank) {
                     case "bb": {
                         
@@ -34,9 +40,12 @@ async function uploadCsv(req: IAuthRequest, res: Response, next: NextFunction) {
                         break
                     }
                     case "inter-mobile": {
-                        const csvData: any[] = result.data
-                        const transactionsList = csvData.map(item => {
+                        let transactionsList = []
+                        
+                        for (let i = 0; i < csvData.length; i++) {
                             
+                            const item = csvData[i]
+
                             const fromCategory = ""
                             const fromWallet = walletId
                             const fromUser = req.user?.id
@@ -47,11 +56,14 @@ async function uploadCsv(req: IAuthRequest, res: Response, next: NextFunction) {
                             const value = Math.abs(Number(String(item[3]).replaceAll(".", "").replace(",", ".")))
                             const debitValue = (value < 0) ? value : 0
                             const creditValue = (value >= 0) ? value : 0
+                            const csvImportId = item.join("|").replaceAll(/\s+/g, "_")
                             
                             const splittedDate = String(item[0]).split("/")
                             const date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}T03:00:00.000Z`
 
-                            return {
+                            const transactionAlreadyExists = (await transactionsCrud.findDocuments({csvImportId})).length > 0
+
+                            const transaction = {
                                 fromCategory,
 		                        fromWallet,
 		                        fromUser,
@@ -61,8 +73,13 @@ async function uploadCsv(req: IAuthRequest, res: Response, next: NextFunction) {
                                 value,
                                 debitValue,
                                 creditValue,
+                                csvImportId,
+                                transactionAlreadyExists
+
                             }
-                        })
+
+                            transactionsList.push(transaction)
+                        }
                         
                         return res.json(transactionsList)
                     }
