@@ -2,10 +2,11 @@ import { Response, NextFunction } from "express";
 import { IAuthRequest } from "../types/auth-request";
 import { Readable } from "stream";
 import { UploadedFile } from "express-fileupload";
+import { GenericModelCRUD } from "../classes/MongooseModelCRUD";
+import { Transaction } from "../models/transactions/transaction"
 import csvParser from "papaparse";
 import Logger from "../../config/logger";
-import { GenericModelCRUD } from "../classes/MongooseModelCRUD";
-import {Transaction} from "../models/transactions/transaction"
+import moment from "moment";
 
 export const uploadController = {
     uploadCsv
@@ -27,60 +28,21 @@ async function uploadCsv(req: IAuthRequest, res: Response, next: NextFunction) {
         csvParser.parse(stream, {
             encoding: (bank == "bb") ? "latin1" : "utf8",
             complete: async (result: any) => {
-                
+
                 const csvData: any[] = result.data
 
                 switch (bank) {
                     case "bb": {
-                        
+
                         break
                     }
                     case "cef": {
-                        
+
                         break
                     }
                     case "inter-mobile": {
-                        let transactionsList = []
-                        
-                        for (let i = 0; i < csvData.length; i++) {
-                            
-                            const item = csvData[i]
+                        const transactionsList = await parseCsvInterMobile(csvData, walletId)
 
-                            const fromCategory = ""
-                            const fromWallet = walletId
-                            const fromUser = req.user?.id
-
-                            //                                            v--> remove excessive spaces
-                            const description = `${item[1]} - ${item[2]}`.replace(/\s+/g, " ")
-                            const description_Upper = description.toUpperCase()
-                            const value = Math.abs(Number(String(item[3]).replaceAll(".", "").replace(",", ".")))
-                            const debitValue = (value < 0) ? value : 0
-                            const creditValue = (value >= 0) ? value : 0
-                            const csvImportId = item.join("|").replaceAll(/\s+/g, "_")
-                            
-                            const splittedDate = String(item[0]).split("/")
-                            const date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}T03:00:00.000Z`
-
-                            const transactionAlreadyExists = (await transactionsCrud.findDocuments({csvImportId})).length > 0
-
-                            const transaction = {
-                                fromCategory,
-		                        fromWallet,
-		                        fromUser,
-		                        date,
-                                description,
-                                description_Upper,
-                                value,
-                                debitValue,
-                                creditValue,
-                                csvImportId,
-                                transactionAlreadyExists
-
-                            }
-
-                            transactionsList.push(transaction)
-                        }
-                        
                         return res.json(transactionsList)
                     }
                 }
@@ -95,48 +57,48 @@ async function uploadCsv(req: IAuthRequest, res: Response, next: NextFunction) {
     }
 }
 
-// Helpers
-// async function decodeCsvInterMobile( csvData, userId, walletId ) {
 
-//     try {
-//         let xtraFunctions = require('../extra-functions')
-//         let totalImportedTransactions = []
+// Helper
+async function parseCsvInterMobile(csvData: any, walletId: string) {
+    const transactionsList = []
 
-//         for (let i = 6; i < csvData.length; i++) {
+    // First line of data = 5
+    for (let i = 5; i < csvData.length; i++) {
 
-//             let date =  String( csvData[i][0] ).slice(6) + '-' + 
-//                         String( csvData[i][0] ).slice(3, 5) + '-' +
-//                         String( csvData[i][0] ).slice(0, 2)
-            
-//             date = xtraFunctions.parseDate( date )
+        const item = csvData[i]
+        const temp_splittedDate = String(item[0]).split("/")
+        const temp_value = Number(String(item[3]).replaceAll(".", "").replace(",", "."))
 
-//             let value = Number( String( csvData[i][2] ).replaceAll('.', '').replace(',', '.') )
-            
-//             let transaction = {
-//                 id:             0,
-//                 categoryId:     0,
-//                 walletId:       walletId,
-//                 userId:         userId,
-//                 date:           date,
-//                 description:    `${ String(csvData[i][1]).toUpperCase() }`,
-//                 extraInfo:      '',
-//                 value:          value >= 0 ? value : value * (-1),
-//                 creditValue:    value > 0 ? value : 0,
-//                 debitValue:     value < 0 ? value * (-1) : 0,
-//                 csvImportId:    `${ csvData[i].toString() }`
-//             }
+        const fromCategory = ""
+        const fromWallet = walletId
+        const fromUser = ""
 
-//             let existingTransaction = await tabTransactions.getTransactionByCsvId( userId, walletId, transaction.csvImportId )
-//             transaction.alreadyExists = existingTransaction.length > 0 ? true : false
+        //                                            v--> remove excessive spaces
+        const description = `${item[1]} - ${item[2]}`.replace(/\s+/g, " ")
+        const value = Math.abs(temp_value)
+        const transactionType = (temp_value >= 0) ? "C" : "D"
+        const csvImportId = item.join("|").replaceAll(/\s+/g, "_")
 
-//             totalImportedTransactions.push( transaction )
+        // const date = `${temp_splittedDate[2]}-${temp_splittedDate[1]}-${temp_splittedDate[0]}T03:00:00.000Z`
+        const date = moment(`${temp_splittedDate[2]}-${temp_splittedDate[1]}-${temp_splittedDate[0]}`).startOf("day").toDate()
 
-//         }
+        const transactionAlreadyExists = (await transactionsCrud.findDocuments({ csvImportId })).length > 0
 
-//         return totalImportedTransactions
-//     }
-//     catch (error) {
-//         return `Erro 'i-1' >> "${ error }"`
-//     }
+        const transaction = {
+            fromCategory,
+            fromWallet,
+            fromUser,
+            date,
+            description,
+            value,
+            transactionType,
+            csvImportId,
+            transactionAlreadyExists
 
-// }
+        }
+
+        transactionsList.push(transaction)
+    }
+
+    return transactionsList
+}
