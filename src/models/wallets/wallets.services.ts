@@ -2,7 +2,8 @@ import { ObjectId } from "mongoose";
 import { GenericModelCRUD } from "../../classes/MongooseModelCRUD";
 import { AppError } from "../../middleware/error-handler";
 import { IWallet, Wallet } from "./wallet";
-import { ITransaction, Transaction } from "../transactions/transaction";
+import { Transaction } from "../transactions/transaction";
+import { User } from "../users/user";
 
 export const walletService = {
     createWallet,
@@ -13,50 +14,60 @@ export const walletService = {
     calculateWalletBalance
 }
 
-const crud = new GenericModelCRUD( Wallet )
-const transactionsCrud = new GenericModelCRUD( Transaction )
+const userCrud = new GenericModelCRUD(User)
+const walletsCrud = new GenericModelCRUD(Wallet)
+const transactionsCrud = new GenericModelCRUD(Transaction)
 
-async function createWallet( walletData: IWallet ): Promise< IWallet > {
-    const duplicateWalletName = await verifyDuplicateWalletName( walletData.walletName, walletData.fromUser ) 
+async function createWallet(walletData: IWallet): Promise<IWallet> {
+    const duplicateWalletName = await verifyDuplicateWalletName(walletData.walletName, walletData.fromUser)
 
-    if ( duplicateWalletName ) throw new AppError("Wallet with duplicate name", 409)
+    if (duplicateWalletName) throw new AppError("Wallet with duplicate name", 409)
 
-    return await crud.insertDocument( walletData, "fromUser" )
+    return await walletsCrud.insertDocument(walletData)
 }
 
-async function getWallets(filter: {fromUser: string} | {} = {}): Promise< Array<IWallet> > {
-    return await crud.findDocuments(filter)
+async function getWallets(filter: { fromUser: string } | {} = {}): Promise<Array<IWallet>> {
+    return await walletsCrud.findDocuments(filter)
 }
 
-async function getWalletById( walletId: string ): Promise< IWallet > {
-    return await crud.findDocumentById( walletId, "fromUser" )
+async function getWalletById(walletId: string): Promise<IWallet> {
+    return await walletsCrud.findDocumentById(walletId)
 }
 
-async function editWallet( walletId: string, newWalletData: IWallet ): Promise< IWallet > {
-    const duplicateWalletName = await verifyDuplicateWalletName( newWalletData.walletName, newWalletData.fromUser ) 
+async function editWallet(walletId: string, newWalletData: IWallet): Promise<IWallet> {
+    const duplicateWalletName = await verifyDuplicateWalletName(newWalletData.walletName, newWalletData.fromUser)
 
-    if ( duplicateWalletName ) throw new AppError("Wallet with duplicate name", 409)
+    if (duplicateWalletName) throw new AppError("Wallet with duplicate name", 409)
 
-    return await crud.editDocument( walletId, newWalletData )
+    return await walletsCrud.editDocument(walletId, newWalletData)
 }
 
-async function deleteWallet( walletId: string ): Promise< IWallet > {
-    return await crud.deleteDocument( walletId )
+async function deleteWallet(walletId: string): Promise<IWallet> {
+    const wallet = await walletsCrud.findDocumentById(walletId)
+    const user = await userCrud.findOneDocument({ fromUser: wallet.fromUser })
+
+    if (user!.activeWallet == wallet.id) {
+        user!.activeWallet = undefined
+    }
+
+    await wallet.delete()
+
+    return wallet
 }
 
-async function calculateWalletBalance( walletId: string ): Promise<number> {
+async function calculateWalletBalance(walletId: string): Promise<number> {
     const [wallet, transactions] = await Promise.all(
         [
-            crud.findDocumentById(walletId),
-            transactionsCrud.findDocuments({fromWallet: walletId})
+            walletsCrud.findDocumentById(walletId),
+            transactionsCrud.findDocuments({ fromWallet: walletId })
         ]
     )
 
     let walletBalance = wallet.initialBalance
 
-    transactions.forEach( transaction => {
+    transactions.forEach(transaction => {
         (transaction.creditValue) ? walletBalance += transaction.creditValue : walletBalance -= transaction.debitValue
-    } )
+    })
 
     wallet.actualBalance = walletBalance
     await wallet.save()
@@ -66,8 +77,8 @@ async function calculateWalletBalance( walletId: string ): Promise<number> {
 
 
 // Helper functions
-async function verifyDuplicateWalletName( walletName: string, userId: ObjectId ): Promise< boolean > {
-    const walletWithSameName = await crud.findOneDocument( {walletName, fromUser: userId })
+async function verifyDuplicateWalletName(walletName: string, userId: ObjectId): Promise<boolean> {
+    const walletWithSameName = await walletsCrud.findOneDocument({ walletName, fromUser: userId })
 
     return walletWithSameName ? true : false
 }
