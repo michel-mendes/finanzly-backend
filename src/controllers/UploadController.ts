@@ -69,9 +69,9 @@ async function parseCsvInterMobile(csvData: any, walletId: string) {
         const temp_splittedDate = String(item[0]).split("/")
         const temp_value = Number(String(item[3]).replaceAll(".", "").replace(",", "."))
 
-        const fromCategory = ""
-        const fromWallet = walletId
         const fromUser = ""
+        const fromWallet = walletId
+        const fromCategory = ""
 
         //                                            v--> remove excessive spaces
         const description = `${item[1]} - ${item[2]}`.replace(/\s+/g, " ")
@@ -79,10 +79,11 @@ async function parseCsvInterMobile(csvData: any, walletId: string) {
         const transactionType = (temp_value >= 0) ? "C" : "D"
         const csvImportId = item.join("|").replaceAll(/\s+/g, "_")
 
-        // const date = `${temp_splittedDate[2]}-${temp_splittedDate[1]}-${temp_splittedDate[0]}T03:00:00.000Z`
         const date = moment(`${temp_splittedDate[2]}-${temp_splittedDate[1]}-${temp_splittedDate[0]}`).startOf("day").toDate()
 
-        const transactionAlreadyExists = (await transactionsCrud.findDocuments({ csvImportId })).length > 0
+        // Checks if this transaction being requested for import already exists in the database.
+        // It will be filtered in the frontend, preventing it from being imported twice
+        const transactionAlreadyExists = (await transactionsCrud.findDocuments({ csvImportId, fromWallet })).length > 0
 
         const transaction = {
             fromCategory,
