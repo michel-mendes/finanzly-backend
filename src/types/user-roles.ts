@@ -1,6 +1,1 @@
-enum Roles {
-    admin = 'Admin',
-    user = 'User'
-}
-
-export default Roles
+export type TUserRoles = "Admin" | "User"

@@ -1,12 +1,13 @@
 import { model, Schema, ObjectId } from "mongoose"
 import { genSalt, hash, compare } from "bcryptjs"
+import { TUserRoles } from "../../types/user-roles"
 import mongoose from "mongoose"
 
 interface IUser extends mongoose.Document {
     id?:                    ObjectId;
     firstName:              string;
     lastName?:              string;
-    role?:                  string | undefined;
+    role?:                  TUserRoles;
     email:                  string;
     password:               string;
     verificationToken?:     string;
@@ -16,7 +17,7 @@ interface IUser extends mongoose.Document {
                             token: string;
                             expireAt: Date;
     };
-    activeWallet?:          ObjectId;
+    activeWallet?:          string | null;
     isVerified?:            boolean;
 }
 
