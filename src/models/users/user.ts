@@ -1,4 +1,4 @@
-import { model, Schema, Model, ObjectId } from "mongoose"
+import { model, Schema, ObjectId } from "mongoose"
 import { genSalt, hash, compare } from "bcryptjs"
 import mongoose from "mongoose"
 
@@ -16,6 +16,7 @@ interface IUser extends mongoose.Document {
                             token: string;
                             expireAt: Date;
     };
+    activeWallet?:          ObjectId;
     isVerified?:            boolean;
 }
 
@@ -36,7 +37,8 @@ const userSchema = new Schema(
         resetPasswordToken: {
             token:      { type: String },
             expireAt:   { type: Date }
-        }
+        },
+        activeWallet:       { type: Schema.Types.ObjectId }
     },
     {
         toJSON: {
