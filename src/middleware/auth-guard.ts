@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express"
 import { User } from "../models/user";
 import { IAuthRequest } from "../types/auth-request";
+import { AppError } from "./error-handler";
 import jwt, {JwtPayload} from "jsonwebtoken"
 import config from "config"
 
@@ -23,9 +24,12 @@ async function authGuard(req: IAuthRequest, res: Response, next: NextFunction) {
         const verifiedToken = jwt.verify( token, secret ) as IJwtTokenData
         const userThatRequested = await User.findById( verifiedToken.userId )
 
+        if (!userThatRequested) throw new AppError("Unauthorized access", 401)
+
         req.user = {
-            id: userThatRequested?._id,
-            firstName: userThatRequested?.firstName!,
+            id: userThatRequested._id,
+            firstName: userThatRequested.firstName,
+            activeWalletId: userThatRequested.activeWallet,
             role: userThatRequested?.role!
         }
 
