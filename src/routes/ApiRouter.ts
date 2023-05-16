@@ -1,7 +1,7 @@
-import { Router, Request, Response } from "express"
+import { Router } from "express"
 import { userRouter } from "./UserRouter"
 import { walletRouter } from "./WalletRouter"
-import categoryRouter from "../models/categories/categories.controller"
+import { categoryRouter } from "./CategoryRouter"
 import transactionRouter from "../models/transactions/transactions.controller"
 import { uploadRouter } from "./UploadRouter"
 
