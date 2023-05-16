@@ -1,5 +1,5 @@
 import mongoose, { model, Schema } from "mongoose"
-import { recalculateWalletBalance } from "./wallet-balance-helper"
+import { recalculateWalletBalance } from "../_helpers/wallet-balance"
 
 interface IWallet extends mongoose.Document {
     id?: Schema.Types.ObjectId,

@@ -1,6 +1,6 @@
 import { model, Schema, ObjectId } from "mongoose"
 import { genSalt, hash, compare } from "bcryptjs"
-import { TUserRoles } from "../../types/user-roles"
+import { TUserRoles } from "../types/user-roles"
 import mongoose from "mongoose"
 
 interface IUser extends mongoose.Document {

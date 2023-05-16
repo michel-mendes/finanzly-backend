@@ -6,9 +6,9 @@ import Logger from "../../config/logger";
 import { IAuthRequest } from "../types/auth-request";
 
 // Models
-import { Wallet } from "../models/wallets/wallet";
+import { Wallet } from "../models/wallet";
 import { Transaction } from "../models/transactions/transaction";
-import { User } from "../models/users/user";
+import { User } from "../models/user";
 
 // Mongoose Collection manipulator
 import { GenericModelCRUD } from "../classes/MongooseModelCRUD";

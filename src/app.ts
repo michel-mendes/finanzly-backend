@@ -11,7 +11,7 @@ import cors from "cors"
 import config from "config"
 import Logger from "../config/logger"
 import morganMiddleware from "./middleware/morgan-handler"
-import apiRouter from './api.router'
+import apiRouter from './routes/ApiRouter'
 import path from "path"
 
 const app = express()

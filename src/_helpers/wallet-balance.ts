@@ -1,7 +1,7 @@
 // This module will be called directly by "wallets.ts" everytime a wallet's initial balance is updated
 
-import { GenericModelCRUD } from "../../classes/MongooseModelCRUD"
-import { Transaction } from "../transactions/transaction"
+import { GenericModelCRUD } from "../classes/MongooseModelCRUD"
+import { Transaction } from "../models/transactions/transaction"
 
 export { recalculateWalletBalance }
 
