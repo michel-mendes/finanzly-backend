@@ -7,7 +7,7 @@ import { IAuthRequest } from "../types/auth-request";
 
 // Models
 import { Wallet } from "../models/wallet";
-import { Transaction } from "../models/transactions/transaction";
+import { Transaction } from "../models/transaction";
 import { User } from "../models/user";
 
 // Mongoose Collection manipulator

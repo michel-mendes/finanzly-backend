@@ -2,7 +2,7 @@ import { Router } from "express"
 import { userRouter } from "./UserRouter"
 import { walletRouter } from "./WalletRouter"
 import { categoryRouter } from "./CategoryRouter"
-import transactionRouter from "../models/transactions/transactions.controller"
+import { transactionRouter } from "./TransactionRouter"
 import { uploadRouter } from "./UploadRouter"
 
 const router = Router()

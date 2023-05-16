@@ -7,7 +7,7 @@ import { IAuthRequest } from "../types/auth-request"
 
 // Database manipulators
 import { GenericModelCRUD } from "../classes/MongooseModelCRUD"
-import { Category } from "../models/categories/category"
+import { Category } from "../models/category"
 
 export const categoryController = {
     createNewCategory,

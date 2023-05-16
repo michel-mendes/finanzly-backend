@@ -3,7 +3,7 @@ import { IAuthRequest } from "../types/auth-request";
 import { Readable } from "stream";
 import { UploadedFile } from "express-fileupload";
 import { GenericModelCRUD } from "../classes/MongooseModelCRUD";
-import { Transaction } from "../models/transactions/transaction"
+import { Transaction } from "../models/transaction"
 import csvParser from "papaparse";
 import Logger from "../../config/logger";
 import moment from "moment";
