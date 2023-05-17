@@ -24,6 +24,7 @@ export const userController = {
     createNewUser,
     getLoggedInUser,
     logoffUser,
+    setActiveWallet,
     getAllUsers,
     getUserById,
     editUser,
@@ -118,6 +119,23 @@ function logoffUser(req: IAuthRequest, res: Response, next: NextFunction) {
         res.status(200).json({message: "Logout successful"})
     } catch (error: any) {
         Logger.error(`Error while logging out current user: ${ error.message }`)
+        return next(error)
+    }
+}
+
+async function setActiveWallet(req: IAuthRequest, res: Response, next: NextFunction) {
+    try {
+        const {activeWallet} = req.body
+        const userId = req.user!.id
+
+        const user = await usersCrud.findDocumentById(userId.toString())
+        user.activeWallet = activeWallet
+
+        await user.save()
+
+        res.status(200).json({message: "OK"})
+    } catch (error: any) {
+        Logger.error(`Error while setting active wallet for current user: ${ error.message }`)
         return next(error)
     }
 }
