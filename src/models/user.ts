@@ -17,7 +17,7 @@ interface IUser extends mongoose.Document {
                             token: string;
                             expireAt: Date;
     };
-    activeWallet?:          string | null;
+    activeWalletId?:        string | null;
     isVerified?:            boolean;
 }
 
@@ -39,7 +39,7 @@ const userSchema = new Schema(
             token:      { type: String },
             expireAt:   { type: Date }
         },
-        activeWallet:       { type: Schema.Types.ObjectId }
+        activeWalletId:     { type: Schema.Types.ObjectId }
     },
     {
         toJSON: {

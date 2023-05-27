@@ -129,7 +129,7 @@ async function setActiveWallet(req: IAuthRequest, res: Response, next: NextFunct
         const userId = req.user!.id
 
         const user = await usersCrud.findDocumentById(userId.toString())
-        user.activeWallet = activeWallet
+        user.activeWalletId = activeWallet
 
         await user.save()
 
