@@ -9,6 +9,7 @@ import { GenericModelCRUD } from "../classes/MongooseModelCRUD"
 
 // Authenticated request
 import { IAuthRequest } from "../types/auth-request"
+import moment from "moment"
 
 export const transactionController = {
     createNewTransaction,
@@ -28,10 +29,11 @@ const transactionsCrud = new GenericModelCRUD(Transaction)
 async function createNewTransaction(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
         const receivedData = <ITransaction>req.body
-
+        
         const category = await categoriesCrud.findDocumentById(receivedData.fromCategory)
         const wallet = await walletsCrud.findDocumentById(receivedData.fromWallet)
-
+        
+        receivedData.date = new Date(receivedData.date).getTime()
         receivedData.creditValue = (category.transactionType == "C") ? receivedData.value : 0
         receivedData.debitValue = (category.transactionType == "D") ? receivedData.value : 0
         receivedData.description_Upper = receivedData.description.toUpperCase()
@@ -95,6 +97,7 @@ async function editTransaction(req: IAuthRequest, res: Response, next: NextFunct
 
         const newTransactionCategory = (!receivedData.fromCategory) ? prevTransactionCategory : await categoriesCrud.findDocumentById(receivedData.fromCategory)
 
+        receivedData.date = moment(receivedData.date)
         receivedData.debitValue = (newTransactionCategory.transactionType == "D") ? receivedData.value : 0
         receivedData.creditValue = (newTransactionCategory.transactionType == "C") ? receivedData.value : 0;
         (!receivedData.description) ? null : receivedData.description_Upper = receivedData.description.toUpperCase();
