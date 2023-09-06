@@ -13,7 +13,15 @@ import { transactionController } from "../controllers/TransactionController"
 // Transactions related routes
 const transactionRouter = Router()
 
+/*
+
+Parameters and query strings for "/from-wallet/:id" route
+- Mandatory parameter    = ":id"
+- Optional query strings = [startDate, endDate]
+
+*/
 transactionRouter.get("/from-wallet/:id", authGuard, transactionController.getTransactionsFromWallet)
+
 transactionRouter.post("/", newTransactionValidation(), validateData, transactionController.createNewTransaction )
 transactionRouter.get("/", transactionController.listAllTransactions)
 transactionRouter.get("/:id", transactionController.getTransactionById)
