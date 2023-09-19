@@ -17,6 +17,7 @@ export const transactionController = {
     createNewTransaction,
     listAllTransactions,
     getTransactionsFromWallet,
+    getTransactionsWithCategoryFromWallet,
     getTransactionById,
     editTransaction,
     deleteTransaction
@@ -70,6 +71,18 @@ async function getTransactionsFromWallet(req: IAuthRequest, res: Response, next:
     try {
         const seachTerms = _setUpSearchTerms(req)
         const transactions = await transactionsCrud.findDocuments(seachTerms)
+
+        res.status(200).json(transactions)
+    } catch (error: any) {
+        Logger.error(`Error while getting wallet transactions: ${error.message}`)
+        return next(error)
+    }
+}
+
+async function getTransactionsWithCategoryFromWallet(req: IAuthRequest, res: Response, next: NextFunction) {
+    try {
+        const seachTerms = _setUpSearchTerms(req)
+        const transactions = await transactionsCrud.findDocuments(seachTerms, "fromCategory")
 
         res.status(200).json(transactions)
     } catch (error: any) {
