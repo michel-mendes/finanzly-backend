@@ -23,7 +23,7 @@ Parameters and query strings for "/from-wallet/:id" route
 transactionRouter.get("/from-wallet/:id", authGuard, transactionController.getTransactionsFromWallet)
 
 // The same as above, however, it returns transactions with the category of each one
-transactionRouter.get("/from-wallet/:id/with-category", authGuard, transactionController.getTransactionsWithCategoryFromWallet)
+transactionRouter.get("/with-category/from-wallet/:id", authGuard, transactionController.getTransactionsWithCategoryFromWallet)
 
 transactionRouter.post("/", newTransactionValidation(), validateData, transactionController.createNewTransaction )
 transactionRouter.get("/", transactionController.listAllTransactions)
