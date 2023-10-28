@@ -1,10 +1,12 @@
 import { Response, NextFunction } from "express"
 import { User } from "../models/user";
+import { GenericModelCRUD } from "../classes/MongooseModelCRUD";
 import { IAuthRequest } from "../types/auth-request";
 import { AppError } from "./error-handler";
 import jwt, {JwtPayload} from "jsonwebtoken"
 import config from "config"
 
+const usersCrud = new GenericModelCRUD(User)
 const secret = config.get<string>("secret")
 
 interface IJwtTokenData extends JwtPayload {
@@ -22,14 +24,14 @@ async function authGuard(req: IAuthRequest, res: Response, next: NextFunction) {
     // Check if the token is valid
     try {
         const verifiedToken = jwt.verify( token, secret ) as IJwtTokenData
-        const userThatRequested = await User.findById( verifiedToken.userId )
+        const userThatRequested = await usersCrud.findDocumentById(verifiedToken.userId, "activeWallet")
 
         if (!userThatRequested) throw new AppError("Unauthorized access", 401)
 
         req.user = {
             id: userThatRequested._id,
             firstName: userThatRequested.firstName,
-            activeWalletId: userThatRequested.activeWalletId,
+            activeWallet: userThatRequested.activeWallet,
             role: userThatRequested?.role!
         }
 

@@ -129,11 +129,12 @@ async function setActiveWallet(req: IAuthRequest, res: Response, next: NextFunct
         const userId = req.user!.id
 
         const user = await usersCrud.findDocumentById(userId.toString())
-        user.activeWalletId = activeWallet
-
+        user.activeWallet = activeWallet
         await user.save()
 
-        res.status(200).json({message: "OK"})
+        const userWithWallet = await usersCrud.findDocumentById(userId.toString(), "activeWallet")
+
+        res.status(200).json(userWithWallet)
     } catch (error: any) {
         Logger.error(`Error while setting active wallet for current user: ${ error.message }`)
         return next(error)
@@ -272,7 +273,7 @@ function renderChangePasswordPage(req: IAuthRequest, res: Response, next: NextFu
 
 // Helper functions
 async function _checkUserDataAndLoginIfMatches(requestEmail: string, requestPassword: string, ipAddress: string): Promise<any> {
-    const user = await usersCrud.findOneDocument( {email: requestEmail} )
+    const user = await usersCrud.findOneDocument( {email: requestEmail}, "activeWallet" )
 
     const userNotFound = ( !user )
     const incorrectPassword = ( user ) ? !(await user.checkIfPasswordIsCorrect( requestPassword )) : true
