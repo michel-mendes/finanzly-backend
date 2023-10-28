@@ -43,6 +43,7 @@ async function createNewTransaction(req: IAuthRequest, res: Response, next: Next
         receivedData.creditValue = (category.transactionType == "C") ? receivedData.value : 0
         receivedData.debitValue = (category.transactionType == "D") ? receivedData.value : 0
         receivedData.description_Upper = receivedData.description.toUpperCase()
+        receivedData.importedTransaction = (receivedData.csvImportId) ? true : false
 
         wallet.actualBalance = wallet.actualBalance + receivedData.creditValue - receivedData.debitValue
 

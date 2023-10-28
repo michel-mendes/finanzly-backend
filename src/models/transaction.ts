@@ -15,6 +15,7 @@ interface ITransaction extends mongoose.Document {
     value:                  number,
     creditValue:            number,
     debitValue:             number,
+    importedTransaction:    boolean,
     csvImportId?:           string,
 }
 
@@ -32,6 +33,7 @@ const transactionSchema = new Schema(
         value:              { type: Number, required: true },
         creditValue:        { type: Number },
         debitValue:         { type: Number },
+        importedTransaction:{ type: Boolean },
         csvImportId:        { type: String }
     },
     {
