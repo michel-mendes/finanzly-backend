@@ -17,13 +17,13 @@ class AppError {
 }
 
 function handle404Error(req: Request, res: Response, next: NextFunction) {
-    return res.status(404).json({message: `Endpoint '${ req.path }' not found`}) 
+    return res.status(404).json({errors: [`Endpoint '${ req.path }' not found`]}) 
 }
 
 function handleCustomErrors(err: any, req: Request, res: Response, next: NextFunction) {
 
     if ( err instanceof AppError ) {
-        return res.status( err.code ).json({message: err.message}) 
+        return res.status( err.code ).json({errors: [err.message]}) 
     }
 
     switch (true) {
