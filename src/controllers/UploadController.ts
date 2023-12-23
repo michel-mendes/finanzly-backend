@@ -73,8 +73,9 @@ async function parseCsvInterMobile(csvData: any, walletId: string) {
         const fromWallet = walletId
         const fromCategory = ""
 
-        //                                            v--> remove excessive spaces
-        const description = `${item[1]} - ${item[2]}`.replace(/\s+/g, " ")
+        //                              v--> `replace(/\s+/g, " ")` removes excessive spaces
+        const description = `${item[1]}`.replace(/\s+/g, " ")
+        const extraInfo = `${item[2]}`.replace(/\s+/g, " ")
         const value = Math.abs(temp_value)
         const transactionType = (temp_value >= 0) ? "C" : "D"
         const csvImportId = item.join("|").replaceAll(/\s+/g, "_")
@@ -91,6 +92,7 @@ async function parseCsvInterMobile(csvData: any, walletId: string) {
             fromUser,
             date,
             description,
+            extraInfo,
             value,
             transactionType,
             csvImportId,
