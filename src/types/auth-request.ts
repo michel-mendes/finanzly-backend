@@ -7,6 +7,7 @@ interface IAuthRequest extends Request {
         id: mongoose.Types.ObjectId;
         firstName: string;
         activeWallet: string | null | undefined;
+        firstDayOfMonth: number;
         role: TUserRoles;
     }
 }

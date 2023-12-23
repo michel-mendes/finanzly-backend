@@ -80,7 +80,7 @@ async function verifyUserEmail(req: IAuthRequest, res: Response, next: NextFunct
 
 async function createNewUser(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
-        const userData = req.body
+        const userData : (IUser & IUserMethods) = req.body
         const hostAddress = req.get("host")
 
         const userAlreadyExists = await _checkIfEmailAlreadyExists(userData.email)
@@ -89,10 +89,11 @@ async function createNewUser(req: IAuthRequest, res: Response, next: NextFunctio
         const isFirstUser = (await User.countDocuments({})) === 0
         userData.role = isFirstUser ? "Admin" : "User"
         userData.verificationToken = _generateRandomTokenString()
+        userData.firstDayOfMonth = 1
 
         await _sendUserVerificationEmail(userData, hostAddress)
 
-        const createdUser = await usersCrud.insertDocument(userData as (IUser & IUserMethods))
+        const createdUser = await usersCrud.insertDocument(userData)
 
         res.status(201).json(createdUser)
     }
@@ -105,6 +106,12 @@ async function createNewUser(req: IAuthRequest, res: Response, next: NextFunctio
 function getLoggedInUser(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
         const user = req.user
+
+        // logs the user out, forcing a new login to correct the possible lack of definition of "firstDayOfMonth"
+        if (!user?.firstDayOfMonth) {
+            logoffUser(req, res, next)
+            return
+        }
     
         res.status(200).json( user )
     } catch (error:any) {
@@ -288,6 +295,7 @@ async function _checkUserDataAndLoginIfMatches(requestEmail: string, requestPass
     const signedObjectData = { userId: user.id }
 
     user.authorizationToken = _generateAuthorizationJwtToken( signedObjectData )
+    await avoidNulledFirstDayOfMonth(user, false)
     await user.save()
       
     return { ...user.toJSON(), authorizationToken: user.authorizationToken}
@@ -368,5 +376,13 @@ function _setCookies(res: Response, originHost: string | undefined, authToken: s
 function _blockRegularUserToGetOtherUsers(requestingUserId: string, requestingUserRole: TUserRoles, targetUserId: string) {
     if ( requestingUserId !== targetUserId && requestingUserRole !== "Admin" ) {
         throw new AppError( 'Unauthorized access', 401 )
+    }
+}
+
+async function avoidNulledFirstDayOfMonth(user: IUser, saveOnChange = true) {
+    if (!user.firstDayOfMonth) {
+        user.firstDayOfMonth = 1;
+
+        (saveOnChange) && await user.save()
     }
 }

@@ -19,6 +19,7 @@ interface IUser extends mongoose.Document {
     };
     activeWallet?:          string | null;
     isVerified?:            boolean;
+    firstDayOfMonth:        number;
 }
 
 interface IUserMethods {
@@ -39,7 +40,8 @@ const userSchema = new Schema(
             token:      { type: String },
             expireAt:   { type: Date }
         },
-        activeWallet:     { type: Schema.Types.ObjectId, required: false, ref: "Wallet" }
+        activeWallet:     { type: Schema.Types.ObjectId, required: false, ref: "Wallet" },
+        firstDayOfMonth:  { type: Number }
     },
     {
         toJSON: {
