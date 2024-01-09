@@ -31,6 +31,7 @@ async function authGuard(req: IAuthRequest, res: Response, next: NextFunction) {
         req.user = {
             id: userThatRequested._id,
             firstName: userThatRequested.firstName,
+            lastName: userThatRequested.lastName,
             activeWallet: userThatRequested.activeWallet,
             firstDayOfMonth: userThatRequested.firstDayOfMonth,
             role: userThatRequested?.role!
