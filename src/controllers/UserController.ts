@@ -32,6 +32,7 @@ export const userController = {
 }
 
 const usersCrud = new GenericModelCRUD( User )
+const environment = config.get<string>("env")
 
 async function authenticateUser(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
@@ -121,7 +122,10 @@ function getLoggedInUser(req: IAuthRequest, res: Response, next: NextFunction) {
 
 function logoffUser(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
-        res.cookie("token", "", {httpOnly: true, secure: true, sameSite: "strict"})
+        res.cookie("token", "", {
+            httpOnly: (environment == "development") ? false : true,
+            secure: (environment == "development") ? false : true,
+            sameSite: "strict"})
 
         res.status(200).json({message: "Logout successful"})
     } catch (error: any) {
@@ -361,9 +365,10 @@ function _generateAuthorizationJwtToken( payload: string | object | Buffer ): st
 }
 
 function _setCookies(res: Response, originHost: string | undefined, authToken: string) {
+    
     const cookiesConfig: CookieOptions = {
-        httpOnly: true,
-        secure: true,
+        httpOnly: (environment == "development") ? false : true,
+        secure: (environment == "development") ? false : true,
         sameSite: "strict",
         maxAge: 1000 * 60 * 60 * 24 * 7   /* 7 days expiration */
     }
