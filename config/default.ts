@@ -8,8 +8,10 @@ const emailHost = process.env.EMAIL_SMTP_HOST
 const emailPort = process.env.EMAIL_SMTP_PORT
 const emailUser = process.env.EMAIL_SMTP_AUTH_USER
 const emailPass = process.env.EMAIL_SMTP_AUTH_PASSWORD
+const env = process.env.NODE_ENV
 
 export default {
+    env,
     secret: appSecret,
     frontEndUrl: frontEndDomain?.replaceAll(" ", "").split(","),
     port: 3000,
@@ -24,7 +26,5 @@ export default {
                 pass: emailPass!
             }
         }
-    },
-    env: process.env.NODE_ENV
-    // env: 'production'
+    }
 }

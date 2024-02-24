@@ -5,8 +5,13 @@
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "production": "set NODE_ENV=production&& node src/app.js",
-    "dev": "set NODE_ENV=development&& ts-node-dev --respawn --transpile-only src/app.ts development"
+    "production-win": "set NODE_ENV=production&& node src/app.js",
+    "production-aws": "export NODE_ENV=production && node src/app.js",
+    "dev": "set NODE_ENV=development&& ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "npm run prepare-build-dir && npm run install-build-packages && npm run notify-how-to-start-production",
+    "prepare-build-dir": "rm -f-r build && mkdir build && cp *json build && cp .env build && cp -r public build && npx tsc",
+    "install-build-packages": "cd build && npm install && cd ..",
+    "notify-how-to-start-production": "echo \n\nBuild complete, in order to run in production mode, follow the instructions below\nWindows: type 'cd build', type 'npm run production-windows'\nAWS EC2: type 'cd build', type 'npm run production-aws'"
   },
   "keywords": [],
   "author": "",
