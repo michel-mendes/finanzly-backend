@@ -125,7 +125,7 @@ function logoffUser(req: IAuthRequest, res: Response, next: NextFunction) {
         res.cookie("token", "", {
             httpOnly: (environment == "development") ? false : true,
             secure: (environment == "development") ? false : true,
-            sameSite: "strict"})
+            sameSite: "none"})
 
         res.status(200).json({message: "Logout successful"})
     } catch (error: any) {
@@ -283,7 +283,7 @@ function renderChangePasswordPage(req: IAuthRequest, res: Response, next: NextFu
 
 
 // Helper functions
-async function _checkUserDataAndLoginIfMatches(requestEmail: string, requestPassword: string, ipAddress: string): Promise<any> {
+async function _checkUserDataAndLoginIfMatches(requestEmail: string, requestPassword: string, ipAddress: string | undefined): Promise<any> {
     const user = await usersCrud.findOneDocument( {email: requestEmail}, "activeWallet" )
 
     const userNotFound = ( !user )
@@ -369,7 +369,7 @@ function _setCookies(res: Response, originHost: string | undefined, authToken: s
     const cookiesConfig: CookieOptions = {
         httpOnly: (environment == "development") ? false : true,
         secure: (environment == "development") ? false : true,
-        sameSite: "strict",
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 7   /* 7 days expiration */
     }
 

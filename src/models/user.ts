@@ -76,10 +76,10 @@ userSchema.pre("save", function( next ) {
     if ( !user.isModified( 'password' ) ) return next()
 
     // Hash the new password
-    genSalt( 10, function( err: Error, salt: string ) {
+    genSalt( 10, function( err: Error | null, salt: string ) {
         if ( err ) return next( err )
 
-        hash( user.password, salt, function ( err: Error, hashedPassword: string ) {
+        hash( user.password, salt, function ( err: Error | null, hashedPassword: string ) {
             if ( err ) return next( err )
 
             user.password = hashedPassword

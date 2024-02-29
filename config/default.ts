@@ -9,12 +9,13 @@ const emailPort = process.env.EMAIL_SMTP_PORT
 const emailUser = process.env.EMAIL_SMTP_AUTH_USER
 const emailPass = process.env.EMAIL_SMTP_AUTH_PASSWORD
 const env = process.env.NODE_ENV
+const port = process.env.PORT || 3000
 
 export default {
     env,
+    port,
     secret: appSecret,
     frontEndUrl: frontEndDomain?.replaceAll(" ", "").split(","),
-    port: 3000,
     connectionString: `mongodb+srv://${ dbUser }:${ dbPassword }@cluster0.a4rqihe.mongodb.net/${ databaseName }?retryWrites=true&w=majority`,
     emailConfig: {
         from: emailFrom,
