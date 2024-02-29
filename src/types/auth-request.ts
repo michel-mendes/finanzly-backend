@@ -10,7 +10,10 @@ interface IAuthRequest extends Request {
         activeWallet: string | null | undefined;
         firstDayOfMonth: number;
         role: TUserRoles;
-    }
+    },
+
+    // v---- Used only for deployment in Render.com in order to avoid type error during build
+    [key: string]: any
 }
 
 export { IAuthRequest }
