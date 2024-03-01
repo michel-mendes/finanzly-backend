@@ -10,13 +10,17 @@ const emailUser = process.env.EMAIL_SMTP_AUTH_USER
 const emailPass = process.env.EMAIL_SMTP_AUTH_PASSWORD
 const env = process.env.NODE_ENV
 const port = process.env.PORT || 3000
+const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN || undefined
+const telegramChatId = process.env.TELEGRAM_CHAT_ID || undefined
 
 export default {
     env,
     port,
+    telegramBotToken,
+    telegramChatId,
     secret: appSecret,
     frontEndUrl: frontEndDomain?.replaceAll(" ", "").split(","),
-    connectionString: `mongodb+srv://${ dbUser }:${ dbPassword }@cluster0.a4rqihe.mongodb.net/${ databaseName }?retryWrites=true&w=majority`,
+    connectionString: `mongodb+srv://${dbUser}:${dbPassword}@cluster0.a4rqihe.mongodb.net/${databaseName}?retryWrites=true&w=majority`,
     emailConfig: {
         from: emailFrom,
         smtpOptions: {

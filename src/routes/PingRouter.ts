@@ -1,11 +1,12 @@
 import { Router } from "express"
+import { telegram } from "../_helpers/telegram-bot"
 
 const pingRouter = Router()
 
-pingRouter.get("/", (req, res, next) => {
-    const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl
+pingRouter.get("/", async (req, res, next) => {
+    const fullUrl = req.protocol + '://' + req.headers.origin
 
-    console.log(`Received ping from "${fullUrl}"`)
+    await telegram.sendMessage(`pong (${fullUrl})`)
     res.status(200).send(`pong (${fullUrl})`)
 })
 
