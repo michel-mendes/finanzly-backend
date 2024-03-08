@@ -125,7 +125,8 @@ function logoffUser(req: IAuthRequest, res: Response, next: NextFunction) {
         res.cookie("token", "", {
             httpOnly: (environment == "development") ? false : true,
             secure: (environment == "development") ? false : true,
-            sameSite: "none"})
+            sameSite: (environment == "development") ? "strict" : "none"
+        })
 
         res.status(200).json({message: "Logout successful"})
     } catch (error: any) {
@@ -369,7 +370,7 @@ function _setCookies(res: Response, originHost: string | undefined, authToken: s
     const cookiesConfig: CookieOptions = {
         httpOnly: (environment == "development") ? false : true,
         secure: (environment == "development") ? false : true,
-        sameSite: "none",
+        sameSite: (environment == "development") ? "strict" : "none",
         maxAge: 1000 * 60 * 60 * 24 * 7   /* 7 days expiration */
     }
 
