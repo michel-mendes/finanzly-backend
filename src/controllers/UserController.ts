@@ -67,7 +67,8 @@ async function verifyUserEmail(req: IAuthRequest, res: Response, next: NextFunct
 
         await user.save()
 
-        res.status(200).render('verify-user', { message: "User verification successful, now you can log in!" })
+        res.status(200).send("Success")
+        // res.status(200).render('verify-user', { message: "User verification successful, now you can log in!" })
         // return res.status(200).json({message: "User verification successful, now you can log in!"})
     }
     catch (error: any) {
@@ -75,7 +76,8 @@ async function verifyUserEmail(req: IAuthRequest, res: Response, next: NextFunct
 
         Logger.error(`Error while user email verification: ${error.message}`)
 
-        return res.status(code).render('verify-user', { message: error.message })
+        return res.status(code).json({ message: error.message })
+        // return res.status(code).render('verify-user', { message: error.message })
         // return next( error )
     }
 }
