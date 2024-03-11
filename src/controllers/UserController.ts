@@ -8,6 +8,7 @@ import Logger from "../../config/logger"
 import config from "config"
 import jwt from "jsonwebtoken"
 import crypto from "crypto"
+import appConfig from "../../config/default"
 
 // Database manipulator
 import { GenericModelCRUD } from "../classes/MongooseModelCRUD"
@@ -82,7 +83,6 @@ async function verifyUserEmail(req: IAuthRequest, res: Response, next: NextFunct
 async function createNewUser(req: IAuthRequest, res: Response, next: NextFunction) {
     try {
         const userData : (IUser & IUserMethods) = req.body
-        const hostAddress = req.get("host")
 
         const userAlreadyExists = await _checkIfEmailAlreadyExists(userData.email)
         if (userAlreadyExists) throw new AppError("Email address already registered", 409)
@@ -92,7 +92,7 @@ async function createNewUser(req: IAuthRequest, res: Response, next: NextFunctio
         userData.verificationToken = _generateRandomTokenString()
         userData.firstDayOfMonth = 1
 
-        await _sendUserVerificationEmail(userData, hostAddress)
+        await _sendUserVerificationEmail(userData)
 
         const createdUser = await usersCrud.insertDocument(userData)
 
@@ -320,11 +320,11 @@ function _generateRandomTokenString(): string {
     return crypto.randomBytes( 40 ).toString('hex')
 }
 
-async function _sendUserVerificationEmail( user: IUser, hostAddress: string | undefined = undefined ) {
+async function _sendUserVerificationEmail( user: IUser ) {
     let bodyMessage: string
     
     {
-        const verifyUrl = `http://${ hostAddress }/api/user/verify-user?token=${ user.verificationToken }`
+        const verifyUrl = `${ appConfig.frontEndUrl }?token=${ user.verificationToken }`
         const lastName = user.lastName ? ` ${user.lastName}` :  ``
         
         bodyMessage = `<h2>Email verification</h2>
